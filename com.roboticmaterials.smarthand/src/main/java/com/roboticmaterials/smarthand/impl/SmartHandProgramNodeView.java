@@ -44,10 +44,9 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 
 	private JSlider forceSliderO = new JSlider();
 	private JSlider forceSliderC = new JSlider();
+	private JSlider forceSliderW = new JSlider();
 	
-	private JSlider apertureSliderO = new  JSlider();
-	private JSlider apertureSliderC = new  JSlider();
-
+	private JSlider apertureSlider = new  JSlider();
 	
 	private JLabel imageLabel;
 	private BufferedImage image;
@@ -56,7 +55,7 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 	private JPanel cards;
 	//final static String CMDOPENGRIPPER = "Open Gripper";
 	//final static String CMDCLOSEGRIPPER = "Close Gripper";
-	private static final String[] commands = {"Open Gripper","Close Gripper","Get Object Pose"};
+	private static final String[] commands = {"Open Gripper","Close Gripper","Set Gripper Width","Get Object Pose"};
 	
 	@Override
 	public void buildUI(JPanel panel, final ContributionProvider<SmartHandProgramNodeContribution> provider) {
@@ -65,15 +64,13 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 		JPanel card1 = new JPanel();
 		JPanel card2 = new JPanel();
 		JPanel card3 = new JPanel();
+		JPanel card4 = new JPanel();
 
 		//card1.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		card1.setLayout(new BoxLayout(card1, BoxLayout.Y_AXIS));
 		card1.add(createDescription("Force:"));
 		card1.add(createSpacer(5));
 		card1.add(createForceOSlider(forceSliderO, 0, 100, provider));
-		card1.add(createDescription("Aperture:"));
-		card1.add(createSpacer(5));
-		card1.add(createApertureOSlider(apertureSliderO, 0, 100, provider));
 		
 		//closeGripperPanel.add(createIOComboBox(ioComboBox, provider));
 		//closeGripperPanel.add(createSpacer(20));
@@ -82,9 +79,14 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 		card2.add(createDescription("Force:"));
 		card2.add(createSpacer(5));
 		card2.add(createForceCSlider(forceSliderC, 0, 100, provider));		
-		card2.add(createDescription("Aperture:"));
-		card2.add(createSpacer(5));
-		card2.add(createApertureCSlider(apertureSliderC, 0, 100, provider));
+		
+		card3.setLayout(new BoxLayout(card3, BoxLayout.Y_AXIS));
+		card3.add(createDescription("Force:"));
+		card3.add(createSpacer(5));
+		card3.add(createForceWSlider(forceSliderW, 0, 100, provider));		
+		card3.add(createDescription("Aperture:"));
+		card3.add(createSpacer(5));
+		card3.add(createApertureSlider(apertureSlider, 0, 108, provider));
 	
 		/*try {
 			image = ImageIO.read(new URL("http://192.168.2.119:8000/snapshot.png"));
@@ -97,13 +99,14 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 		}*/
 		//card3.add(imageLabel);
 		
-		card3.add(createObjectsComboBox(objectsComboBox, provider));
+		card4.add(createObjectsComboBox(objectsComboBox, provider));
 		
 		//Create the panel that contains the "cards".
 		cards = new JPanel(new CardLayout());
 		cards.add(card1, commands[0]);
 		cards.add(card2, commands[1]);
 		cards.add(card3, commands[2]);
+		cards.add(card4, commands[3]);
 		
 
 		panel.add(createCommandComboBox(commandComboBox, provider));
@@ -166,13 +169,14 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 		forceSliderC.setValue(value);
 	}
 	
-	public void setApertureSliderO(int value) {
-		forceSliderO.setValue(value);
-	}
-	
-	public void setApertureSliderC(int value) {
+	public void setForceSliderW(int value) {
 		forceSliderC.setValue(value);
 	}
+	
+	public void setApertureSlider(int value) {
+		apertureSlider.setValue(value);
+	}
+	
 	
 	private Box createDescription(String desc){
 		Box box = Box.createHorizontalBox();
@@ -294,7 +298,7 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 		return box;		
 	}
 	
-	private Box createApertureOSlider(final JSlider slider, int min, int max, 
+	private Box createForceWSlider(final JSlider slider, int min, int max, 
 			final ContributionProvider<SmartHandProgramNodeContribution> provider) {
 		Box box = Box.createHorizontalBox();
 		box.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -315,7 +319,7 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 			public void stateChanged(ChangeEvent e) {
 				int newValue = slider.getValue();
 				value.setText(Integer.toString(newValue)+" %");
-				provider.get().onApertureOSelection(newValue);
+				provider.get().onForceWSelection(newValue);
 				
 			}
 		});
@@ -325,7 +329,7 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 		return box;		
 	}
 	
-	private Box createApertureCSlider(final JSlider slider, int min, int max, 
+	private Box createApertureSlider(final JSlider slider, int min, int max, 
 			final ContributionProvider<SmartHandProgramNodeContribution> provider) {
 		Box box = Box.createHorizontalBox();
 		box.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -338,15 +342,15 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 		slider.setPreferredSize(new Dimension(275,30));
 		slider.setMaximumSize(slider.getPreferredSize());
 		
-		final JLabel value = new JLabel(Integer.toString(slider.getValue()) +" %");
+		final JLabel value = new JLabel(Integer.toString(slider.getValue()) +" mm");
 		
 		slider.addChangeListener(new ChangeListener() {
 			
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				int newValue = slider.getValue();
-				value.setText(Integer.toString(newValue)+" %");
-				provider.get().onApertureCSelection(newValue);
+				value.setText(Integer.toString(newValue)+" mm");
+				provider.get().onApertureSelection(newValue);
 				
 			}
 		});
@@ -355,7 +359,7 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 		box.add(value);
 		return box;		
 	}
-	
+		
 	private Component createSpacer(int height) {
 		return Box.createRigidArea(new Dimension(0,height));
 	}
