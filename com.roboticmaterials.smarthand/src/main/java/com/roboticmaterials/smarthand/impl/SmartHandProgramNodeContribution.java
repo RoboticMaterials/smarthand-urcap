@@ -47,6 +47,8 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 	private final ScriptSender sender;
 	private final ScriptExporter exporter;
 	
+	private GlobalVariable targetVariable;
+	
 	public SmartHandProgramNodeContribution(ProgramAPIProvider apiProvider, 
 			final SmartHandProgramNodeView view, DataModel model) {
 		commands = view.getCommands();
@@ -67,19 +69,21 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 	          }
 	      };
 	    timer = new Timer(500,taskPerformer);*/
-		 try {
+		
+		try {
 			VariableFactory variableFactory = programAPI.getVariableModel().getVariableFactory();
-			GlobalVariable variable = variableFactory.createGlobalVariable("rm_target",
+			targetVariable = variableFactory.createGlobalVariable("rm_target",
 					programAPI.getValueFactoryProvider().createExpressionBuilder().append("get_actual_tcp_pose()").build());
-   
-			model.set("var", variable);        
+			
+			// move this to time when command is selected: model.set("var", targetVariable);        
     
 			} catch (VariableException e) {
 				e.printStackTrace();
 			} catch (InvalidExpressionException e1) {
 				e1.printStackTrace();
-			}		 
-		      
+			}	
+			 
+			   
 	}
 	
 	public void onObjectSelection(final String output) {
@@ -100,7 +104,13 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 			@Override
 			public void executeChanges() {
 				model.set(OUTPUT_KEY, output);
-				
+				if(output.matches("Get Object Pose")) {
+				  model.set("var", targetVariable);
+				} else {
+					if(model.isSet("var")) {
+						model.remove("var");
+					}
+				}
 			}
 		});
 	}
@@ -194,6 +204,10 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 		view.setObjectsComboBoxItems(getInstallation().getKnownObjects());
 		view.setObjectsComboBoxSelection(getObject());
 		
+		if(!model.isSet("var") && getCommandId(getCommand())==3) {
+			
+		}
+		
 		/*switch(getCommandId(getCommand())){
 			case 2 : 
 				//view.updateCameraFeed();
@@ -230,7 +244,7 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 		// Set Width
 		case 2 : return getCommand()+"("+getAperture()+"mm, @"+getForceW()+"% force)";
 		// Get Pose
-		case 3 : return "rm_target=" + getCommand()+"("+getObject()+")";
+		case 3 : return  targetVariable.getDisplayName() + "=" + getCommand()+"("+getObject()+")";
 		default: return "";
 		}
 	}
@@ -266,7 +280,7 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 		case 2 : writer.appendLine("smarthand.run_cmd(\"rm.set_gripper_torque("+getForceW()/100.0+")\")");
 				 writer.appendLine("smarthand.run_cmd(\"rm.set_gripper_width("+getAperture()/100.0+")\")");
 				 break;
-		case 3 : writer.assign("rm_target","smarthand.get_object_pose(\""+getObject()+"\")");
+		case 3 : writer.assign(writer.getResolvedVariableName(targetVariable),"smarthand.get_object_pose(\""+getObject()+"\")");
 				 break;
 		}
 		
