@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1557427915581
+Bnd-LastModified: 1557428069529
 Build-Jdk: 1.8.0_191
 Built-By: ur
 Bundle-Activator: com.roboticmaterials.smarthand.impl.Activator
@@ -25,8 +25,10 @@ Import-Package: com.ur.urcap.api.contribution;version="[1.6.0,2.0.0)",co
  1.6.0,2.0.0)",com.ur.urcap.api.domain.script;version="[1.6.0,2.0.0)",co
  m.ur.urcap.api.domain.undoredo;version="[1.6.0,2.0.0)",com.ur.urcap.api
  .domain.userinteraction;version="[1.6.0,2.0.0)",com.ur.urcap.api.domain
- .userinteraction.keyboard;version="[1.6.0,2.0.0)",com.roboticmaterials.
- smarthand.communicator;version="[1.0,2)",javax.imageio,javax.swing,java
- x.swing.border,javax.swing.event,javax.swing.text,org.osgi.framework;ve
- rsion="[1.6,2)"
+ .userinteraction.keyboard;version="[1.6.0,2.0.0)",com.ur.urcap.api.doma
+ in.value;version="[1.6.0,2.0.0)",com.ur.urcap.api.domain.value.expressi
+ on;version="[1.6.0,2.0.0)",com.ur.urcap.api.domain.variable;version="[1
+ .6.0,2.0.0)",com.roboticmaterials.smarthand.communicator;version="[1.0,
+ 2)",javax.imageio,javax.swing,javax.swing.border,javax.swing.event,java
+ x.swing.text,org.osgi.framework;version="[1.6,2)"
 Tool: Bnd-2.1.0.20130426-122213

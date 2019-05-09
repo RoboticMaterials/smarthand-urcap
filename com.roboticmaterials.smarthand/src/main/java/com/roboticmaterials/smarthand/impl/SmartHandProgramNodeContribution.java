@@ -79,9 +79,7 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 			} catch (InvalidExpressionException e1) {
 				e1.printStackTrace();
 			}		 
-			break;
-
-           
+		      
 	}
 	
 	public void onObjectSelection(final String output) {
@@ -269,6 +267,7 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 				 writer.appendLine("smarthand.run_cmd(\"rm.set_gripper_width("+getAperture()/100.0+")\")");
 				 break;
 		case 3 : writer.assign("rm_target","smarthand.get_object_pose(\""+getObject()+"\")");
+				 break;
 		}
 		
 	}
