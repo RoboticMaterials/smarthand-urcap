@@ -67,6 +67,20 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 	          }
 	      };
 	    timer = new Timer(500,taskPerformer);*/
+		 try {
+			VariableFactory variableFactory = programAPI.getVariableModel().getVariableFactory();
+			GlobalVariable variable = variableFactory.createGlobalVariable("rm_target",
+					programAPI.getValueFactoryProvider().createExpressionBuilder().append("get_actual_tcp_pose()").build());
+   
+			model.set("var", variable);        
+    
+			} catch (VariableException e) {
+				e.printStackTrace();
+			} catch (InvalidExpressionException e1) {
+				e1.printStackTrace();
+			}		 
+			break;
+
            
 	}
 	
@@ -255,19 +269,6 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 				 writer.appendLine("smarthand.run_cmd(\"rm.set_gripper_width("+getAperture()/100.0+")\")");
 				 break;
 		case 3 : writer.assign("rm_target","smarthand.get_object_pose(\""+getObject()+"\")");
-				 try {
-					VariableFactory variableFactory = programAPI.getVariableModel().getVariableFactory();
-					GlobalVariable variable = variableFactory.createGlobalVariable("rm_target",
-							programAPI.getValueFactoryProvider().createExpressionBuilder().append("get_actual_tcp_pose()").build());
-		    
-					model.set("var", variable);        
-		     
-					} catch (VariableException e) {
-						e.printStackTrace();
-					} catch (InvalidExpressionException e1) {
-						e1.printStackTrace();
-					}		 
-					break;
 		}
 		
 	}
