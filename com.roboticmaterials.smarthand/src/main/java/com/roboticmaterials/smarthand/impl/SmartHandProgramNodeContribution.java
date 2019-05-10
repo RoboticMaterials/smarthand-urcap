@@ -42,6 +42,8 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 	private static final int DEFAULT_FORCE = 100;
 	private static final int DEFAULT_APERTURE = 108;
 	private static final String DEFAULT_OBJECT = "generic";
+	
+	private String IPADDRESS;
 	//private Timer timer; 
 	
 	private final ScriptSender sender;
@@ -58,6 +60,7 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 		this.model = model;
 		this.undoRedoManager = this.apiProvider.getProgramAPI().getUndoRedoManager();
 		getInstallation().setChildren(true);
+		this.IPADDRESS=getInstallation().getIPAddress();
 		
 		this.sender = new ScriptSender();
 		this.exporter = new ScriptExporter();
@@ -86,6 +89,10 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 			   
 	}
 	
+	public String getIPAddress() {
+	return IPADDRESS;
+	}
+	
 	public void onObjectSelection(final String output) {
 		undoRedoManager.recordChanges(new UndoableChanges() {
 
@@ -104,6 +111,10 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 			@Override
 			public void executeChanges() {
 				model.set(OUTPUT_KEY, output);
+				
+				// Add the rm_target variable only for the "get object pose" command.
+				// Remove it, if it has been added previously when the user changed
+				// the command type. 
 				if(output.matches("Get Object Pose")) {
 				  model.set("var", targetVariable);
 				} else {
@@ -290,6 +301,8 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 		return programAPI.getInstallationNode(SmartHandInstallationNodeContribution.class);
 	}
 	
+	
+	
 	public void sendScriptOpenGripper() {
 		// Create a new ScriptCommand called "testSend"
 		ScriptCommand sendTestCommand = new ScriptCommand("testSend");
@@ -310,6 +323,32 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 		sendTestCommand.appendLine("smarthand.init()");
 		sendTestCommand.appendLine("smarthand.run_cmd(\"rm.close_gripper()\")");
 		sender.sendScriptCommand(sendTestCommand);
+	}
+	
+	public void requestPoseAndImage() {
+		
+		ScriptCommand exportTestCommand = new ScriptCommand("exportVariable");
+		
+		// Add the calculation script to the command
+		exportTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + getInstallation().getIPAddress() +":8101/RPC2\")");
+		exportTestCommand.appendLine("smarthand.init()");
+		exportTestCommand.appendLine(targetVariable.getDisplayName()+"=smarthand.get_object_pose(\""+getObject()+"\")");
+		exportTestCommand.appendLine("smarthand.irimage()");
+		//exportTestCommand.appendLine("z_value = pose[2]");
+		
+		// Use the exporter to send the script
+		// Note the String name of the variable (z_value) to be returned
+		String returnValue = exporter.exportStringFromURScript(exportTestCommand,
+				targetVariable.getDisplayName());
+		
+		
+		/*ScriptCommand sendTestCommand = new ScriptCommand("testSend");
+		sendTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + getInstallation().getIPAddress() +":8101/RPC2\")");
+		sendTestCommand.appendLine("smarthand.init()");
+		sendTestCommand.appendLine(targetVariable.getDisplayName()+"=smarthand.get_object_pose(\""+getObject()+"\")");
+		sendTestCommand.appendLine("smarthand.irimage()");
+		sender.sendScriptCommand(sendTestCommand);*/
+
 	}
 	
 }
