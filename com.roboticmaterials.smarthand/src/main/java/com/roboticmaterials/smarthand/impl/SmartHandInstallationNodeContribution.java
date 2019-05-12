@@ -23,17 +23,19 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 	private static final String DEFAULT_OBJECT = "generic";
 	
 	private final SmartHandInstallationNodeView view;
-	private final KeyboardInputFactory keyboardFactory;
+	private final KeyboardInputFactory keyboardInputFactory;
 
 	private DataModel model;
 	
 	private final ScriptSender sender;
 	private final ScriptExporter exporter;
-
+		
 	public SmartHandInstallationNodeContribution(InstallationAPIProvider apiProvider, DataModel model, SmartHandInstallationNodeView view) {
-		this.keyboardFactory = apiProvider.getUserInterfaceAPI().getUserInteraction().getKeyboardInputFactory();
+		this.keyboardInputFactory = apiProvider.getUserInterfaceAPI().getUserInteraction().getKeyboardInputFactory();
 		this.model = model;
 		this.view = view;
+		
+
 		
 		this.sender = new ScriptSender();
 		this.exporter = new ScriptExporter();
@@ -103,6 +105,21 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		}
 	}
 
+	public KeyboardTextInput getKeyboardForIpAddress() {
+		KeyboardTextInput keyboard = keyboardInputFactory.createIPAddressKeyboardInput();
+		keyboard.setInitialValue(model.get(IPADDRESS_KEY, ""));
+		return keyboard;
+	}
+
+	public KeyboardInputCallback<String> getCallbackForIpAddress() {
+		return new KeyboardInputCallback<String>() {
+			@Override
+			public void onOk(String value) {
+				model.set(IPADDRESS_KEY, value);
+				view.setIPAddress(value);
+			}
+		};
+	}
 	public String getIPAddress() {
 		return model.get(IPADDRESS_KEY, DEFAULT_VALUE);
 	}
@@ -132,11 +149,6 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		model.set(IPADDRESS_KEY, DEFAULT_VALUE);
 	}
 
-	public KeyboardTextInput getInputForTextField() {
-		KeyboardTextInput keyboardInput = keyboardFactory.createStringKeyboardInput();
-		keyboardInput.setInitialValue(getIPAddress());
-		return keyboardInput;
-	}
 
 	public KeyboardInputCallback<String> getCallbackForTextField() {
 		return new KeyboardInputCallback<String>() {

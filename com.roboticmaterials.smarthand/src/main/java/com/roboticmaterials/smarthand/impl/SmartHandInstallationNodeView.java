@@ -33,7 +33,8 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 
 	
 	private final Style style;
-	private JTextField jTextField;
+	private JTextField ipAddress = new JTextField();
+	
 	//private JLabel RETURN_VALUE = new JLabel();
 	private final JComboBox<String> objectsComboBox = new JComboBox<String>();
 
@@ -44,10 +45,15 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 	@Override
 	public void buildUI(JPanel jPanel, final SmartHandInstallationNodeContribution contribution) {
 		jPanel.setLayout(new BoxLayout(jPanel, BoxLayout.Y_AXIS));
-
-		jPanel.add(createInfo("Please provide the SmartHand IP address:"));
-		jPanel.add(createVerticalSpacing());
-		jPanel.add(createIPAddressInput(contribution));
+	
+		ipAddress.setHorizontalAlignment(JTextField.RIGHT);
+		jPanel.add(createLabelInputField("IP Address: ", ipAddress, new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				KeyboardTextInput keyboardInput = contribution.getKeyboardForIpAddress();
+				keyboardInput.show(ipAddress, contribution.getCallbackForIpAddress());
+			}
+		}));	
 		
 		jPanel.add(createVerticalSpacing());
 		jPanel.add(createRequestObjectsButton(contribution));
@@ -60,6 +66,22 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 		jPanel.add(createSenderOpenGripperButton(contribution));
 		jPanel.add(createVerticalSpacing());
 		jPanel.add(createSenderCloseGripperButton(contribution));
+	}
+	
+	private Box createLabelInputField(String label, final JTextField inputField, MouseAdapter mouseAdapter) {
+		Box horizontalBox = Box.createHorizontalBox();
+		horizontalBox.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+		JLabel jLabel = new JLabel(label);
+		inputField.setFocusable(false);
+		inputField.setPreferredSize(style.getInputfieldSize());
+		inputField.setMaximumSize(inputField.getPreferredSize());
+		inputField.addMouseListener(mouseAdapter);
+
+		horizontalBox.add(jLabel);
+		horizontalBox.add(inputField);
+
+		return horizontalBox;
 	}
 	
 	public void setKnownObjects(String value) {
@@ -163,29 +185,6 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 		return infoBox;
 	}
 
-	private Box createIPAddressInput(final SmartHandInstallationNodeContribution contribution) {
-		Box inputBox = Box.createHorizontalBox();
-		inputBox.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-		inputBox.add(new JLabel("IP:"));
-		inputBox.add(createHorizontalSpacing());
-
-		jTextField = new JTextField();
-		jTextField.setFocusable(false);
-		jTextField.setPreferredSize(style.getInputfieldSize());
-		jTextField.setMaximumSize(jTextField.getPreferredSize());
-		jTextField.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mousePressed(MouseEvent e) {
-				KeyboardTextInput keyboardInput = contribution.getInputForTextField();
-				keyboardInput.show(jTextField, contribution.getCallbackForTextField());
-			}
-		});
-		inputBox.add(jTextField);
-
-		return inputBox;
-	}
-
 	private Component createHorizontalSpacing() {
 		return Box.createRigidArea(new Dimension(style.getHorizontalSpacing(), 0));
 	}
@@ -195,7 +194,7 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 	}
 
 	public void setIPAddress(String t) {
-		jTextField.setText(t);
+		ipAddress.setText(t);
 	}
 
 }
