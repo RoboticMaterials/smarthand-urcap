@@ -50,6 +50,7 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 	private final ScriptExporter exporter;
 	
 	private GlobalVariable targetVariable;
+	private GlobalVariable graspVariable;
 	
 	public SmartHandProgramNodeContribution(ProgramAPIProvider apiProvider, 
 			final SmartHandProgramNodeView view, DataModel model) {
@@ -75,11 +76,25 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 		
 		try {
 			VariableFactory variableFactory = programAPI.getVariableModel().getVariableFactory();
-			targetVariable = variableFactory.createGlobalVariable("rm_target",
+			targetVariable = variableFactory.createGlobalVariable("target",
 					programAPI.getValueFactoryProvider().createExpressionBuilder().append("get_actual_tcp_pose()").build());
 			
-			// move this to time when command is selected: model.set("var", targetVariable);        
+			// move this to time when command is selected: model.set("var_target", targetVariable);        
     
+			} catch (VariableException e) {
+				e.printStackTrace();
+			} catch (InvalidExpressionException e1) {
+				e1.printStackTrace();
+			}	
+		
+		try {
+			VariableFactory variableFactory = programAPI.getVariableModel().getVariableFactory();
+			graspVariable = variableFactory.createGlobalVariable("grasp",
+					programAPI.getValueFactoryProvider().createExpressionBuilder().append("True").build());
+			
+			// Set this here as "open gripper" is the default command
+			model.set("var_target",graspVariable);
+			
 			} catch (VariableException e) {
 				e.printStackTrace();
 			} catch (InvalidExpressionException e1) {
@@ -112,14 +127,28 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 			public void executeChanges() {
 				model.set(OUTPUT_KEY, output);
 				
-				// Add the rm_target variable only for the "get object pose" command.
+				// Add the target and grasp variables only for the "get object pose" 
+				// and open/close gripper commands.
 				// Remove it, if it has been added previously when the user changed
 				// the command type. 
 				if(output.matches("Get Object Pose")) {
-				  model.set("var", targetVariable);
+				  model.set("var_target", targetVariable);
+					if(model.isSet("var_grasp")) {
+						model.remove("var_grasp");
+					}
 				} else {
-					if(model.isSet("var")) {
-						model.remove("var");
+					if(model.isSet("var_target")) {
+						model.remove("var_target");
+					}
+				}
+				if(output.matches("Open Gripper") || 
+						output.matches("Close Gripper") ||
+						output.matches("Set Gripper width")) {
+					model.set("var_target",graspVariable);
+					
+				} else {
+					if(model.isSet("var_grasp")) {
+						model.remove("var_grasp");
 					}
 				}
 			}
@@ -215,9 +244,7 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 		view.setObjectsComboBoxItems(getInstallation().getKnownObjects());
 		view.setObjectsComboBoxSelection(getObject());
 		
-		if(!model.isSet("var") && getCommandId(getCommand())==3) {
-			
-		}
+
 		
 		/*switch(getCommandId(getCommand())){
 			case 2 : 
@@ -249,11 +276,11 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 	public String getTitle() {
 		switch(getCommandId(getCommand())) {
 		// Open
-		case 0 : return getCommand()+"(@"+getForceO()+"% force)";
+		case 0 : return graspVariable.getDisplayName()+"="+getCommand()+"(@"+getForceO()+"% force)";
 		// Close
-		case 1 : return getCommand()+"(@"+getForceC()+"% force)";
+		case 1 : return graspVariable.getDisplayName()+"="+getCommand()+"(@"+getForceC()+"% force)";
 		// Set Width
-		case 2 : return getCommand()+"("+getAperture()+"mm, @"+getForceW()+"% force)";
+		case 2 : return graspVariable.getDisplayName()+"="+getCommand()+"("+getAperture()+"mm, @"+getForceW()+"% force)";
 		// Get Pose
 		case 3 : return  targetVariable.getDisplayName() + "=" + getCommand()+"("+getObject()+")";
 		default: return "";

@@ -19,6 +19,7 @@ import java.awt.event.ActionListener;
 public class SmartHandInstallationNodeContribution implements InstallationNodeContribution {
 	private static final String IPADDRESS_KEY = "ipaddress";
 	private static final String DEFAULT_VALUE = "192.168.1.2";
+	private static final String VALIDIP_KEY = "validip";
 	private static final String OBJECTS_KEY = "objects";
 	private static final String DEFAULT_OBJECT = "generic";
 	
@@ -45,6 +46,8 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 	public void openView() {
 		view.setIPAddress(getIPAddress());
 		view.setKnownObjects(getKnownObjects());
+		view.setButtonEnabled(true);
+		view.setButtonEnabled(model.get(VALIDIP_KEY, false));
 	}
 
 	@Override
@@ -116,7 +119,15 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 			@Override
 			public void onOk(String value) {
 				model.set(IPADDRESS_KEY, value);
+				model.set(VALIDIP_KEY,true);
 				view.setIPAddress(value);
+				view.setButtonEnabled(true);
+			}
+			
+			@Override
+			public void onCancel() {
+				model.set(VALIDIP_KEY,false);
+				view.setButtonEnabled(false);
 			}
 		};
 	}
@@ -150,15 +161,21 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 	}
 
 
-	public KeyboardInputCallback<String> getCallbackForTextField() {
+/*	public KeyboardInputCallback<String> getCallbackForTextField() {
 		return new KeyboardInputCallback<String>() {
 			@Override
 			public void onOk(String value) {
 				setIPAddress(value);
 				view.setIPAddress(value);
+				view.setButtonEnabled(true);
+			}
+			
+			@Override
+			public void onCancel() {
+				view.setButtonEnabled(false);
 			}
 		};
-	}
+	}*/
 	
 	private boolean areThereChildren = false;
 	

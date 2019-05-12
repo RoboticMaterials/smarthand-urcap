@@ -37,6 +37,9 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 	
 	//private JLabel RETURN_VALUE = new JLabel();
 	private final JComboBox<String> objectsComboBox = new JComboBox<String>();
+	private JButton requestObjectsButton;
+	private JButton openGripperButton;
+	private JButton closeGripperButton;
 
 	public SmartHandInstallationNodeView(Style style) {
 		this.style = style;
@@ -50,16 +53,21 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 		jPanel.add(createLabelInputField("IP Address: ", ipAddress, new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
+				setButtonEnabled(false);
 				KeyboardTextInput keyboardInput = contribution.getKeyboardForIpAddress();
 				keyboardInput.show(ipAddress, contribution.getCallbackForIpAddress());
 			}
 		}));	
+		
+		requestObjectsButton = new JButton("Request objects");
 		
 		jPanel.add(createVerticalSpacing());
 		jPanel.add(createRequestObjectsButton(contribution));
 		jPanel.add(createVerticalSpacing());
 		jPanel.add(createObjectsComboBox(objectsComboBox, contribution));
 
+		openGripperButton = new JButton("Open Gripper");
+		closeGripperButton = new JButton("Close Gripper");
 		jPanel.add(createVerticalSpacing());
 		jPanel.add(createInfo("Open and close gripper:"));
 		jPanel.add(createVerticalSpacing());
@@ -82,6 +90,12 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 		horizontalBox.add(inputField);
 
 		return horizontalBox;
+	}
+	
+	public void setButtonEnabled(boolean b) {
+		requestObjectsButton.setEnabled(b);
+		openGripperButton.setEnabled(b);
+		closeGripperButton.setEnabled(b);
 	}
 	
 	public void setKnownObjects(String value) {
@@ -118,16 +132,14 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 		
 		box.add(new JLabel("Obtain list of available object definitions"));
 		
-		JButton button = new JButton("Request objects");
-		button.addActionListener(new ActionListener() {
+		requestObjectsButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				contribution.importKnownObjects();
 			}
 		});
-
 		box.add(createVerticalSpacing());
-		box.add(button);
+		box.add(requestObjectsButton);
 		//box.add(new JLabel("Returned value:"));
 		//box.add(this.RETURN_VALUE);
 		
@@ -138,8 +150,7 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 		Box box = Box.createVerticalBox();
 		
 	
-		JButton button = new JButton("Open Gripper");
-		button.addActionListener(new ActionListener() {
+		openGripperButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				contribution.sendScriptOpenGripper();
@@ -147,7 +158,7 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 		});
 		
 		//box.add(createVerticalSpacing());
-		box.add(button);
+		box.add(openGripperButton);
 		
 		return box;
 	}
@@ -155,15 +166,13 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 	private Box createSenderCloseGripperButton(final SmartHandInstallationNodeContribution contribution) {
 		Box box = Box.createVerticalBox();
 		
-	
-		JButton button = new JButton("Close Gripper");
-		button.addActionListener(new ActionListener() {
+		closeGripperButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				contribution.sendScriptCloseGripper();
 			}
 		});
-		box.add(button);
+		box.add(closeGripperButton);
 		
 		return box;
 	}
