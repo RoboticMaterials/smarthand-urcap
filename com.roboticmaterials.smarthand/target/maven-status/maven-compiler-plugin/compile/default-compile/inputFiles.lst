@@ -1,5 +1,6 @@
 /home/ur/sdk/sdk-1.6.1/com.roboticmaterials.smarthand/src/main/java/com/roboticmaterials/smarthand/impl/Activator.java
 /home/ur/sdk/sdk-1.6.1/com.roboticmaterials.smarthand/src/main/java/com/roboticmaterials/smarthand/impl/V3Style.java
+/home/ur/sdk/sdk-1.6.1/com.roboticmaterials.smarthand/src/main/java/com/roboticmaterials/smarthand/impl/ToolbarService.java
 /home/ur/sdk/sdk-1.6.1/com.roboticmaterials.smarthand/src/main/java/com/roboticmaterials/smarthand/impl/SmartHandInstallationNodeService.java
 /home/ur/sdk/sdk-1.6.1/com.roboticmaterials.smarthand/src/main/java/com/roboticmaterials/smarthand/impl/SmartHandProgramNodeService.java
 /home/ur/sdk/sdk-1.6.1/com.roboticmaterials.smarthand/src/main/java/com/roboticmaterials/smarthand/communicator/ScriptSender.java
@@ -8,6 +9,7 @@
 /home/ur/sdk/sdk-1.6.1/com.roboticmaterials.smarthand/src/main/java/com/roboticmaterials/smarthand/impl/SmartHandInstallationNodeContribution.java
 /home/ur/sdk/sdk-1.6.1/com.roboticmaterials.smarthand/src/main/java/com/roboticmaterials/smarthand/impl/Style.java
 /home/ur/sdk/sdk-1.6.1/com.roboticmaterials.smarthand/src/main/java/com/roboticmaterials/smarthand/communicator/ScriptExporter.java
+/home/ur/sdk/sdk-1.6.1/com.roboticmaterials.smarthand/src/main/java/com/roboticmaterials/smarthand/impl/ToolbarContribution.java
 /home/ur/sdk/sdk-1.6.1/com.roboticmaterials.smarthand/src/main/java/com/roboticmaterials/smarthand/impl/SmartHandProgramNodeView.java
 /home/ur/sdk/sdk-1.6.1/com.roboticmaterials.smarthand/src/main/java/com/roboticmaterials/smarthand/impl/SmartHandInstallationNodeView.java
 /home/ur/sdk/sdk-1.6.1/com.roboticmaterials.smarthand/src/main/java/com/roboticmaterials/smarthand/impl/SmartHandProgramNodeContribution.java

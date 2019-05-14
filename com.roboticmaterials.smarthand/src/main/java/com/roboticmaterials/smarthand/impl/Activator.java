@@ -5,6 +5,8 @@ import org.osgi.framework.BundleContext;
 
 import com.ur.urcap.api.contribution.installation.swing.SwingInstallationNodeService;
 import com.ur.urcap.api.contribution.program.swing.SwingProgramNodeService;
+import com.ur.urcap.api.contribution.toolbar.swing.SwingToolbarService;
+import com.roboticmaterials.smarthand.impl.ToolbarService;
 import com.roboticmaterials.smarthand.impl.SmartHandInstallationNodeService;
 
 /**
@@ -18,6 +20,7 @@ public class Activator implements BundleActivator {
 		
 		bundleContext.registerService(SwingInstallationNodeService.class, new SmartHandInstallationNodeService(), null);
 		bundleContext.registerService(SwingProgramNodeService.class, new SmartHandProgramNodeService(), null);
+	//	bundleContext.registerService(SwingToolbarService.class, new ToolbarService(), null);	
 	}
 
 	@Override

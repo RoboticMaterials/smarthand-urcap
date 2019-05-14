@@ -63,36 +63,50 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 		JPanel card2 = new JPanel();
 		JPanel card3 = new JPanel();
 		JPanel card4 = new JPanel();
-
+	
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-		panel.add(createCommandComboBox(commandComboBox, provider));
-		panel.add(createSpacer(10));
-		panel.add(createDescription("Open and close gripper:"));
-		panel.add(createSpacer(10));
-		panel.add(createSenderOpenGripperButton(provider));
-		panel.add(createSpacer(10));
-		panel.add(createSenderCloseGripperButton(provider));
+		
+//		panel.add(createSpacer(10));
+
+		Box box = Box.createVerticalBox();
+		
+		Box toolbox = Box.createHorizontalBox();
+		toolbox.setAlignmentX(Component.CENTER_ALIGNMENT);
+		toolbox.add(createCommandComboBox(commandComboBox, provider));
+		//box.add(createHorizontalSpacing(10));
+		//box.add(createDescription("Open and close gripper:"));
+		toolbox.add(createHorizontalSpacing(10));
+		toolbox.add(createSenderOpenGripperButton(provider));
+		toolbox.add(createHorizontalSpacing(10));
+		toolbox.add(createSenderCloseGripperButton(provider));
+		
+		box.add(toolbox);
+		box.add(createSpacer(15));
+		
+		panel.add(box);
+		
+		
 		
 		// First card: open gripper
 		card1.setLayout(new BoxLayout(card1, BoxLayout.Y_AXIS));
-		card1.add(createDescription("Force:"));
-		card1.add(createSpacer(5));
-		card1.add(createForceOSlider(forceSliderO, 0, 100, provider));
+		//card1.add(createDescription("Force:"));
+		//card1.add(createSpacer(5));
+		card1.add(createForceOSlider("Force:",forceSliderO, 0, 100, provider));
 		
 		// Second card: close gripper	
 		card2.setLayout(new BoxLayout(card2, BoxLayout.Y_AXIS));
-		card2.add(createDescription("Force:"));
-		card2.add(createSpacer(5));
-		card2.add(createForceCSlider(forceSliderC, 0, 100, provider));		
+		//card2.add(createDescription("Force:"));
+		//card2.add(createSpacer(5));
+		card2.add(createForceCSlider("Force:", forceSliderC, 0, 100, provider));		
 		
 		// Third card: set gripper width
 		card3.setLayout(new BoxLayout(card3, BoxLayout.Y_AXIS));
-		card3.add(createDescription("Force:"));
-		card3.add(createSpacer(5));
-		card3.add(createForceWSlider(forceSliderW, 0, 100, provider));		
-		card3.add(createDescription("Aperture:"));
-		card3.add(createSpacer(5));
-		card3.add(createApertureSlider(apertureSlider, 0, 108, provider));
+		//card3.add(createDescription(   "Force:    "));
+		//card3.add(createSpacer(5));
+		card3.add(createForceWSlider("Force:",forceSliderW, 0, 100, provider));		
+	//	card3.add(createDescription("Aperture:"));
+		//card3.add(createSpacer(5));
+		card3.add(createApertureSlider("Aperture:", apertureSlider, 0, 108, provider));
 	
 		/*try {
 			image = ImageIO.read(new URL("http://192.168.2.119:8000/snapshot.png"));
@@ -131,6 +145,11 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 		
 
 		panel.add(cards, BorderLayout.CENTER);
+	}
+	
+	private Component createHorizontalSpacing(int width) {
+		//return Box.createHorizontalGlue();
+		return Box.createRigidArea(new Dimension(width,0));
 	}
 	
 	public void updateCameraFeed() {
@@ -270,7 +289,9 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 		Box box = Box.createHorizontalBox();
 		box.setAlignmentX(Component.LEFT_ALIGNMENT);
 		
-		JLabel label = new JLabel("Available commands");
+		final JLabel label = new JLabel("Avail. commands:");
+		label.setPreferredSize(new Dimension(120,30));
+		label.setMaximumSize(label.getPreferredSize());
 		
 		combo.setPreferredSize(new Dimension(160,30));
 		combo.setMaximumSize(combo.getPreferredSize());
@@ -285,16 +306,21 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 				}
 			}
 		});
+		
 		box.add(label);
 		box.add(combo);
 		
 		return box;
 	}
 	
-	private Box createForceOSlider(final JSlider slider, int min, int max, 
+	private Box createForceOSlider(String labelstr, final JSlider slider, int min, int max, 
 			final ContributionProvider<SmartHandProgramNodeContribution> provider) {
 		Box box = Box.createHorizontalBox();
-		box.setAlignmentX(Component.LEFT_ALIGNMENT);
+		box.setAlignmentX(Component.CENTER_ALIGNMENT);
+		
+		final JLabel label = new JLabel(labelstr);
+		label.setPreferredSize(new Dimension(80,30));
+		label.setMaximumSize(label.getPreferredSize());
 		
 		slider.setMinimum(min);
 		slider.setMaximum(max);
@@ -317,15 +343,20 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 			}
 		});
 		
+		box.add(label);
 		box.add(slider);
 		box.add(value);
 		return box;		
 	}
 	
-	private Box createForceCSlider(final JSlider slider, int min, int max, 
+	private Box createForceCSlider(String labelstr, final JSlider slider, int min, int max, 
 			final ContributionProvider<SmartHandProgramNodeContribution> provider) {
 		Box box = Box.createHorizontalBox();
-		box.setAlignmentX(Component.LEFT_ALIGNMENT);
+		box.setAlignmentX(Component.CENTER_ALIGNMENT);
+		
+		final JLabel label = new JLabel(labelstr);
+		label.setPreferredSize(new Dimension(80,30));
+		label.setMaximumSize(label.getPreferredSize());
 		
 		slider.setMinimum(min);
 		slider.setMaximum(max);
@@ -348,15 +379,21 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 			}
 		});
 		
+		box.add(label);
 		box.add(slider);
 		box.add(value);
 		return box;		
 	}
 	
-	private Box createForceWSlider(final JSlider slider, int min, int max, 
+	private Box createForceWSlider(String labelstr, final JSlider slider, int min, int max, 
 			final ContributionProvider<SmartHandProgramNodeContribution> provider) {
 		Box box = Box.createHorizontalBox();
-		box.setAlignmentX(Component.LEFT_ALIGNMENT);
+		box.setAlignmentX(Component.CENTER_ALIGNMENT);
+		
+		final JLabel label = new JLabel(labelstr);
+		label.setPreferredSize(new Dimension(80,30));
+		label.setMaximumSize(label.getPreferredSize());
+		label.setAlignmentX(Component.LEFT_ALIGNMENT);
 		
 		slider.setMinimum(min);
 		slider.setMaximum(max);
@@ -379,15 +416,21 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 			}
 		});
 		
+		box.add(label);
 		box.add(slider);
 		box.add(value);
 		return box;		
 	}
 	
-	private Box createApertureSlider(final JSlider slider, int min, int max, 
+	private Box createApertureSlider(String labelstr, final JSlider slider, int min, int max, 
 			final ContributionProvider<SmartHandProgramNodeContribution> provider) {
 		Box box = Box.createHorizontalBox();
-		box.setAlignmentX(Component.LEFT_ALIGNMENT);
+		box.setAlignmentX(Component.CENTER_ALIGNMENT);
+		
+		final JLabel label = new JLabel(labelstr);
+		label.setPreferredSize(new Dimension(80,30));
+		label.setMaximumSize(label.getPreferredSize());
+		label.setAlignmentX(Component.LEFT_ALIGNMENT);
 		
 		slider.setMinimum(min);
 		slider.setMaximum(max);
@@ -410,6 +453,7 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 			}
 		});
 		
+		box.add(label);
 		box.add(slider);
 		box.add(value);
 		return box;		

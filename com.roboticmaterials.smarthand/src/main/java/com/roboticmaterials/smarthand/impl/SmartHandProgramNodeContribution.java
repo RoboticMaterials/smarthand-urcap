@@ -316,7 +316,7 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 				 writer.appendLine("smarthand.run_cmd(\"rm.close_gripper()\")");
 				 break;
 		case 2 : writer.appendLine("smarthand.run_cmd(\"rm.set_gripper_torque("+getForceW()/100.0+")\")");
-				 writer.appendLine("smarthand.run_cmd(\"rm.set_gripper_width("+getAperture()/100.0+")\")");
+				 writer.appendLine("smarthand.run_cmd(\"rm.set_gripper_width("+getAperture()/1000.0+")\")");
 				 break;
 		case 3 : writer.assign(writer.getResolvedVariableName(targetVariable),"smarthand.get_object_pose(\""+getObject()+"\")");
 				 break;
