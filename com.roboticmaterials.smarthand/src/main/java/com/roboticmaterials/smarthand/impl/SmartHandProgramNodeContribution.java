@@ -9,11 +9,13 @@ import com.ur.urcap.api.domain.undoredo.UndoRedoManager;
 import com.ur.urcap.api.domain.undoredo.UndoableChanges;
 import com.ur.urcap.api.domain.value.expression.InvalidExpressionException;
 import com.ur.urcap.api.domain.variable.GlobalVariable;
+import com.ur.urcap.api.domain.variable.Variable;
 import com.ur.urcap.api.domain.variable.VariableException;
 import com.ur.urcap.api.domain.variable.VariableFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.function.Consumer;
 
 import javax.swing.Timer;
 
@@ -55,7 +57,7 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 	private final ScriptExporter exporter;
 	
 	private GlobalVariable targetVariable;
-	private GlobalVariable graspVariable;
+	private GlobalVariable successVariable;
 	private GlobalVariable widthVariable;
 	
 	public SmartHandProgramNodeContribution(ProgramAPIProvider apiProvider, 
@@ -108,11 +110,11 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 		
 		try {
 			VariableFactory variableFactory = programAPI.getVariableModel().getVariableFactory();
-			graspVariable = variableFactory.createGlobalVariable("grasp",
+			successVariable = variableFactory.createGlobalVariable("grasp",
 					programAPI.getValueFactoryProvider().createExpressionBuilder().append("True").build());
 			
 			// Set this here as "open gripper" is the default command
-			model.set("var_target",graspVariable);
+			model.set("var_success",successVariable);
 			
 			} catch (VariableException e) {
 				e.printStackTrace();
@@ -162,9 +164,10 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 				// the command type. 
 				if(output.matches("Get Object Pose") || output.matches("Get Object Info")) {
 				  model.set("var_target", targetVariable);
-					if(model.isSet("var_grasp")) {
-						model.remove("var_grasp");
-					}
+				  model.set("var_success", successVariable);
+			/*		if(model.isSet("var_success")) {
+						model.remove("var_success");
+					}*/
 					if(output.matches("Get Object Info")) {
 						model.set("var_width",widthVariable);
 					} else {
@@ -181,13 +184,13 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 				if(output.matches("Open Gripper") || 
 						output.matches("Close Gripper") ||
 						output.matches("Set Gripper Width")) {
-					model.set("var_target",graspVariable);
+					model.set("var_success",successVariable);
 					
-				} else {
+				} /*else {
 					if(model.isSet("var_grasp")) {
 						model.remove("var_grasp");
 					}
-				}
+				}*/
 			}
 		});
 	}
@@ -311,10 +314,19 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 		view.setCard(getCommand());
 	}
 
+
+	
 	private String[] getApertureVarItems() {
-		ArrayList<String> variableArrayList = new ArrayList<String>();
+		final ArrayList<String> variableArrayList = new ArrayList<String>();
 		variableArrayList.add("<none>");
-		programAPI.getVariableModel().getAll().forEach(var->variableArrayList.add(var.getDisplayName()));
+		//programAPI.getVariableModel().getAll().forEach((var) -> variableArrayList.add(var.getDisplayName()));
+		programAPI.getVariableModel().getAll().forEach(new Consumer<Variable>() {
+		    public void accept(Variable var) {
+		    	variableArrayList.add(var.getDisplayName());
+		    }
+		    
+		});
+
         Object[] objNames = variableArrayList.toArray();
         String[] variableList = Arrays.copyOf(objNames, objNames.length, String[].class);
         return variableList;
@@ -341,15 +353,15 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 	public String getTitle() {
 		switch(getCommandId(getCommand())) {
 		// Open
-		case 0 : return graspVariable.getDisplayName()+"="+getCommand()+"(@"+getForceO()+"% force)";
+		case 0 : return successVariable.getDisplayName()+"="+getCommand()+"(@"+getForceO()+"% force)";
 		// Close
-		case 1 : return graspVariable.getDisplayName()+"="+getCommand()+"(@"+getForceC()+"% force)";
+		case 1 : return successVariable.getDisplayName()+"="+getCommand()+"(@"+getForceC()+"% force)";
 		// Set Width
 		case 2 : // Differentiate between variable and slider to provide width
 			if(getApertureVar().contentEquals("<none>")) {
-				return graspVariable.getDisplayName()+"="+getCommand()+"("+getAperture()+"mm, @"+getForceW()+"% force)";
+				return successVariable.getDisplayName()+"="+getCommand()+"("+getAperture()+"mm, @"+getForceW()+"% force)";
 			} else {
-				return graspVariable.getDisplayName()+"="+getCommand()+"("+getApertureVar() +", @"+getForceW()+"% force)"; 
+				return successVariable.getDisplayName()+"="+getCommand()+"("+getApertureVar() +", @"+getForceW()+"% force)"; 
 			}
 		// Get Pose
 		case 3 : return  targetVariable.getDisplayName() + "=" + getCommand()+"("+getPoseObject()+")";
@@ -380,12 +392,10 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 		writer.sleep(getDuration());
 		writer.appendLine("set_standard_digital_out("+getOutput()+", False)");*/
 		switch(getCommandId(getCommand())) {
-		case 0 : writer.appendLine("smarthand.run_cmd(\"rm.set_gripper_torque("+
-			 	 getForceO()/100.0+")\")"); 
-				 writer.appendLine("smarthand.run_cmd(\"rm.open_gripper()\")");	 
+		case 0 : writer.appendLine("smarthand.open_gripper("+
+			 	 getForceO()/100.0+")"); 
 				 break;
-		case 1 : writer.appendLine("smarthand.run_cmd(\"rm.set_gripper_torque("+getForceC()/100.0+")\")");
-				 writer.appendLine("smarthand.run_cmd(\"rm.close_gripper()\")");
+		case 1 : writer.appendLine("smarthand.close_gripper("+getForceC()/100.0+")");
 				 break;
 		case 2 : if(getApertureVar().contentEquals("<none>")) {
 					 writer.appendLine("smarthand.set_gripper_width("+getAperture()/1000.0+","+getForceW()/100.0+")");

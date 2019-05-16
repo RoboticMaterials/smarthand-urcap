@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1558018040154
+Bnd-LastModified: 1558032393176
 Build-Jdk: 1.8.0_212
 Built-By: ur
 Bundle-Activator: com.roboticmaterials.smarthand.impl.Activator
