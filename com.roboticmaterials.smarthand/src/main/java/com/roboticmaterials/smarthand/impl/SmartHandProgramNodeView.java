@@ -44,12 +44,14 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 	private JComboBox<String> commandComboBox = new JComboBox<String>();
 	private JComboBox<String> objectsPoseComboBox = new JComboBox<String>();
 	private JComboBox<String> objectsInfoComboBox = new JComboBox<String>();
-
+	private JComboBox<String> apertureVarComboBox = new JComboBox<String>();
+	
 	private JSlider forceSliderO = new JSlider();
 	private JSlider forceSliderC = new JSlider();
 	private JSlider forceSliderW = new JSlider();
 	
 	private JSlider apertureSlider = new  JSlider();
+	
 	
 	//private JLabel imageLabel;
 	//private BufferedImage image;
@@ -234,6 +236,15 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 	
 	public void setObjectsInfoComboBoxSelection(String object) {
 		objectsInfoComboBox.setSelectedItem(object);
+	}
+	
+	public void setApertureVarComboBoxItems(String[] vars) {
+		apertureVarComboBox.removeAllItems();
+		apertureVarComboBox.setModel(new DefaultComboBoxModel<String>(vars));
+	}
+	
+	public void setApertureVarComboBoxSelection(String var) {
+		apertureVarComboBox.setSelectedItem(var);
 	}
 	
 	public void setForceSliderO(int value) {
@@ -446,22 +457,23 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 	
 	private Box createApertureSlider(String labelstr, final JSlider slider, int min, int max, 
 			final ContributionProvider<SmartHandProgramNodeContribution> provider) {
+		
+		// Arrange all items in a horizontal box
 		Box box = Box.createHorizontalBox();
 		box.setAlignmentX(Component.CENTER_ALIGNMENT);
 		
+		// Start with a label
 		final JLabel label = new JLabel(labelstr);
 		label.setPreferredSize(new Dimension(80,30));
 		label.setMaximumSize(label.getPreferredSize());
 		label.setAlignmentX(Component.LEFT_ALIGNMENT);
 		
+		// Add slider
 		slider.setMinimum(min);
 		slider.setMaximum(max);
-	
 		slider.setOrientation(JSlider.HORIZONTAL);
-		
-		slider.setPreferredSize(new Dimension(275,30));
+		slider.setPreferredSize(new Dimension(115,30));
 		slider.setMaximumSize(slider.getPreferredSize());
-		
 		final JLabel value = new JLabel(Integer.toString(slider.getValue()) +" mm");
 		
 		slider.addChangeListener(new ChangeListener() {
@@ -475,9 +487,26 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 			}
 		});
 		
+		
+		apertureVarComboBox.setPreferredSize(new Dimension(160,30));
+		apertureVarComboBox.setMaximumSize(apertureVarComboBox.getPreferredSize());
+		
+		apertureVarComboBox.addItemListener(new  ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if(e.getStateChange() == ItemEvent.SELECTED) {
+					provider.get().onApertureVarSelection((String) e.getItem());
+				}
+			}
+		});
+		
+		
+		// Piece all items together
 		box.add(label);
 		box.add(slider);
 		box.add(value);
+		box.add(apertureVarComboBox);
 		return box;		
 	}
 		

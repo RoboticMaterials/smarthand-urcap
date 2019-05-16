@@ -12,6 +12,9 @@ import com.ur.urcap.api.domain.variable.GlobalVariable;
 import com.ur.urcap.api.domain.variable.VariableException;
 import com.ur.urcap.api.domain.variable.VariableFactory;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import javax.swing.Timer;
 
 import com.roboticmaterials.smarthand.communicator.ScriptCommand;
@@ -33,7 +36,7 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 	private static final String FORCEC_KEY = "forceC";
 	private static final String FORCEW_KEY = "forceW";
 	private static final String APERTURE_KEY = "aperture";
-	
+	private static final String APERTUREVAR_KEY = "aperturevar";
 	private static final String POSEOBJECT_KEY = "object";
 	private static final String INFOOBJECT_KEY = "object";
 	
@@ -42,6 +45,7 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 	private static final String DEFAULT_OUTPUT = "Open Gripper";
 	private static final int DEFAULT_FORCE = 100;
 	private static final int DEFAULT_APERTURE = 108;
+	private static final String DEFAULT_APERTUREVAR = "<none>";
 	private static final String DEFAULT_OBJECT = "generic";
 	
 	private String IPADDRESS;
@@ -115,8 +119,6 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 			} catch (InvalidExpressionException e1) {
 				e1.printStackTrace();
 			}	
-			 
-			   
 	}
 	
 	public String getIPAddress() {
@@ -178,7 +180,7 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 				}
 				if(output.matches("Open Gripper") || 
 						output.matches("Close Gripper") ||
-						output.matches("Set Gripper width")) {
+						output.matches("Set Gripper Width")) {
 					model.set("var_target",graspVariable);
 					
 				} else {
@@ -239,6 +241,17 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 		
 	}
 	
+	public void onApertureVarSelection(final String var) {
+		undoRedoManager.recordChanges(new UndoableChanges() {
+			
+			@Override
+			public void executeChanges() {
+				model.set(APERTUREVAR_KEY, var);
+				
+			}
+		});
+	}
+	
 	private String getPoseObject() {
 		return model.get(POSEOBJECT_KEY, DEFAULT_OBJECT);
 	}
@@ -267,9 +280,13 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 		return model.get(APERTURE_KEY, DEFAULT_APERTURE);
 	}
 	
+	private String getApertureVar() {
+		return model.get(APERTUREVAR_KEY, DEFAULT_APERTUREVAR);
+	}
+	
 	@Override
 	public void openView() {
-		view.setCommandComboBoxItems(getOutputItems());
+		view.setCommandComboBoxItems(getCommandItems());
 		view.setCommandComboBoxSelection(getCommand());
 		
 		view.setForceSliderO(getForceO());
@@ -278,7 +295,8 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 		
 		view.setForceSliderW(getForceW());
 		view.setApertureSlider(getAperture());
-		
+		view.setApertureVarComboBoxItems(getApertureVarItems());
+		view.setApertureVarComboBoxSelection(getApertureVar());
 		
 		view.setObjectsPoseComboBoxItems(getInstallation().getKnownObjects());
 		view.setObjectsPoseComboBoxSelection(getPoseObject());
@@ -288,17 +306,22 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 		
 		getInstallation().setChildren(true);
 		
-		/*switch(getCommandId(getCommand())){
-			case 2 : 
-				//view.updateCameraFeed();
-				//timer.start();
-			break;
-		}*/
+
 		//System.out.println("Open view: " + getCommandId(getCommand()));
 		view.setCard(getCommand());
 	}
 
-	private String[] getOutputItems() {
+	private String[] getApertureVarItems() {
+		ArrayList<String> variableArrayList = new ArrayList<String>();
+		variableArrayList.add("<none>");
+		programAPI.getVariableModel().getAll().forEach(var->variableArrayList.add(var.getDisplayName()));
+        Object[] objNames = variableArrayList.toArray();
+        String[] variableList = Arrays.copyOf(objNames, objNames.length, String[].class);
+        return variableList;
+	}
+	
+	
+	private String[] getCommandItems() {
 		/*Integer[] items = new Integer[8];
 		for(int i=0; i<8; i++) {
 			items[i] = i;
@@ -322,7 +345,12 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 		// Close
 		case 1 : return graspVariable.getDisplayName()+"="+getCommand()+"(@"+getForceC()+"% force)";
 		// Set Width
-		case 2 : return graspVariable.getDisplayName()+"="+getCommand()+"("+getAperture()+"mm, @"+getForceW()+"% force)";
+		case 2 : // Differentiate between variable and slider to provide width
+			if(getApertureVar().contentEquals("<none>")) {
+				return graspVariable.getDisplayName()+"="+getCommand()+"("+getAperture()+"mm, @"+getForceW()+"% force)";
+			} else {
+				return graspVariable.getDisplayName()+"="+getCommand()+"("+getApertureVar() +", @"+getForceW()+"% force)"; 
+			}
 		// Get Pose
 		case 3 : return  targetVariable.getDisplayName() + "=" + getCommand()+"("+getPoseObject()+")";
 		// Get Object info
@@ -359,8 +387,12 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 		case 1 : writer.appendLine("smarthand.run_cmd(\"rm.set_gripper_torque("+getForceC()/100.0+")\")");
 				 writer.appendLine("smarthand.run_cmd(\"rm.close_gripper()\")");
 				 break;
-		case 2 : writer.appendLine("smarthand.run_cmd(\"rm.set_gripper_torque("+getForceW()/100.0+")\")");
-				 writer.appendLine("smarthand.run_cmd(\"rm.set_gripper_width("+getAperture()/1000.0+")\")");
+		case 2 : if(getApertureVar().contentEquals("<none>")) {
+					 writer.appendLine("smarthand.set_gripper_width("+getAperture()/1000.0+","+getForceW()/100.0+")");
+				 } else {
+					 writer.appendLine("smarthand.set_gripper_width("+getApertureVar()+","+getForceW()/100.0+")");					 
+				 }
+				 
 				 break;
 		case 3 : writer.assign(writer.getResolvedVariableName(targetVariable),"smarthand.get_object_pose(\""+getPoseObject()+"\")");
 				 break;
