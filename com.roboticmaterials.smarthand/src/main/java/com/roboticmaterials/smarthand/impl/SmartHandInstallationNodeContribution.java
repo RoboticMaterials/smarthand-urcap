@@ -2,12 +2,16 @@ package com.roboticmaterials.smarthand.impl;
 
 import com.ur.urcap.api.contribution.InstallationNodeContribution;
 import com.ur.urcap.api.contribution.installation.InstallationAPIProvider;
+import com.ur.urcap.api.contribution.toolbar.swing.SwingToolbarService;
 import com.ur.urcap.api.domain.data.DataModel;
 import com.ur.urcap.api.domain.script.ScriptWriter;
 import com.ur.urcap.api.domain.userinteraction.keyboard.KeyboardInputCallback;
 import com.ur.urcap.api.domain.userinteraction.keyboard.KeyboardInputFactory;
 import com.ur.urcap.api.domain.userinteraction.keyboard.KeyboardTextInput;
 import com.roboticmaterials.smarthand.impl.SmartHandInstallationNodeView;
+
+import java.net.InetSocketAddress;
+import java.net.Socket;
 
 import com.roboticmaterials.smarthand.communicator.ScriptCommand;
 import com.roboticmaterials.smarthand.communicator.ScriptExporter;
@@ -23,6 +27,12 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 	private static final String OBJECTS_KEY = "objects";
 	private static final String DEFAULT_OBJECT = "generic";
 	
+	// Variables to manage the status of the hand. 'status' is shown at 'statusLabel'.
+	final static String SHS_OFFLINE = "offline";
+	final static String SHS_IDLE = "idle";
+	final static String SHS_ONLINE = "online";		
+	private String status=SHS_OFFLINE;
+	
 	private final SmartHandInstallationNodeView view;
 	private final KeyboardInputFactory keyboardInputFactory;
 
@@ -30,14 +40,14 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 	
 	private final ScriptSender sender;
 	private final ScriptExporter exporter;
+	
+	private boolean areThereChildren = false;
 		
 	public SmartHandInstallationNodeContribution(InstallationAPIProvider apiProvider, DataModel model, SmartHandInstallationNodeView view) {
 		this.keyboardInputFactory = apiProvider.getUserInterfaceAPI().getUserInteraction().getKeyboardInputFactory();
 		this.model = model;
 		this.view = view;
-		
-
-		
+				
 		this.sender = new ScriptSender();
 		this.exporter = new ScriptExporter();
 	}
@@ -46,8 +56,8 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 	public void openView() {
 		view.setIPAddress(getIPAddress());
 		view.setKnownObjects(getKnownObjects());
-		view.setButtonEnabled(true);
 		view.setButtonEnabled(model.get(VALIDIP_KEY, false));
+		view.setStatusLabel(getStatus());
 	}
 
 	@Override
@@ -55,8 +65,78 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 
 	}
 	
+	public String testHandStatus()
+	{
+	    Socket s1 = null;
+	    try
+	    {
+	    	System.out.printf("Pinging" + getIPAddress() +":8101...\n");
+	        //s = new Socket(getIPAddress(),8101);
+	        s1 = new Socket();
+	        s1.connect(new InetSocketAddress(getIPAddress(), 8101), 20);
+	      
+	        // At this point, the IP address is correct and the hand
+	        // responds via the XML-RPC server. We now test for RMLib
+	        // being started:
+	        
+	        Socket s2 = null;
+	        try
+	        {
+	        	System.out.printf("Pinging" + getIPAddress() +":8001...\n");
+		        //s2 = new Socket(getIPAddress(),8001);
+		        s2 = new Socket();
+	        	s2.connect(new InetSocketAddress(getIPAddress(), 8001), 20);
+		        // At this point RMLib has also started or an exception has been
+	        	// thrown
+		        status=SHS_ONLINE;
+		        view.setStatusLabel(SHS_ONLINE);
+		        model.set(VALIDIP_KEY,true);
+		        return SHS_ONLINE;
+		        
+	        }
+	        catch (Exception e2)
+	        {
+	            // at least the hand replied at the IP address given
+		        status=SHS_IDLE;
+		        view.setStatusLabel(status);
+		        model.set(VALIDIP_KEY,true);
+	        	System.out.printf("8001 (RMLIB) FAILED\n");
+	        	return SHS_IDLE;
+	        }
+	        finally
+	        {
+		        if(s2 != null)
+		            try {s2.close();}
+		            catch(Exception e2){}
+	
+	        }
+	    }
+	    catch (Exception e1)
+	    {
+	    	System.out.printf("8101 (XML-RPC) FAILED\n");
+	    	status=SHS_OFFLINE;
+	    	view.setStatusLabel(status);
+	    	model.set(VALIDIP_KEY,false);
+	        return SHS_OFFLINE;
+	    }
+	    finally
+	    {
+	        if(s1 != null)
+	            try {s1.close();}
+	            catch(Exception e1){}
+	    }
+	}
+	
+	
+	public String getStatus() {
+		testHandStatus();
+		return status;
+	}
+	
 	public void importKnownObjects() {
 		// Create a new ScriptCommand called "exportVariable"
+		testHandStatus();
+		if(!getStatus().contentEquals(SHS_OFFLINE)) {
 		ScriptCommand exportTestCommand = new ScriptCommand("exportVariable");
 		
 		// Add the calculation script to the command
@@ -72,10 +152,13 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		// Put the result back in the View
 		view.setKnownObjects(returnValue);
 		setKnownObjects(returnValue);
+		}
 	}
 
 	public void sendScriptOpenGripper() {
+		testHandStatus();
 		// Create a new ScriptCommand called "testSend"
+		if(!getStatus().contentEquals(SHS_OFFLINE)) {
 		ScriptCommand sendTestCommand = new ScriptCommand("testSend");
 		
 		// Append a popup command to the ScriptCommand
@@ -86,14 +169,18 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		
 		// Use the ScriptSender to send the command for immediate execution
 		sender.sendScriptCommand(sendTestCommand);
+		}
 	}
 	
 	public void sendScriptCloseGripper() {
+		testHandStatus();
+		if(!getStatus().contentEquals(SHS_OFFLINE)) { // only if not offline
 		ScriptCommand sendTestCommand = new ScriptCommand("testSend");
 		sendTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_VALUE) +":8101/RPC2\")");
 		sendTestCommand.appendLine("smarthand.init()");
 		sendTestCommand.appendLine("smarthand.run_cmd(\"rm.close_gripper()\")");
 		sender.sendScriptCommand(sendTestCommand);
+		}
 	}
 	public boolean isDefined() {
 		return !getIPAddress().isEmpty();
@@ -101,8 +188,8 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 
 	@Override
 	public void generateScript(ScriptWriter writer) {
-		// Store the popup title in a global variable so it is globally available to all Hello World Swing program nodes.
 		writer.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_VALUE) +":8101/RPC2\")");
+		// Only add the init call when a smarthand command is used in the code
 		if(areThereChildren) {
 			writer.appendLine("return_value = smarthand.init()");
 		}
@@ -177,7 +264,6 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		};
 	}*/
 	
-	private boolean areThereChildren = false;
 	
 	public void setChildren(boolean b) {
 		areThereChildren=b;

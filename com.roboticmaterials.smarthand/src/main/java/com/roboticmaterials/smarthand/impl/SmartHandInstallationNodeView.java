@@ -1,5 +1,6 @@
 package com.roboticmaterials.smarthand.impl;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
@@ -35,12 +36,15 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 	private final Style style;
 	private JTextField ipAddress = new JTextField();
 	
-	//private JLabel RETURN_VALUE = new JLabel();
 	private final JComboBox<String> objectsComboBox = new JComboBox<String>();
 	private JButton requestObjectsButton;
 	private JButton openGripperButton;
 	private JButton closeGripperButton;
+	private JButton testNetworkButton = new JButton("Test");
+	
+	private JLabel statusLabel = new JLabel("unknown status");
 
+	
 	public SmartHandInstallationNodeView(Style style) {
 		this.style = style;
 	}
@@ -49,8 +53,21 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 	public void buildUI(JPanel jPanel, final SmartHandInstallationNodeContribution contribution) {
 		jPanel.setLayout(new BoxLayout(jPanel, BoxLayout.Y_AXIS));
 	
+		
 		ipAddress.setHorizontalAlignment(JTextField.RIGHT);
-		jPanel.add(createLabelInputField("IP Address: ", ipAddress, new MouseAdapter() {
+		testNetworkButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(!contribution.testHandStatus().equals("offline")) {
+					setButtonEnabled(true);
+				}
+				else {
+					setButtonEnabled(false);
+				    //testNetworkButton.setText("Test");
+				}
+			}
+		});
+		jPanel.add(createLabelInputField("IP Address: ", ipAddress, testNetworkButton, new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				setButtonEnabled(false);
@@ -59,6 +76,7 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 			}
 		}));	
 		
+		jPanel.add(statusLabel);
 		requestObjectsButton = new JButton("Request objects");
 		
 		jPanel.add(createVerticalSpacing());
@@ -66,8 +84,10 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 		jPanel.add(createVerticalSpacing());
 		jPanel.add(createObjectsComboBox(objectsComboBox, contribution));
 
-		openGripperButton = new JButton("Open Gripper");
-		closeGripperButton = new JButton("Close Gripper");
+		openGripperButton = new JButton("Open");
+		closeGripperButton = new JButton("Close");
+		statusLabel = new JLabel("");
+		
 		jPanel.add(createVerticalSpacing());
 		jPanel.add(createInfo("Open and close gripper:"));
 		jPanel.add(createVerticalSpacing());
@@ -76,7 +96,7 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 		jPanel.add(createSenderCloseGripperButton(contribution));
 	}
 	
-	private Box createLabelInputField(String label, final JTextField inputField, MouseAdapter mouseAdapter) {
+	private Box createLabelInputField(String label, final JTextField inputField, final JButton testNetworkButton, MouseAdapter mouseAdapter) {
 		Box horizontalBox = Box.createHorizontalBox();
 		horizontalBox.setAlignmentX(Component.LEFT_ALIGNMENT);
 
@@ -85,10 +105,12 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 		inputField.setPreferredSize(style.getInputfieldSize());
 		inputField.setMaximumSize(inputField.getPreferredSize());
 		inputField.addMouseListener(mouseAdapter);
-
+		
 		horizontalBox.add(jLabel);
 		horizontalBox.add(inputField);
-
+		horizontalBox.add(Box.createRigidArea(new Dimension(5,0)));
+		horizontalBox.add(testNetworkButton);
+		
 		return horizontalBox;
 	}
 	
@@ -96,6 +118,13 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 		requestObjectsButton.setEnabled(b);
 		openGripperButton.setEnabled(b);
 		closeGripperButton.setEnabled(b);
+	}
+	
+	public void setStatusLabel(String label) {
+		statusLabel.setText(label);
+		statusLabel.setBackground(new Color(255,0,0));
+		statusLabel.repaint();
+		System.out.printf("Update label to: " + label);
 	}
 	
 	public void setKnownObjects(String value) {

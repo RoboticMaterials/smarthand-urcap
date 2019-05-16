@@ -21,7 +21,9 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSeparator;
 import javax.swing.JSlider;
+import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -40,7 +42,8 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 	
 	
 	private JComboBox<String> commandComboBox = new JComboBox<String>();
-	private JComboBox<String> objectsComboBox = new JComboBox<String>();
+	private JComboBox<String> objectsPoseComboBox = new JComboBox<String>();
+	private JComboBox<String> objectsInfoComboBox = new JComboBox<String>();
 
 	private JSlider forceSliderO = new JSlider();
 	private JSlider forceSliderC = new JSlider();
@@ -48,12 +51,12 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 	
 	private JSlider apertureSlider = new  JSlider();
 	
-	private JLabel imageLabel;
-	private BufferedImage image;
+	//private JLabel imageLabel;
+	//private BufferedImage image;
 	private ContributionProvider<SmartHandProgramNodeContribution> provider;
 
 	private JPanel cards;
-	private static final String[] commands = {"Open Gripper","Close Gripper","Set Gripper Width","Get Object Pose"};
+	private static final String[] commands = {"Open Gripper","Close Gripper","Set Gripper Width","Get Object Pose","Get Object Info"};
 	
 	@Override
 	public void buildUI(JPanel panel, final ContributionProvider<SmartHandProgramNodeContribution> provider) {
@@ -63,18 +66,16 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 		JPanel card2 = new JPanel();
 		JPanel card3 = new JPanel();
 		JPanel card4 = new JPanel();
+		JPanel card5 = new JPanel();
 	
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		
-//		panel.add(createSpacer(10));
 
 		Box box = Box.createVerticalBox();
 		
 		Box toolbox = Box.createHorizontalBox();
 		toolbox.setAlignmentX(Component.CENTER_ALIGNMENT);
 		toolbox.add(createCommandComboBox(commandComboBox, provider));
-		//box.add(createHorizontalSpacing(10));
-		//box.add(createDescription("Open and close gripper:"));
 		toolbox.add(createHorizontalSpacing(10));
 		toolbox.add(createSenderOpenGripperButton(provider));
 		toolbox.add(createHorizontalSpacing(10));
@@ -82,6 +83,7 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 		
 		box.add(toolbox);
 		box.add(createSpacer(15));
+		box.add(new JSeparator(SwingConstants.HORIZONTAL));
 		
 		panel.add(box);
 		
@@ -89,37 +91,20 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 		
 		// First card: open gripper
 		card1.setLayout(new BoxLayout(card1, BoxLayout.Y_AXIS));
-		//card1.add(createDescription("Force:"));
-		//card1.add(createSpacer(5));
 		card1.add(createForceOSlider("Force:",forceSliderO, 0, 100, provider));
 		
 		// Second card: close gripper	
 		card2.setLayout(new BoxLayout(card2, BoxLayout.Y_AXIS));
-		//card2.add(createDescription("Force:"));
-		//card2.add(createSpacer(5));
 		card2.add(createForceCSlider("Force:", forceSliderC, 0, 100, provider));		
 		
 		// Third card: set gripper width
 		card3.setLayout(new BoxLayout(card3, BoxLayout.Y_AXIS));
-		//card3.add(createDescription(   "Force:    "));
-		//card3.add(createSpacer(5));
 		card3.add(createForceWSlider("Force:",forceSliderW, 0, 100, provider));		
-	//	card3.add(createDescription("Aperture:"));
-		//card3.add(createSpacer(5));
 		card3.add(createApertureSlider("Aperture:", apertureSlider, 0, 108, provider));
 	
-		/*try {
-			image = ImageIO.read(new URL("http://192.168.2.119:8000/snapshot.png"));
-			imageLabel = new JLabel(new ImageIcon(image));
-			imageLabel.setPreferredSize(new Dimension(500,375));
-			imageLabel.setMaximumSize(imageLabel.getPreferredSize());
-			card3.add(imageLabel);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}*/
-		//card3.add(imageLabel);
+
 		
-		try {
+/*		try {
 			ClassLoader classLoader = getClass().getClassLoader();
 			image = ImageIO.read(classLoader.getResource("rmlogo.png"));
 //			image = ImageIO.read(new URL("http://192.168.2.119:8000/snapshot.png"));
@@ -129,12 +114,16 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 			
 		// Fourth card: get object pose
-		card4.add(createObjectsComboBox(objectsComboBox, provider));
-		card4.add(createSpacer(10));
-		card4.add(createRequestImageButton(provider));
+		card4.add(createObjectsPoseComboBox(objectsPoseComboBox, provider));
+//		card4.add(createSpacer(10));
+//		card4.add(createRequestImageButton(provider));
+		
+		// Fifth card: get object info
+		card5.add(createObjectsInfoComboBox(objectsInfoComboBox, provider));
+	
 		
 		//Create the panel that contains the "cards".
 		cards = new JPanel(new CardLayout());
@@ -142,6 +131,7 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 		cards.add(card2, commands[1]);
 		cards.add(card3, commands[2]);
 		cards.add(card4, commands[3]);
+		cards.add(card5, commands[4]);
 		
 
 		panel.add(cards, BorderLayout.CENTER);
@@ -152,7 +142,7 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 		return Box.createRigidArea(new Dimension(width,0));
 	}
 	
-	public void updateCameraFeed() {
+/*	public void updateCameraFeed() {
 		try {
 			image = ImageIO.read(new URL("http://" +
 					provider.get().getInstallation().getIPAddress() + 
@@ -167,7 +157,7 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 			e1.printStackTrace();
 		}
 		
-	}
+	}*/
 	
 	private Box createRequestImageButton(final ContributionProvider<SmartHandProgramNodeContribution> provider) {
 		Box box = Box.createVerticalBox();
@@ -179,7 +169,7 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				provider.get().requestPoseAndImage();
-				try {
+			/*	try {
 					image = ImageIO.read(new URL("http://" +
 							provider.get().getIPAddress() + 
 							":8000/snapshot.png"));
@@ -193,15 +183,15 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 					
 				} catch (IOException e1) {
 					e1.printStackTrace();
-				}
+				}*/
 			}
 		});
 		
-		imageLabel = new JLabel(new ImageIcon(image));
+/*		imageLabel = new JLabel(new ImageIcon(image));
 		imageLabel.setPreferredSize(new Dimension(320,240));
 		imageLabel.setMaximumSize(imageLabel.getPreferredSize());
 		
-		box.add(imageLabel);
+		box.add(imageLabel);*/
 		box.add(button);
 		//box.add(new JLabel("Returned value:"));
 		//box.add(this.RETURN_VALUE);
@@ -225,14 +215,25 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 		commandComboBox.setSelectedItem(item);
 	}
 	
-	public void setObjectsComboBoxItems(String objects) {
-		objectsComboBox.removeAllItems();
+	public void setObjectsPoseComboBoxItems(String objects) {
+		objectsPoseComboBox.removeAllItems();
 		String[] objArray = objects.split("%");
-		objectsComboBox.setModel(new DefaultComboBoxModel<String>(objArray));
+		objectsPoseComboBox.setModel(new DefaultComboBoxModel<String>(objArray));
 	}
 	
-	public void setObjectsComboBoxSelection(String object) {
-		objectsComboBox.setSelectedItem(object);
+	
+	public void setObjectsPoseComboBoxSelection(String object) {
+		objectsPoseComboBox.setSelectedItem(object);
+	}
+
+	public void setObjectsInfoComboBoxItems(String objects) {
+		objectsInfoComboBox.removeAllItems();
+		String[] objArray = objects.split("%");
+		objectsInfoComboBox.setModel(new DefaultComboBoxModel<String>(objArray));
+	}
+	
+	public void setObjectsInfoComboBoxSelection(String object) {
+		objectsInfoComboBox.setSelectedItem(object);
 	}
 	
 	public void setForceSliderO(int value) {
@@ -263,7 +264,7 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 		return box;
 	}
 	
-	private Box createObjectsComboBox(final JComboBox<String> combo, 
+	private Box createObjectsPoseComboBox(final JComboBox<String> combo, 
 			final ContributionProvider<SmartHandProgramNodeContribution> provider) {
 		Box box = Box.createHorizontalBox();
 		box.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -276,7 +277,28 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				if(e.getStateChange() == ItemEvent.SELECTED) {
-					provider.get().onObjectSelection((String) e.getItem());
+					provider.get().onPoseObjectSelection((String) e.getItem());
+				}
+			}
+		});
+		box.add(combo);
+		return box;
+	}
+	
+	private Box createObjectsInfoComboBox(final JComboBox<String> combo, 
+			final ContributionProvider<SmartHandProgramNodeContribution> provider) {
+		Box box = Box.createHorizontalBox();
+		box.setAlignmentX(Component.LEFT_ALIGNMENT);
+		
+		combo.setPreferredSize(new Dimension(160,30));
+		combo.setMaximumSize(combo.getPreferredSize());
+		
+		combo.addItemListener(new  ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if(e.getStateChange() == ItemEvent.SELECTED) {
+					provider.get().onInfoObjectSelection((String) e.getItem());
 				}
 			}
 		});
