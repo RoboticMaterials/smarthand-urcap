@@ -72,7 +72,7 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 	    	System.out.printf("Pinging" + getIPAddress() +":8101...\n");
 	        //s = new Socket(getIPAddress(),8101);
 	        s1 = new Socket();
-	        s1.connect(new InetSocketAddress(getIPAddress(), 8101), 20);
+	        s1.connect(new InetSocketAddress(getIPAddress(), 8101), 30);
 	      
 	        // At this point, the IP address is correct and the hand
 	        // responds via the XML-RPC server. We now test for RMLib
@@ -84,7 +84,7 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 	        	System.out.printf("Pinging" + getIPAddress() +":8001...\n");
 		        //s2 = new Socket(getIPAddress(),8001);
 		        s2 = new Socket();
-	        	s2.connect(new InetSocketAddress(getIPAddress(), 8001), 20);
+	        	s2.connect(new InetSocketAddress(getIPAddress(), 8001), 30);
 		        // At this point RMLib has also started or an exception has been
 	        	// thrown
 		        status=SHS_ONLINE;

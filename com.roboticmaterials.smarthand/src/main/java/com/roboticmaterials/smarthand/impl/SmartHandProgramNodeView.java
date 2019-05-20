@@ -2,6 +2,7 @@ package com.roboticmaterials.smarthand.impl;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -577,7 +578,7 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				provider.get().setStatus(provider.get().getInstallation().testHandStatus());
-				testButton.setText(provider.get().getStatus());	
+				setTestButtonText(provider.get().getStatus());	
 				if(!provider.get().getStatus().contentEquals("offline"))
 	      			setButtonsEnabled(true);
 	      		else
@@ -591,6 +592,11 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 	
 	public void setTestButtonText(String status) {
 		testButton.setText(status);
+		if(status.contentEquals("offline")) testButton.setBackground(Color.red);
+		else
+		if(status.contentEquals("idle")) testButton.setBackground(Color.orange);
+		else
+			if(status.contentEquals("online")) testButton.setBackground(Color.green);
 	}
 
 }
