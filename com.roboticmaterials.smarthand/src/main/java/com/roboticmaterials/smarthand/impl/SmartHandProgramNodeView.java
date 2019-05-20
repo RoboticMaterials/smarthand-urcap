@@ -41,17 +41,21 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 	
 	
 	
-	private JComboBox<String> commandComboBox = new JComboBox<String>();
-	private JComboBox<String> objectsPoseComboBox = new JComboBox<String>();
-	private JComboBox<String> objectsInfoComboBox = new JComboBox<String>();
-	private JComboBox<String> apertureVarComboBox = new JComboBox<String>();
+	private final JComboBox<String> commandComboBox = new JComboBox<String>();
+	private final JComboBox<String> objectsPoseComboBox = new JComboBox<String>();
+	private final JComboBox<String> objectsInfoComboBox = new JComboBox<String>();
+	private final JComboBox<String> apertureVarComboBox = new JComboBox<String>();
 	
-	private JSlider forceSliderO = new JSlider();
-	private JSlider forceSliderC = new JSlider();
-	private JSlider forceSliderW = new JSlider();
+	private final JSlider forceSliderO = new JSlider();
+	private final JSlider forceSliderC = new JSlider();
+	private final JSlider forceSliderW = new JSlider();
 	
-	private JSlider apertureSlider = new  JSlider();
+	private final JSlider apertureSlider = new  JSlider();
 	
+	private final JButton testButton = new JButton();
+	private final JButton openButton = new JButton();
+	private final JButton closeButton = new JButton();
+	private final JButton snapshotButton = new JButton();
 	
 	//private JLabel imageLabel;
 	//private BufferedImage image;
@@ -82,6 +86,9 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 		toolbox.add(createSenderOpenGripperButton(provider));
 		toolbox.add(createHorizontalSpacing(10));
 		toolbox.add(createSenderCloseGripperButton(provider));
+		toolbox.add(createHorizontalSpacing(10));
+		toolbox.add(createTestButton(provider));
+		
 		
 		box.add(toolbox);
 		box.add(createSpacer(15));
@@ -137,11 +144,18 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 		
 
 		panel.add(cards, BorderLayout.CENTER);
+		setButtonsEnabled(false);
 	}
 	
 	private Component createHorizontalSpacing(int width) {
 		//return Box.createHorizontalGlue();
 		return Box.createRigidArea(new Dimension(width,0));
+	}
+	
+	public void setButtonsEnabled(boolean b) {
+		openButton.setEnabled(b);
+		closeButton.setEnabled(b);
+		snapshotButton.setEnabled(b);
 	}
 	
 /*	public void updateCameraFeed() {
@@ -166,8 +180,9 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 		
 		box.add(new JLabel("Obtain list of available object definitions"));
 		
-		JButton button = new JButton("Request image");
-		button.addActionListener(new ActionListener() {
+		//JButton button = new JButton("Snapshot");
+		snapshotButton.setText("Snapshot");
+		snapshotButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				provider.get().requestPoseAndImage();
@@ -194,7 +209,7 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 		imageLabel.setMaximumSize(imageLabel.getPreferredSize());
 		
 		box.add(imageLabel);*/
-		box.add(button);
+		box.add(snapshotButton);
 		//box.add(new JLabel("Returned value:"));
 		//box.add(this.RETURN_VALUE);
 		
@@ -524,8 +539,8 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 		Box box = Box.createVerticalBox();
 		
 	
-		JButton button = new JButton("Open Gripper");
-		button.addActionListener(new ActionListener() {
+		openButton.setText("Open");
+		openButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				provider.get().sendScriptOpenGripper();
@@ -533,7 +548,7 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 		});
 		
 		//box.add(createVerticalSpacing());
-		box.add(button);
+		box.add(openButton);
 		
 		return box;
 	}
@@ -542,16 +557,40 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 		Box box = Box.createVerticalBox();
 		
 	
-		JButton button = new JButton("Close Gripper");
-		button.addActionListener(new ActionListener() {
+		closeButton.setText("Close");
+		closeButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				provider.get().sendScriptCloseGripper();
 			}
 		});
-		box.add(button);
+		box.add(closeButton);
 		
 		return box;
+	}
+	
+	private Box createTestButton(final ContributionProvider<SmartHandProgramNodeContribution> provider) {
+		Box box = Box.createVerticalBox();
+		
+		testButton.setText("Test");
+		testButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				provider.get().setStatus(provider.get().getInstallation().testHandStatus());
+				testButton.setText(provider.get().getStatus());	
+				if(!provider.get().getStatus().contentEquals("offline"))
+	      			setButtonsEnabled(true);
+	      		else
+	      			setButtonsEnabled(false);
+			}
+		});
+		box.add(testButton);
+		
+		return box;
+	}
+	
+	public void setTestButtonText(String status) {
+		testButton.setText(status);
 	}
 
 }

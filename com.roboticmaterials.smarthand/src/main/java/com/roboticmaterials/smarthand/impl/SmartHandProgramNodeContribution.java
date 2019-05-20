@@ -13,6 +13,8 @@ import com.ur.urcap.api.domain.variable.Variable;
 import com.ur.urcap.api.domain.variable.VariableException;
 import com.ur.urcap.api.domain.variable.VariableFactory;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.function.Consumer;
@@ -51,7 +53,8 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 	private static final String DEFAULT_OBJECT = "generic";
 	
 	private String IPADDRESS;
-	//private Timer timer; 
+	private String STATUS = "offline";
+	private Timer timer; 
 	
 	private final ScriptSender sender;
 	private final ScriptExporter exporter;
@@ -74,13 +77,19 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 		this.sender = new ScriptSender();
 		this.exporter = new ScriptExporter();
 		
-		/*ActionListener taskPerformer = new ActionListener() {
+		ActionListener taskPerformer = new ActionListener() {
 	          public void actionPerformed(ActionEvent evt) {
-	              view.updateCameraFeed();
-	              System.out.println("Timer: Camera update");
+	              //view.updateCameraFeed();
+	              //System.out.println("Timer: Camera update");
+	        	  setStatus(getInstallation().testHandStatus());
+	        	  view.setTestButtonText(getStatus());
+	      		if(!getStatus().contentEquals("offline"))
+	      			view.setButtonsEnabled(true);
+	      		else
+	      			view.setButtonsEnabled(false);
 	          }
 	      };
-	    timer = new Timer(500,taskPerformer);*/
+	    timer = new Timer(1000,taskPerformer);
 		
 		try {
 			VariableFactory variableFactory = programAPI.getVariableModel().getVariableFactory();
@@ -289,6 +298,13 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 	
 	@Override
 	public void openView() {
+		setStatus(getInstallation().testHandStatus());
+		view.setTestButtonText(getStatus());
+		if(!getStatus().contentEquals("offline"))
+			view.setButtonsEnabled(true);
+		else
+			view.setButtonsEnabled(false);
+		
 		view.setCommandComboBoxItems(getCommandItems());
 		view.setCommandComboBoxSelection(getCommand());
 		
@@ -322,7 +338,10 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 		//programAPI.getVariableModel().getAll().forEach((var) -> variableArrayList.add(var.getDisplayName()));
 		programAPI.getVariableModel().getAll().forEach(new Consumer<Variable>() {
 		    public void accept(Variable var) {
+		    	//System.out.print("Test var: "+var.toString()+"\n");
+		    	if(var.toString().matches("w(?=_).*")) { // only variables of the kind width
 		    	variableArrayList.add(var.getDisplayName());
+		    	}
 		    }
 		    
 		});
@@ -474,5 +493,12 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 		sender.sendScriptCommand(sendTestCommand);*/
 		}
 	}
+
+	public void setStatus(String testHandStatus) {
+		STATUS=testHandStatus;
+	}
 	
+	public String getStatus() {
+		return STATUS;
+	}
 }
