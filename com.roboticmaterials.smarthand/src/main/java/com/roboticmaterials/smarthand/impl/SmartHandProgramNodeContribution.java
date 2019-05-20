@@ -344,7 +344,7 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 		final ArrayList<String> variableArrayList = new ArrayList<String>();
 		variableArrayList.add("<none>");
 		//programAPI.getVariableModel().getAll().forEach((var) -> variableArrayList.add(var.getDisplayName()));
-		programAPI.getVariableModel().getAll().forEach(new Consumer<Variable>() {
+	/*	programAPI.getVariableModel().getAll().forEach(new Consumer<Variable>() {
 		    public void accept(Variable var) {
 		    	//System.out.print("Test var: "+var.toString()+"\n");
 		    	if(var.toString().matches("w(?=_).*")) { // only variables of the kind width
@@ -353,7 +353,7 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 		    }
 		    
 		});
-
+*/
         Object[] objNames = variableArrayList.toArray();
         String[] variableList = Arrays.copyOf(objNames, objNames.length, String[].class);
         return variableList;
@@ -414,7 +414,6 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 
 	@Override
 	public void generateScript(ScriptWriter writer) {
-		// TODO Auto-generated method stub
 	/*	writer.appendLine("set_standard_digital_out("+getOutput()+", True)");
 		writer.sleep(getDuration());
 		writer.appendLine("set_standard_digital_out("+getOutput()+", False)");*/
