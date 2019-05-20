@@ -84,7 +84,7 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 		
 		try {
 			VariableFactory variableFactory = programAPI.getVariableModel().getVariableFactory();
-			targetVariable = variableFactory.createGlobalVariable("target",
+			targetVariable = variableFactory.createGlobalVariable("t_1",
 					programAPI.getValueFactoryProvider().createExpressionBuilder().append("get_actual_tcp_pose()").build());
 			
 			// move this to time when command is selected: model.set("var_target", targetVariable);        
@@ -97,7 +97,7 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 		
 		try {
 			VariableFactory variableFactory = programAPI.getVariableModel().getVariableFactory();
-			widthVariable = variableFactory.createGlobalVariable("width",
+			widthVariable = variableFactory.createGlobalVariable("w_1",
 					programAPI.getValueFactoryProvider().createExpressionBuilder().append("0.108").build());
 			
 			// move this to time when command is selected: model.set("var_width", widthVariable);        
@@ -110,7 +110,7 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 		
 		try {
 			VariableFactory variableFactory = programAPI.getVariableModel().getVariableFactory();
-			successVariable = variableFactory.createGlobalVariable("grasp",
+			successVariable = variableFactory.createGlobalVariable("s_1",
 					programAPI.getValueFactoryProvider().createExpressionBuilder().append("True").build());
 			
 			// Set this here as "open gripper" is the default command
@@ -366,7 +366,7 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 		// Get Pose
 		case 3 : return  targetVariable.getDisplayName() + "=" + getCommand()+"("+getPoseObject()+")";
 		// Get Object info
-		case 4 : return  "(" + targetVariable.getDisplayName() +"," + widthVariable.getDisplayName() + ")=" + getCommand()+"("+getInfoObject()+")";
+		case 4 : return  "(" + successVariable.getDisplayName() + "," + targetVariable.getDisplayName() +"," + widthVariable.getDisplayName() + ")=" + getCommand()+"("+getInfoObject()+")";
 		default: return "";
 		}
 	}
@@ -392,15 +392,15 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 		writer.sleep(getDuration());
 		writer.appendLine("set_standard_digital_out("+getOutput()+", False)");*/
 		switch(getCommandId(getCommand())) {
-		case 0 : writer.appendLine("smarthand.open_gripper("+
+		case 0 : writer.assign(successVariable.getDisplayName(),"smarthand.open_gripper("+
 			 	 getForceO()/100.0+")"); 
 				 break;
-		case 1 : writer.appendLine("smarthand.close_gripper("+getForceC()/100.0+")");
+		case 1 : writer.assign(successVariable.getDisplayName(),"smarthand.close_gripper("+getForceC()/100.0+")");
 				 break;
 		case 2 : if(getApertureVar().contentEquals("<none>")) {
-					 writer.appendLine("smarthand.set_gripper_width("+getAperture()/1000.0+","+getForceW()/100.0+")");
+					 writer.assign(successVariable.getDisplayName(),"smarthand.set_gripper_width("+getAperture()/1000.0+","+getForceW()/100.0+")");
 				 } else {
-					 writer.appendLine("smarthand.set_gripper_width("+getApertureVar()+","+getForceW()/100.0+")");					 
+					 writer.assign(successVariable.getDisplayName(),"smarthand.set_gripper_width("+getApertureVar()+","+getForceW()/100.0+")");					 
 				 }
 				 
 				 break;
@@ -409,6 +409,12 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 		case 4 : writer.assign("_t","smarthand.get_object_info(\""+getInfoObject()+"\")");
 			     writer.appendLine(writer.getResolvedVariableName(targetVariable)+"=p[_t[0],_t[1],_t[2],_t[3],_t[4],_t[5]]");
 			     writer.assign(writer.getResolvedVariableName(widthVariable),"_t[6]");
+			     //writer.assign(writer.getResolvedVariableName(successVariable),"_t[7]");
+				 writer.appendLine("if _t[7] == 0 :");
+				 writer.assign(writer.getResolvedVariableName(successVariable), "False");
+				 writer.appendLine("else:");
+				 writer.assign(writer.getResolvedVariableName(successVariable), "True");
+			     writer.appendLine("end");
 				 break;
 		}
 		
@@ -428,7 +434,7 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 		//sendTestCommand.appendLine("popup(\"This is a popup\")");
 		sendTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + getInstallation().getIPAddress() +":8101/RPC2\")");
 		sendTestCommand.appendLine("smarthand.init()");
-		sendTestCommand.appendLine("smarthand.run_cmd(\"rm.open_gripper()\")");
+		sendTestCommand.appendLine("smarthand.open_gripper(1.0)");
 		
 		// Use the ScriptSender to send the command for immediate execution
 		sender.sendScriptCommand(sendTestCommand);
@@ -438,7 +444,7 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 		ScriptCommand sendTestCommand = new ScriptCommand("testSend");
 		sendTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + getInstallation().getIPAddress() +":8101/RPC2\")");
 		sendTestCommand.appendLine("smarthand.init()");
-		sendTestCommand.appendLine("smarthand.run_cmd(\"rm.close_gripper()\")");
+		sendTestCommand.appendLine("smarthand.close_gripper()\")");
 		sender.sendScriptCommand(sendTestCommand);
 	}
 	

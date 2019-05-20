@@ -161,7 +161,7 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		//sendTestCommand.appendLine("popup(\"This is a popup\")");
 		sendTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_VALUE) +":8101/RPC2\")");
 		sendTestCommand.appendLine("smarthand.init()");
-		sendTestCommand.appendLine("smarthand.run_cmd(\"rm.open_gripper()\")");
+		sendTestCommand.appendLine("smarthand.open_gripper(1.0)");
 		
 		// Use the ScriptSender to send the command for immediate execution
 		sender.sendScriptCommand(sendTestCommand);
@@ -174,7 +174,7 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		ScriptCommand sendTestCommand = new ScriptCommand("testSend");
 		sendTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_VALUE) +":8101/RPC2\")");
 		sendTestCommand.appendLine("smarthand.init()");
-		sendTestCommand.appendLine("smarthand.run_cmd(\"rm.close_gripper()\")");
+		sendTestCommand.appendLine("smarthand.close_gripper(1.0)");
 		sender.sendScriptCommand(sendTestCommand);
 		}
 	}
