@@ -57,7 +57,6 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		view.setIPAddress(getIPAddress());
 		view.setKnownObjects(getKnownObjects());
 		view.setButtonEnabled(model.get(VALIDIP_KEY, false));
-		view.setStatusLabel(getStatus());
 	}
 
 	@Override
@@ -89,7 +88,6 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		        // At this point RMLib has also started or an exception has been
 	        	// thrown
 		        status=SHS_ONLINE;
-		        view.setStatusLabel(SHS_ONLINE);
 		        model.set(VALIDIP_KEY,true);
 		        return SHS_ONLINE;
 		        
@@ -98,7 +96,6 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 	        {
 	            // at least the hand replied at the IP address given
 		        status=SHS_IDLE;
-		        view.setStatusLabel(status);
 		        model.set(VALIDIP_KEY,true);
 	        	System.out.printf("8001 (RMLIB) FAILED\n");
 	        	return SHS_IDLE;
@@ -115,7 +112,6 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 	    {
 	    	System.out.printf("8101 (XML-RPC) FAILED\n");
 	    	status=SHS_OFFLINE;
-	    	view.setStatusLabel(status);
 	    	model.set(VALIDIP_KEY,false);
 	        return SHS_OFFLINE;
 	    }

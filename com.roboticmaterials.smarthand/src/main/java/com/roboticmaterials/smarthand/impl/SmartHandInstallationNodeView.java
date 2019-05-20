@@ -42,8 +42,7 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 	private JButton closeGripperButton;
 	private JButton testNetworkButton = new JButton("Test");
 	
-	private JLabel statusLabel = new JLabel("unknown status");
-
+	
 	
 	public SmartHandInstallationNodeView(Style style) {
 		this.style = style;
@@ -53,17 +52,17 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 	public void buildUI(JPanel jPanel, final SmartHandInstallationNodeContribution contribution) {
 		jPanel.setLayout(new BoxLayout(jPanel, BoxLayout.Y_AXIS));
 	
-		
 		ipAddress.setHorizontalAlignment(JTextField.RIGHT);
 		testNetworkButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(!contribution.testHandStatus().equals("offline")) {
 					setButtonEnabled(true);
+					testNetworkButton.setText(contribution.testHandStatus());
 				}
 				else {
 					setButtonEnabled(false);
-				    //testNetworkButton.setText("Test");
+					testNetworkButton.setText("offline");
 				}
 			}
 		});
@@ -76,7 +75,6 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 			}
 		}));	
 		
-		jPanel.add(statusLabel);
 		requestObjectsButton = new JButton("Request objects");
 		
 		jPanel.add(createVerticalSpacing());
@@ -86,7 +84,6 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 
 		openGripperButton = new JButton("Open");
 		closeGripperButton = new JButton("Close");
-		statusLabel = new JLabel("");
 		
 		jPanel.add(createVerticalSpacing());
 		jPanel.add(createInfo("Open and close gripper:"));
@@ -120,12 +117,6 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 		closeGripperButton.setEnabled(b);
 	}
 	
-	public void setStatusLabel(String label) {
-		statusLabel.setText(label);
-		statusLabel.setBackground(new Color(255,0,0));
-		statusLabel.repaint();
-		System.out.printf("Update label to: " + label);
-	}
 	
 	public void setKnownObjects(String value) {
 		String[] objects = value.split("%");
