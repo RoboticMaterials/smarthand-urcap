@@ -7,6 +7,7 @@ import com.ur.urcap.api.domain.data.DataModel;
 import com.ur.urcap.api.domain.script.ScriptWriter;
 import com.ur.urcap.api.domain.undoredo.UndoRedoManager;
 import com.ur.urcap.api.domain.undoredo.UndoableChanges;
+import com.ur.urcap.api.domain.util.Filter;
 import com.ur.urcap.api.domain.value.expression.Expression;
 import com.ur.urcap.api.domain.value.expression.ExpressionBuilder;
 import com.ur.urcap.api.domain.value.expression.InvalidExpressionException;
@@ -19,6 +20,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.function.Consumer;
 
 import javax.swing.Timer;
@@ -260,7 +262,7 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 		
 	}
 	
-	public void onApertureVarSelection(final String var) {
+	/*public void onApertureVarSelection(final String var) {
 		undoRedoManager.recordChanges(new UndoableChanges() {
 			
 			@Override
@@ -269,7 +271,7 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 				
 			}
 		});
-	}
+	}*/
 	
 	private String getPoseObject() {
 		return model.get(POSEOBJECT_KEY, DEFAULT_OBJECT);
@@ -299,8 +301,11 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 		return model.get(APERTURE_KEY, DEFAULT_APERTURE);
 	}
 	
-	private String getApertureVar() {
-		return model.get(APERTUREVAR_KEY, DEFAULT_APERTUREVAR);
+	private String getApertureVarStr() {
+		if(model.isSet(APERTUREVAR_KEY))
+			return model.get(APERTUREVAR_KEY, (Variable) null).getDisplayName();
+		else
+			return DEFAULT_APERTUREVAR;
 	}
 	
 	@Override
@@ -321,8 +326,9 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 		
 		view.setForceSliderW(getForceW());
 		view.setApertureSlider(getAperture());
-		view.setApertureVarComboBoxItems(getApertureVarItems());
-		view.setApertureVarComboBoxSelection(getApertureVar());
+		//view.setApertureVarComboBoxItems(getApertureVarItems());
+		//view.setApertureVarComboBoxSelection(getApertureVar());
+		view.updateApertureVarComboBox(this);
 		
 		view.setObjectsPoseComboBoxItems(getInstallation().getKnownObjects());
 		view.setObjectsPoseComboBoxSelection(getPoseObject());
@@ -338,27 +344,36 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 		timer.start();
 	}
 
-
-	
-	private String[] getApertureVarItems() {
-		final ArrayList<String> variableArrayList = new ArrayList<String>();
-		variableArrayList.add("<none>");
-		//programAPI.getVariableModel().getAll().forEach((var) -> variableArrayList.add(var.getDisplayName()));
-	/*	programAPI.getVariableModel().getAll().forEach(new Consumer<Variable>() {
-		    public void accept(Variable var) {
-		    	//System.out.print("Test var: "+var.toString()+"\n");
-		    	if(var.toString().matches("w(?=_).*")) { // only variables of the kind width
-		    	variableArrayList.add(var.getDisplayName());
-		    	}
-		    }
-		    
-		});
-*/
-        Object[] objNames = variableArrayList.toArray();
-        String[] variableList = Arrays.copyOf(objNames, objNames.length, String[].class);
-        return variableList;
+	public Variable getSelectedApertureVar() {
+		return model.get(APERTUREVAR_KEY, (Variable) null);
 	}
 	
+	public Collection<Variable> getGlobalVariables() {
+		return programAPI.getVariableModel().get(new Filter<Variable>() {
+			@Override
+			public boolean accept(Variable element) {
+				return element.getType().equals(Variable.Type.GLOBAL) || element.getType().equals(Variable.Type.VALUE_PERSISTED);
+			}
+		});
+	}
+	
+	public void setApertureVar(final Variable variable) {
+		programAPI.getUndoRedoManager().recordChanges(new UndoableChanges() {
+			@Override
+			public void executeChanges() {
+				model.set(APERTUREVAR_KEY, variable);
+			}
+		});
+	}
+
+	public void removeApertureVar() {
+		programAPI.getUndoRedoManager().recordChanges(new UndoableChanges() {
+			@Override
+			public void executeChanges() {
+				model.remove(APERTUREVAR_KEY);
+			}
+		});
+	}
 	
 	private String[] getCommandItems() {
 		/*Integer[] items = new Integer[8];
@@ -385,10 +400,10 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 		case 1 : return getResolvedVarName(SUCCESSVAR_KEY)+"="+getCommand()+"(@"+getForceC()+"% force)";
 		// Set Width
 		case 2 : // Differentiate between variable and slider to provide width
-			if(getApertureVar().contentEquals("<none>")) {
+			if(getApertureVarStr().contentEquals("<none>")) {
 				return getResolvedVarName(SUCCESSVAR_KEY)+"="+getCommand()+"("+getAperture()+"mm, @"+getForceW()+"% force)";
 			} else {
-				return getResolvedVarName(SUCCESSVAR_KEY)+"="+getCommand()+"("+getApertureVar() +", @"+getForceW()+"% force)"; 
+				return getResolvedVarName(SUCCESSVAR_KEY)+"="+getCommand()+"("+getApertureVarStr() +", @"+getForceW()+"% force)"; 
 			}
 		// Get Pose
 		case 3 : return   getResolvedVarName(TARGETVAR_KEY) + "=" + getCommand()+"("+getPoseObject()+")";
@@ -423,10 +438,10 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 				 break;
 		case 1 : writer.assign(getResolvedVarName(SUCCESSVAR_KEY),"smarthand.close_gripper("+getForceC()/100.0+")");
 				 break;
-		case 2 : if(getApertureVar().contentEquals("<none>")) {
+		case 2 : if(getApertureVarStr().contentEquals("<none>")) {
 					 writer.assign(getResolvedVarName(SUCCESSVAR_KEY),"smarthand.set_gripper_width("+getAperture()/1000.0+","+getForceW()/100.0+")");
 				 } else {
-					 writer.assign(getResolvedVarName(SUCCESSVAR_KEY),"smarthand.set_gripper_width("+getApertureVar()+","+getForceW()/100.0+")");					 
+					 writer.assign(getResolvedVarName(SUCCESSVAR_KEY),"smarthand.set_gripper_width("+getApertureVarStr()+","+getForceW()/100.0+")");					 
 				 }
 				 
 				 break;

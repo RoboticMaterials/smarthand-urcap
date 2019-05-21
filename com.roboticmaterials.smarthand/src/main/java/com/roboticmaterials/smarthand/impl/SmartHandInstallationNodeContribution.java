@@ -137,11 +137,11 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		
 		// Add the calculation script to the command
 		exportTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_VALUE) +":8101/RPC2\")");
+		exportTestCommand.appendLine("smarthand.init()");
 		exportTestCommand.appendLine("objectIDs = smarthand.get_object_defs()");
-		//exportTestCommand.appendLine("z_value = pose[2]");
 		
 		// Use the exporter to send the script
-		// Note the String name of the variable (z_value) to be returned
+		// Note the String name of the variable (objectIDs) to be returned
 		String returnValue = exporter.exportStringFromURScript(exportTestCommand,
 				"objectIDs");
 		

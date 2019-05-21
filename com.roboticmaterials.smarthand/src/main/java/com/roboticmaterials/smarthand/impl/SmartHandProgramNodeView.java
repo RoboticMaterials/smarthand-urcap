@@ -5,6 +5,7 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -12,6 +13,10 @@ import java.awt.event.ItemListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.Box;
@@ -31,6 +36,7 @@ import javax.swing.event.ChangeListener;
 import com.ur.urcap.api.contribution.ContributionProvider;
 import com.ur.urcap.api.contribution.ViewAPIProvider;
 import com.ur.urcap.api.contribution.program.swing.SwingProgramNodeView;
+import com.ur.urcap.api.domain.variable.Variable;
 
 public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandProgramNodeContribution>{
 
@@ -45,7 +51,7 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 	private final JComboBox<String> commandComboBox = new JComboBox<String>();
 	private final JComboBox<String> objectsPoseComboBox = new JComboBox<String>();
 	private final JComboBox<String> objectsInfoComboBox = new JComboBox<String>();
-	private final JComboBox<String> apertureVarComboBox = new JComboBox<String>();
+	private final JComboBox apertureVarComboBox = new JComboBox();
 	
 	private final JSlider forceSliderO = new JSlider();
 	private final JSlider forceSliderC = new JSlider();
@@ -254,14 +260,15 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 		objectsInfoComboBox.setSelectedItem(object);
 	}
 	
-	public void setApertureVarComboBoxItems(String[] vars) {
+
+/*	public void setApertureVarComboBoxItems(String[] vars) {
 		apertureVarComboBox.removeAllItems();
 		apertureVarComboBox.setModel(new DefaultComboBoxModel<String>(vars));
-	}
+	}*/
 	
-	public void setApertureVarComboBoxSelection(String var) {
+	/*public void setApertureVarComboBoxSelection(String var) {
 		apertureVarComboBox.setSelectedItem(var);
-	}
+	}*/
 	
 	public void setForceSliderO(int value) {
 		forceSliderO.setValue(value);
@@ -502,21 +509,22 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 				
 			}
 		});
-		
-		
+		 
+		apertureVarComboBox.setFocusable(false);
 		apertureVarComboBox.setPreferredSize(new Dimension(160,30));
 		apertureVarComboBox.setMaximumSize(apertureVarComboBox.getPreferredSize());
-		
-		apertureVarComboBox.addItemListener(new  ItemListener() {
-			
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				if(e.getStateChange() == ItemEvent.SELECTED) {
-					provider.get().onApertureVarSelection((String) e.getItem());
-				}
-			}
-		});
-		
+		apertureVarComboBox.addItemListener(new ItemListener() {
+		            @Override
+		            public void itemStateChanged(ItemEvent itemEvent) {
+		                if (itemEvent.getStateChange() == ItemEvent.SELECTED) {
+		                    if (itemEvent.getItem() instanceof Variable) {
+		                        provider.get().setApertureVar(((Variable) itemEvent.getItem()));
+		                    } else {
+		                        provider.get().removeApertureVar();
+		                    }
+		                }
+		            }
+		        });
 		
 		// Piece all items together
 		box.add(label);
@@ -525,13 +533,39 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 		box.add(apertureVarComboBox);
 		return box;		
 	}
+	
+    public void updateApertureVarComboBox(SmartHandProgramNodeContribution contribution) {
+        List<Object> items = new ArrayList<Object>();
+        items.addAll(contribution.getGlobalVariables());
+
+        Collections.sort(items, new Comparator<Object>() {
+            @Override
+            public int compare(Object o1, Object o2) {
+                if (o1.toString().toLowerCase().compareTo(o2.toString().toLowerCase()) == 0) {
+                    //Sort lowercase/uppercase consistently
+                    return o1.toString().compareTo(o2.toString());
+                } else {
+                    return o1.toString().toLowerCase().compareTo(o2.toString().toLowerCase());
+                }
+            }
+        });
+
+        //Insert at top after sorting
+        items.add(0, "<none>");
+
+        apertureVarComboBox.setModel(new DefaultComboBoxModel(items.toArray()));
+
+        Variable selectedVar = contribution.getSelectedApertureVar();
+        if (selectedVar != null) {
+        	apertureVarComboBox.setSelectedItem(selectedVar);
+        }
+    }
 		
 	private Component createSpacer(int height) {
 		return Box.createRigidArea(new Dimension(0,height));
 	}
 
 	public String[] getCommands() {
-		// TODO Auto-generated method stub
 		return commands;
 	}
 
