@@ -13,6 +13,8 @@ import com.roboticmaterials.smarthand.impl.SmartHandInstallationNodeView;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
+import javax.swing.Timer;
+
 import com.roboticmaterials.smarthand.communicator.ScriptCommand;
 import com.roboticmaterials.smarthand.communicator.ScriptExporter;
 import com.roboticmaterials.smarthand.communicator.ScriptSender;
@@ -41,27 +43,46 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 	private final ScriptSender sender;
 	private final ScriptExporter exporter;
 	
+	private Timer timer;
 	private boolean areThereChildren = false;
 		
-	public SmartHandInstallationNodeContribution(InstallationAPIProvider apiProvider, DataModel model, SmartHandInstallationNodeView view) {
+	public SmartHandInstallationNodeContribution(InstallationAPIProvider apiProvider, DataModel model, final SmartHandInstallationNodeView view) {
 		this.keyboardInputFactory = apiProvider.getUserInterfaceAPI().getUserInteraction().getKeyboardInputFactory();
 		this.model = model;
 		this.view = view;
 				
 		this.sender = new ScriptSender();
 		this.exporter = new ScriptExporter();
+		
+		ActionListener taskPerformer = new ActionListener() {
+	          public void actionPerformed(ActionEvent evt) {
+	              //view.updateCameraFeed();
+	              //System.out.println("Timer: Camera update");
+	        	  status=testHandStatus();
+	        	  view.setTestButtonText(status);
+	      		if(!getStatus().contentEquals("offline")) {
+	      			view.setButtonEnabled(true);
+	      		}
+	      		else {
+	      			view.setButtonEnabled(false);
+	      		}
+	          }
+	      };
+	    timer = new Timer(1000,taskPerformer);
 	}
 
 	@Override
 	public void openView() {
+		timer.restart();
 		view.setIPAddress(getIPAddress());
 		view.setKnownObjects(getKnownObjects());
 		view.setButtonEnabled(model.get(VALIDIP_KEY, false));
+		view.setTestButtonText(status);
 	}
 
 	@Override
 	public void closeView() {
-
+		timer.stop();
 	}
 	
 	public String testHandStatus()
@@ -151,14 +172,26 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		}
 	}
 
+	public void sendScriptInitGripper() {
+		testHandStatus();
+		// Create a new ScriptCommand called "testSend"
+		if(!getStatus().contentEquals(SHS_OFFLINE)) {
+		ScriptCommand sendTestCommand = new ScriptCommand("testSend");
+		
+		sendTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_VALUE) +":8101/RPC2\")");
+		sendTestCommand.appendLine("smarthand.init()");
+		
+		// Use the ScriptSender to send the command for immediate execution
+		sender.sendScriptCommand(sendTestCommand);
+		}	
+	}
+	
 	public void sendScriptOpenGripper() {
 		testHandStatus();
 		// Create a new ScriptCommand called "testSend"
 		if(!getStatus().contentEquals(SHS_OFFLINE)) {
 		ScriptCommand sendTestCommand = new ScriptCommand("testSend");
 		
-		// Append a popup command to the ScriptCommand
-		//sendTestCommand.appendLine("popup(\"This is a popup\")");
 		sendTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_VALUE) +":8101/RPC2\")");
 		sendTestCommand.appendLine("smarthand.init()");
 		sendTestCommand.appendLine("smarthand.open_gripper(1.0)");
@@ -263,5 +296,9 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 	
 	public void setChildren(boolean b) {
 		areThereChildren=b;
+	}
+	
+	public void setButtonEnabled(boolean b) {
+		view.setButtonEnabled(b);
 	}
 }

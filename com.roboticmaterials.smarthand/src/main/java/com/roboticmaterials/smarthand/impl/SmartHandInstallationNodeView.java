@@ -37,10 +37,12 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 	private JTextField ipAddress = new JTextField();
 	
 	private final JComboBox<String> objectsComboBox = new JComboBox<String>();
-	private JButton requestObjectsButton;
-	private JButton openGripperButton;
-	private JButton closeGripperButton;
-	private JButton testNetworkButton = new JButton("Test");
+	private JButton requestObjectsButton = new JButton("Request objects");
+	private JButton openGripperButton = new JButton("Open");
+	private JButton closeGripperButton = new JButton("Close");;
+	private final JButton testNetworkButton = new JButton("Test");
+	private final JButton initGripperButton = new JButton("Init");
+
 	
 	
 	
@@ -75,15 +77,13 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 			}
 		}));	
 		
-		requestObjectsButton = new JButton("Request objects");
 		
+		jPanel.add(createVerticalSpacing());
+		jPanel.add(createSenderInitGripperButton(contribution));
 		jPanel.add(createVerticalSpacing());
 		jPanel.add(createRequestObjectsButton(contribution));
 		jPanel.add(createVerticalSpacing());
 		jPanel.add(createObjectsComboBox(objectsComboBox, contribution));
-
-		openGripperButton = new JButton("Open");
-		closeGripperButton = new JButton("Close");
 		
 		jPanel.add(createVerticalSpacing());
 		jPanel.add(createInfo("Open and close gripper:"));
@@ -115,8 +115,17 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 		requestObjectsButton.setEnabled(b);
 		openGripperButton.setEnabled(b);
 		closeGripperButton.setEnabled(b);
+		initGripperButton.setEnabled(b);
 	}
 	
+	public void setTestButtonText(String status) {
+		testNetworkButton.setText(status);
+		if(status.contentEquals("offline")) testNetworkButton.setBackground(Color.red);
+		else
+		if(status.contentEquals("idle")) testNetworkButton.setBackground(Color.orange);
+		else
+			if(status.contentEquals("online")) testNetworkButton.setBackground(Color.green);
+	}
 	
 	public void setKnownObjects(String value) {
 		String[] objects = value.split("%");
@@ -166,6 +175,22 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 		return box;
 	}
 	
+	private Box createSenderInitGripperButton(final SmartHandInstallationNodeContribution contribution) {
+		Box box = Box.createVerticalBox();
+		
+	
+		initGripperButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				contribution.sendScriptInitGripper();
+			}
+		});
+		
+		box.add(initGripperButton);
+		
+		return box;
+	}
+	
 	private Box createSenderOpenGripperButton(final SmartHandInstallationNodeContribution contribution) {
 		Box box = Box.createVerticalBox();
 		
@@ -177,7 +202,6 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 			}
 		});
 		
-		//box.add(createVerticalSpacing());
 		box.add(openGripperButton);
 		
 		return box;
@@ -196,6 +220,7 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 		
 		return box;
 	}
+	
 	
 	private Box createInfo(String text) {
 		Box infoBox = Box.createVerticalBox();

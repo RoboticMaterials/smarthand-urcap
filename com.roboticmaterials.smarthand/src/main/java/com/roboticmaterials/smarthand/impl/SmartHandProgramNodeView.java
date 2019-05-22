@@ -45,9 +45,7 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 	public SmartHandProgramNodeView(ViewAPIProvider apiProvider) {
 		this.apiProvider = apiProvider;
 	}
-	
-	
-	
+		
 	private final JComboBox<String> commandComboBox = new JComboBox<String>();
 	private final JComboBox<String> objectsPoseComboBox = new JComboBox<String>();
 	private final JComboBox<String> objectsInfoComboBox = new JComboBox<String>();

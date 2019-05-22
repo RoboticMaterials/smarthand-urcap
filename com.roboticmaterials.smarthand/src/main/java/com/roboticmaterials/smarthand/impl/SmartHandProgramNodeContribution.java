@@ -90,10 +90,12 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 	              //System.out.println("Timer: Camera update");
 	        	  setStatus(getInstallation().testHandStatus());
 	        	  view.setTestButtonText(getStatus());
-	      		if(!getStatus().contentEquals("offline"))
+	      		if(!getStatus().contentEquals("offline")) {
 	      			view.setButtonsEnabled(true);
-	      		else
+	      		}
+	      		else {
 	      			view.setButtonsEnabled(false);
+	      		}
 	          }
 	      };
 	    timer = new Timer(1000,taskPerformer);
