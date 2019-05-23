@@ -12,6 +12,7 @@ import com.roboticmaterials.smarthand.impl.SmartHandInstallationNodeView;
 
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketException;
 
 import javax.swing.Timer;
 
@@ -212,6 +213,13 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		ScriptCommand sendTestCommand = new ScriptCommand("testSend");
 		
 		sendTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_VALUE) +":8101/RPC2\")");
+		try {
+			sendTestCommand.appendLine("smarthand.set_robot_ip(\""+view.getHost4Address() +"\")");
+			System.out.print("Sending "+view.getHost4Address()+" as robot address to hand");
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		sendTestCommand.appendLine("smarthand.init()");
 		
 		// Use the ScriptSender to send the command for immediate execution

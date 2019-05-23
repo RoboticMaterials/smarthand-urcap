@@ -27,6 +27,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
@@ -77,9 +78,14 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 				}*/
 				
 				try {
-					String newAddress = contribution.scanIPAddress(getHost4Address());//InetAddress.getLocalHost().getHostAddress());
-					setIPAddress(newAddress);
-					contribution.setIPAddress(newAddress);		
+					String robotAddress = getHost4Address();
+					if(robotAddress != null) {
+						String handAddress = contribution.scanIPAddress(robotAddress);//InetAddress.getLocalHost().getHostAddress());
+						setIPAddress(handAddress);
+						contribution.setIPAddress(handAddress);	
+					} else {
+						JOptionPane.showMessageDialog(null, "Cannot determine the robot's IP address. Is the network cable connected?", "No IP address", JOptionPane.INFORMATION_MESSAGE);
+					}
 				} catch (SocketException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -143,7 +149,7 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 	 * @return
 	 * @throws SocketException
 	 */
-	private static String getHost4Address() throws SocketException {
+	public static String getHost4Address() throws SocketException {
 	    List<Inet4Address> inet4 = getInet4Addresses();
 	    return !inet4.isEmpty()
 	            ? inet4.get(0).getHostAddress()
