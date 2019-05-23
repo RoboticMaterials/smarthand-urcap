@@ -4,13 +4,21 @@ import com.ur.urcap.api.contribution.ProgramNodeContribution;
 import com.ur.urcap.api.contribution.program.ProgramAPIProvider;
 import com.ur.urcap.api.domain.ProgramAPI;
 import com.ur.urcap.api.domain.data.DataModel;
+import com.ur.urcap.api.domain.program.nodes.ProgramNodeFactory;
+import com.ur.urcap.api.domain.program.nodes.builtin.InvalidDomainException;
+import com.ur.urcap.api.domain.program.nodes.builtin.WaitNode;
+import com.ur.urcap.api.domain.program.nodes.builtin.configurations.waitnode.TimeWaitNodeConfig;
+import com.ur.urcap.api.domain.program.structure.TreeNode;
+import com.ur.urcap.api.domain.program.structure.TreeStructureException;
 import com.ur.urcap.api.domain.script.ScriptWriter;
 import com.ur.urcap.api.domain.undoredo.UndoRedoManager;
 import com.ur.urcap.api.domain.undoredo.UndoableChanges;
 import com.ur.urcap.api.domain.util.Filter;
+import com.ur.urcap.api.domain.validation.ErrorHandler;
 import com.ur.urcap.api.domain.value.expression.Expression;
 import com.ur.urcap.api.domain.value.expression.ExpressionBuilder;
 import com.ur.urcap.api.domain.value.expression.InvalidExpressionException;
+import com.ur.urcap.api.domain.value.simple.Time;
 import com.ur.urcap.api.domain.variable.GlobalVariable;
 import com.ur.urcap.api.domain.variable.Variable;
 import com.ur.urcap.api.domain.variable.VariableException;
@@ -515,6 +523,24 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 		sendTestCommand.appendLine(targetVariable.getDisplayName()+"=smarthand.get_object_pose(\""+getObject()+"\")");
 		sendTestCommand.appendLine("smarthand.irimage()");
 		sender.sendScriptCommand(sendTestCommand);*/
+		}
+		
+	}
+	
+	private void insertGetInfoNode() {
+		try {
+			ProgramNodeFactory programNodeFactory = programAPI.getProgramModel().getProgramNodeFactory();
+			//WaitNode waitNode = programNodeFactory.createWaitNode();
+			TreeNode treeNode = programAPI.getProgramModel().getRootTreeNode(this);
+
+			//Time oneSecondWait = programAPI.getValueFactoryProvider().getSimpleValueFactory().createTime(1, Time.Unit.S);
+			//TimeWaitNodeConfig config = waitNode.getConfigFactory().createTimeConfig(oneSecondWait, ErrorHandler.AUTO_CORRECT);
+
+			//programAPI.getProgramModel().getRootTreeNode(this).addChild(waitNode.setConfig(config));
+			treeNode.addChild(programNodeFactory.createURCapProgramNode(SmartHandProgramNodeService.class));
+
+		} catch (TreeStructureException e) {
+			e.printStackTrace();
 		}
 	}
 

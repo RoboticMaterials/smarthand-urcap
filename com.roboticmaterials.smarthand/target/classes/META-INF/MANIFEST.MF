@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1558517032018
+Bnd-LastModified: 1558610494986
 Build-Jdk: 1.8.0_212
 Built-By: ur
 Bundle-Activator: com.roboticmaterials.smarthand.impl.Activator
@@ -24,15 +24,19 @@ Import-Package: com.ur.urcap.api.contribution;version="[1.6.0,2.0.0)",co
  .contribution.toolbar;version="[1.6.0,2.0.0)",com.ur.urcap.api.contribu
  tion.toolbar.swing;version="[1.6.0,2.0.0)",com.ur.urcap.api.domain;vers
  ion="[1.6.0,2.0.0)",com.ur.urcap.api.domain.data;version="[1.6.0,2.0.0)
- ",com.ur.urcap.api.domain.script;version="[1.6.0,2.0.0)",com.ur.urcap.a
- pi.domain.system;version="[1.6.0,2.0.0)",com.ur.urcap.api.domain.system
- .localization;version="[1.6.0,2.0.0)",com.ur.urcap.api.domain.undoredo;
- version="[1.6.0,2.0.0)",com.ur.urcap.api.domain.userinteraction;version
- ="[1.6.0,2.0.0)",com.ur.urcap.api.domain.userinteraction.keyboard;versi
- on="[1.6.0,2.0.0)",com.ur.urcap.api.domain.util;version="[1.6.0,2.0.0)"
- ,com.ur.urcap.api.domain.value;version="[1.6.0,2.0.0)",com.ur.urcap.api
- .domain.value.expression;version="[1.6.0,2.0.0)",com.ur.urcap.api.domai
- n.variable;version="[1.6.0,2.0.0)",com.roboticmaterials.smarthand.commu
- nicator;version="[1.0,2)",javax.swing,javax.swing.border,javax.swing.ev
- ent,javax.swing.text,org.osgi.framework;version="[1.6,2)"
+ ",com.ur.urcap.api.domain.program;version="[1.6.0,2.0.0)",com.ur.urcap.
+ api.domain.program.nodes;version="[1.6.0,2.0.0)",com.ur.urcap.api.domai
+ n.program.nodes.contributable;version="[1.6.0,2.0.0)",com.ur.urcap.api.
+ domain.program.structure;version="[1.6.0,2.0.0)",com.ur.urcap.api.domai
+ n.script;version="[1.6.0,2.0.0)",com.ur.urcap.api.domain.system;version
+ ="[1.6.0,2.0.0)",com.ur.urcap.api.domain.system.localization;version="[
+ 1.6.0,2.0.0)",com.ur.urcap.api.domain.undoredo;version="[1.6.0,2.0.0)",
+ com.ur.urcap.api.domain.userinteraction;version="[1.6.0,2.0.0)",com.ur.
+ urcap.api.domain.userinteraction.keyboard;version="[1.6.0,2.0.0)",com.u
+ r.urcap.api.domain.util;version="[1.6.0,2.0.0)",com.ur.urcap.api.domain
+ .value;version="[1.6.0,2.0.0)",com.ur.urcap.api.domain.value.expression
+ ;version="[1.6.0,2.0.0)",com.ur.urcap.api.domain.variable;version="[1.6
+ .0,2.0.0)",com.roboticmaterials.smarthand.communicator;version="[1.0,2)
+ ",javax.swing,javax.swing.border,javax.swing.event,javax.swing.text,org
+ .osgi.framework;version="[1.6,2)"
 Tool: Bnd-2.1.0.20130426-122213

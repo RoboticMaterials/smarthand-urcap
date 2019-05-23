@@ -50,6 +50,8 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		this.keyboardInputFactory = apiProvider.getUserInterfaceAPI().getUserInteraction().getKeyboardInputFactory();
 		this.model = model;
 		this.view = view;
+		
+
 				
 		this.sender = new ScriptSender();
 		this.exporter = new ScriptExporter();
@@ -142,6 +144,37 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 	            try {s1.close();}
 	            catch(Exception e1){}
 	    }
+	}
+	
+	public String scanIPAddress(String range) {
+		String cand = "0.0.0.0";
+		String[] address = range.split("\\.");
+		for(int i=1;i<=255;i++) {
+			cand=address[0]+"."+address[1]+"."+address[2]+"."+i;
+	        Socket s = null;
+	        try
+	        {
+	        	System.out.printf("Pinging" + cand +":8001...\n");
+		        s = new Socket();
+	        	s.connect(new InetSocketAddress(cand, 8001), 30);
+		        // At this point the hand replied or an exception has been
+	        	// thrown
+		        return cand;
+		        
+	        }
+	        catch (Exception e)
+	        {
+	            if(i==255) return "0.0.0.0";
+	        }
+	        finally
+	        {
+		        if(s != null)
+		            try {s.close();}
+		            catch(Exception e){}
+	
+	        }
+		}
+		return cand;
 	}
 	
 	

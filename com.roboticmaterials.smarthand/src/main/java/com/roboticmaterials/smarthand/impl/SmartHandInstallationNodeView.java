@@ -5,7 +5,16 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -40,7 +49,7 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 	private JButton requestObjectsButton = new JButton("Request objects");
 	private JButton openGripperButton = new JButton("Open");
 	private JButton closeGripperButton = new JButton("Close");;
-	private final JButton testNetworkButton = new JButton("Test");
+	private final JButton scanNetworkButton = new JButton("Scan");
 	private final JButton initGripperButton = new JButton("Init");
 
 	
@@ -55,20 +64,30 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 		jPanel.setLayout(new BoxLayout(jPanel, BoxLayout.Y_AXIS));
 	
 		ipAddress.setHorizontalAlignment(JTextField.RIGHT);
-		testNetworkButton.addActionListener(new ActionListener() {
+		scanNetworkButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(!contribution.testHandStatus().equals("offline")) {
+				/*if(!contribution.testHandStatus().equals("offline")) {
 					setButtonEnabled(true);
-					testNetworkButton.setText(contribution.testHandStatus());
+					scanNetworkButton.setText(contribution.testHandStatus());
 				}
 				else {
 					setButtonEnabled(false);
-					testNetworkButton.setText("offline");
+					scanNetworkButton.setText("offline");
+				}*/
+				
+				try {
+					String newAddress = contribution.scanIPAddress(getHost4Address());//InetAddress.getLocalHost().getHostAddress());
+					setIPAddress(newAddress);
+					contribution.setIPAddress(newAddress);		
+				} catch (SocketException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
+				
 			}
 		});
-		jPanel.add(createLabelInputField("IP Address: ", ipAddress, testNetworkButton, new MouseAdapter() {
+		jPanel.add(createLabelInputField("IP Address: ", ipAddress, scanNetworkButton, new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				setButtonEnabled(false);
@@ -76,6 +95,8 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 				keyboardInput.show(ipAddress, contribution.getCallbackForIpAddress());
 			}
 		}));	
+		
+		
 		
 		
 		jPanel.add(createVerticalSpacing());
@@ -91,6 +112,42 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 		jPanel.add(createSenderOpenGripperButton(contribution));
 		jPanel.add(createVerticalSpacing());
 		jPanel.add(createSenderCloseGripperButton(contribution));
+	}
+	
+	/**
+	 * Returns this host's non-loopback IPv4 addresses.
+	 * 
+	 * @return
+	 * @throws SocketException 
+	 */
+	private static List<Inet4Address> getInet4Addresses() throws SocketException{
+	    List<Inet4Address> ret = new ArrayList<Inet4Address>();
+
+	    Enumeration<NetworkInterface> nets = NetworkInterface.getNetworkInterfaces();
+	    for (NetworkInterface netint : Collections.list(nets)) {
+	        Enumeration<InetAddress> inetAddresses = netint.getInetAddresses();
+	        for (InetAddress inetAddress : Collections.list(inetAddresses)) {
+	            if (inetAddress instanceof Inet4Address && !inetAddress.isLoopbackAddress()) {
+	                ret.add((Inet4Address)inetAddress);
+	            }
+	        }
+	    }
+
+	    return ret;
+	}
+
+	/**
+	 * Returns this host's first non-loopback IPv4 address string in textual
+	 * representation.
+	 * 
+	 * @return
+	 * @throws SocketException
+	 */
+	private static String getHost4Address() throws SocketException {
+	    List<Inet4Address> inet4 = getInet4Addresses();
+	    return !inet4.isEmpty()
+	            ? inet4.get(0).getHostAddress()
+	            : null;
 	}
 	
 	private Box createLabelInputField(String label, final JTextField inputField, final JButton testNetworkButton, MouseAdapter mouseAdapter) {
@@ -119,12 +176,12 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 	}
 	
 	public void setTestButtonText(String status) {
-		testNetworkButton.setText(status);
-		if(status.contentEquals("offline")) testNetworkButton.setBackground(Color.red);
+		//scanNetworkButton.setText(status);
+		if(status.contentEquals("offline")) scanNetworkButton.setBackground(Color.red);
 		else
-		if(status.contentEquals("idle")) testNetworkButton.setBackground(Color.orange);
+		if(status.contentEquals("idle")) scanNetworkButton.setBackground(Color.orange);
 		else
-			if(status.contentEquals("online")) testNetworkButton.setBackground(Color.green);
+			if(status.contentEquals("online")) scanNetworkButton.setBackground(Color.green);
 	}
 	
 	public void setKnownObjects(String value) {
