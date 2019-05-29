@@ -155,9 +155,9 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 	        Socket s = null;
 	        try
 	        {
-	        	System.out.printf("Pinging" + cand +":8001...\n");
+	        	System.out.printf("Pinging" + cand +":8101...\n");
 		        s = new Socket();
-	        	s.connect(new InetSocketAddress(cand, 8001), 30);
+	        	s.connect(new InetSocketAddress(cand, 8101), 30);
 		        // At this point the hand replied or an exception has been
 	        	// thrown
 		        return cand;
