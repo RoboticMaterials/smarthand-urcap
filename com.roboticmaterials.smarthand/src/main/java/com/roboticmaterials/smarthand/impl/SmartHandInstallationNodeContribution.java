@@ -25,7 +25,7 @@ import java.awt.event.ActionListener;
 
 public class SmartHandInstallationNodeContribution implements InstallationNodeContribution {
 	private static final String IPADDRESS_KEY = "ipaddress";
-	private static final String DEFAULT_VALUE = "192.168.1.2";
+	private static final String DEFAULT_IP = "192.168.1.2";
 	private static final String VALIDIP_KEY = "validip";
 	private static final String OBJECTS_KEY = "objects";
 	private static final String DEFAULT_OBJECT = "generic";
@@ -191,7 +191,7 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		ScriptCommand exportTestCommand = new ScriptCommand("exportVariable");
 		
 		// Add the calculation script to the command
-		exportTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_VALUE) +":8101/RPC2\")");
+		exportTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8101/RPC2\")");
 		exportTestCommand.appendLine("smarthand.init()");
 		exportTestCommand.appendLine("objectIDs = smarthand.get_object_defs()");
 		
@@ -212,7 +212,7 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		if(!getStatus().contentEquals(SHS_OFFLINE)) {
 		ScriptCommand sendTestCommand = new ScriptCommand("testSend");
 		
-		sendTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_VALUE) +":8101/RPC2\")");
+		sendTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8101/RPC2\")");
 		try {
 			sendTestCommand.appendLine("smarthand.set_robot_ip(\""+view.getHost4Address() +"\")");
 			System.out.print("Sending "+view.getHost4Address()+" as robot address to hand");
@@ -227,13 +227,27 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		}	
 	}
 	
+	public void sendScriptStopGripper() {
+		testHandStatus();
+		// Create a new ScriptCommand called "testSend"
+		if(!getStatus().contentEquals(SHS_OFFLINE)) {
+		ScriptCommand sendTestCommand = new ScriptCommand("testSend");
+		
+		sendTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8101/RPC2\")");
+		sendTestCommand.appendLine("smarthand.stop()");
+		
+		// Use the ScriptSender to send the command for immediate execution
+		sender.sendScriptCommand(sendTestCommand);
+		}	
+	}
+	
 	public void sendScriptOpenGripper() {
 		testHandStatus();
 		// Create a new ScriptCommand called "testSend"
 		if(!getStatus().contentEquals(SHS_OFFLINE)) {
 		ScriptCommand sendTestCommand = new ScriptCommand("testSend");
 		
-		sendTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_VALUE) +":8101/RPC2\")");
+		sendTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8101/RPC2\")");
 		sendTestCommand.appendLine("smarthand.init()");
 		sendTestCommand.appendLine("smarthand.open_gripper(1.0)");
 		
@@ -246,7 +260,7 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		testHandStatus();
 		if(!getStatus().contentEquals(SHS_OFFLINE)) { // only if not offline
 		ScriptCommand sendTestCommand = new ScriptCommand("testSend");
-		sendTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_VALUE) +":8101/RPC2\")");
+		sendTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8101/RPC2\")");
 		sendTestCommand.appendLine("smarthand.init()");
 		sendTestCommand.appendLine("smarthand.close_gripper(1.0)");
 		sender.sendScriptCommand(sendTestCommand);
@@ -258,7 +272,7 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 
 	@Override
 	public void generateScript(ScriptWriter writer) {
-		writer.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_VALUE) +":8101/RPC2\")");
+		writer.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8101/RPC2\")");
 		// Only add the init call when a smarthand command is used in the code
 		if(areThereChildren) {
 			writer.appendLine("return_value = smarthand.init()");
@@ -289,7 +303,7 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		};
 	}
 	public String getIPAddress() {
-		return model.get(IPADDRESS_KEY, DEFAULT_VALUE);
+		return model.get(IPADDRESS_KEY, DEFAULT_IP);
 	}
 
 	public void setIPAddress(String message) {
@@ -313,8 +327,8 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 	}
 
 	private void resetToDefaultValue() {
-		view.setIPAddress(DEFAULT_VALUE);
-		model.set(IPADDRESS_KEY, DEFAULT_VALUE);
+		view.setIPAddress(DEFAULT_IP);
+		model.set(IPADDRESS_KEY, DEFAULT_IP);
 	}
 
 
