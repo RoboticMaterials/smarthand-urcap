@@ -62,6 +62,12 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 	private final JButton closeButton = new JButton();
 	private final JButton snapshotButton = new JButton();
 	
+	private final JLabel openGripperLabel = new JLabel();
+	private final JLabel closeGripperLabel = new JLabel();
+	private final JLabel widthGripperLabel = new JLabel();
+	private final JLabel objectsPoseLabel = new JLabel();
+	private final JLabel objectsInfoLabel = new JLabel();
+	
 	//private JLabel imageLabel;
 	//private BufferedImage image;
 	private ContributionProvider<SmartHandProgramNodeContribution> provider;
@@ -105,17 +111,30 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 		
 		// First card: open gripper
 		card1.setLayout(new BoxLayout(card1, BoxLayout.Y_AXIS));
+		//card1.setAlignmentX(Component.CENTER_ALIGNMENT);
+		//card1.setAlignmentY(Component.LEFT_ALIGNMENT);
 		card1.add(createForceOSlider("Force:",forceSliderO, 0, 100, provider));
-		
+		card1.add(createDescription(openGripperLabel, "<html><b>Input:</b><br><br><i>force</i>: Maximum force during opening<br><br><b>Output:</b><br><br><i>s</i>: <i>success</i>, binary variable representing successful execution</html>"));
+	
 		// Second card: close gripper	
 		card2.setLayout(new BoxLayout(card2, BoxLayout.Y_AXIS));
 		card2.add(createForceCSlider("Force:", forceSliderC, 0, 100, provider));		
+		card2.add(createDescription(closeGripperLabel, "<html><b>Input:</b><br><br><i>force</i>: Maximum force during closing<br><br><b>Output:</b><br><br><i>s</i>: <i>success</i>, binary variable representing successful execution</html>"));
 		
 		// Third card: set gripper width
 		card3.setLayout(new BoxLayout(card3, BoxLayout.Y_AXIS));
 		card3.add(createForceWSlider("Force:",forceSliderW, 0, 100, provider));		
 		card3.add(createApertureSlider("Aperture:", apertureSlider, 0, 108, provider));
-	
+		card3.add(createDescription(widthGripperLabel, "<html>"
+				+ "<table>"
+				+ "<tr><td colspan=2><b>Input:</b></td></tr>"
+				+ "<tr><td><i>force</i>:</td><td>Maximum force during gripper motion</td></tr>"
+				+ "<tr><td><i>aperture</i>:</td><td>Gripper opening in mm. Either use slider or chose a variable.</td></tr>"
+				+ "<tr><td colspan=2>&nbsp;</td></tr>"
+				+ "<tr><td colspan=2><b>Output:</b></td></tr>"
+				+ "<tr><td><i>s</i>:</td><td><i>success</i>, binary variable representing successful execution.</td></tr>"
+				+ "</table></html>"));
+		
 
 		
 /*		try {
@@ -134,10 +153,31 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 		card4.add(createObjectsPoseComboBox(objectsPoseComboBox, provider));
 //		card4.add(createSpacer(10));
 //		card4.add(createRequestImageButton(provider));
+		card4.add(createDescription(objectsPoseLabel, "<html>"
+				+ "<table>"
+				+ "<tr><td colspan=2><b>Input:</b></td></tr>"
+				+ "<tr><td><i>type</i>:</td><td>String determining the specific parameters that the SmartHand will use</td></tr>"
+				+ "<tr><td></td><td>for object recognition. Use the 'installation' tab to retrieve a</td></tr>"
+				+ "<tr><td></td><td>list of supported objects.</td></tr>"
+				+ "<tr><td colspan=2><b>Output:</b></td></tr>"
+				+ "<tr><td><i>t</i>:</td><td><i>target</i>, a <i>pose</i> to grasp the object.</td></tr>"
+				+ "</table></html>"));
+		
 		
 		// Fifth card: get object info
 		card5.add(createObjectsInfoComboBox(objectsInfoComboBox, provider));
-	
+		card5.add(createDescription(objectsInfoLabel, "<html><table>"
+				+ "<tr><td colspan=2><b>Input:</b></td></tr>"
+				+ "<tr><td><i>type</i>:</td><td>String determining the specific parameters that the SmartHand will use</td></tr>"
+				+ "<tr><td></td><td>for object recognition. Use the 'installation' tab to retrieve a</td></tr>"
+				+ "<tr><td></td><td>list of supported objects.</td></tr>"
+				+ "<tr><td><b>Output:</b></td></tr>"
+				+ "<tr><td><i>s</i>:</td><td><i>success</i>, binary variable indicating whether an object was found.</td></tr>"
+				+ "<tr><td><i>t</i>:</td><td><i>target</i>, a <i>pose</i> to grasp the object. Yields current pose if</td></tr>"
+				+ "<tr><td><i>s</i> is <i>false</i>.</td></tr>"
+				+ "<tr><td><i>w</i>:</td><td><i>width</i>, optimal opening aperture to grasp the object.</td></tr>"
+				+ "</table></html>"));
+		
 		
 		//Create the panel that contains the "cards".
 		cards = new JPanel(new CardLayout());
@@ -290,6 +330,17 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 		box.setAlignmentX(Component.LEFT_ALIGNMENT);
 		
 		JLabel label = new JLabel(desc);
+		
+		box.add(label);
+		
+		return box;
+	}
+	
+	private Box createDescription(JLabel label, String desc){
+		Box box = Box.createHorizontalBox();
+		box.setAlignmentX(Component.CENTER_ALIGNMENT);
+		
+		label.setText(desc);
 		
 		box.add(label);
 		
