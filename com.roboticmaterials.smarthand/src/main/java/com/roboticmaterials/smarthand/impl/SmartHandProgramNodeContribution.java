@@ -69,7 +69,7 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 	
 	private String IPADDRESS;
 	private String STATUS = "offline";
-	private Timer timer; 
+	//private Timer timer; 
 	
 	private final ScriptSender sender;
 	private final ScriptExporter exporter;
@@ -94,10 +94,9 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 		
 		ActionListener taskPerformer = new ActionListener() {
 	          public void actionPerformed(ActionEvent evt) {
-	              //view.updateCameraFeed();
-	              //System.out.println("Timer: Camera update");
-	        	  setStatus(getInstallation().testHandStatus());
-	        	  view.setTestButtonText(getStatus());
+	           
+	        	setStatus(getInstallation().testHandStatus());
+	        	view.setTestButtonText(getStatus());
 	      		if(!getStatus().contentEquals("offline")) {
 	      			view.setButtonsEnabled(true);
 	      		}
@@ -106,7 +105,7 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 	      		}
 	          }
 	      };
-	    timer = new Timer(1000,taskPerformer);
+	    //timer = new Timer(1000,taskPerformer);
 		
 		try {
 			ExpressionBuilder expressionBuilder = programAPI.getValueFactoryProvider().createExpressionBuilder();
@@ -351,7 +350,7 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 
 		//System.out.println("Open view: " + getCommandId(getCommand()));
 		view.setCard(getCommand());
-		timer.start();
+		//timer.start();
 	}
 
 	public Variable getSelectedApertureVar() {
@@ -397,7 +396,7 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 	@Override
 	public void closeView() {
 		// Stop image reload, only needed when image is shown
-		timer.stop(); 
+	//	timer.stop(); 
 		
 	}
 
@@ -470,6 +469,7 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 		}
 		
 	}
+	
 	
 	public SmartHandInstallationNodeContribution getInstallation() {
 		return programAPI.getInstallationNode(SmartHandInstallationNodeContribution.class);

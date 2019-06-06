@@ -187,6 +187,7 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 	public void importKnownObjects() {
 		// Create a new ScriptCommand called "exportVariable"
 		testHandStatus();
+		timer.stop();
 		if(!getStatus().contentEquals(SHS_OFFLINE)) {
 		ScriptCommand exportTestCommand = new ScriptCommand("exportVariable");
 		
@@ -204,10 +205,12 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		view.setKnownObjects(returnValue);
 		setKnownObjects(returnValue);
 		}
+		timer.restart();
 	}
 
 	public void sendScriptInitGripper() {
 		testHandStatus();
+		timer.stop();
 		// Create a new ScriptCommand called "testSend"
 		if(!getStatus().contentEquals(SHS_OFFLINE)) {
 		ScriptCommand sendTestCommand = new ScriptCommand("testSend");
@@ -224,11 +227,13 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		
 		// Use the ScriptSender to send the command for immediate execution
 		sender.sendScriptCommand(sendTestCommand);
+		timer.restart();
 		}	
 	}
 	
 	public void sendScriptStopGripper() {
 		testHandStatus();
+		timer.stop();
 		// Create a new ScriptCommand called "testSend"
 		if(!getStatus().contentEquals(SHS_OFFLINE)) {
 		ScriptCommand sendTestCommand = new ScriptCommand("testSend");
@@ -239,10 +244,12 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		// Use the ScriptSender to send the command for immediate execution
 		sender.sendScriptCommand(sendTestCommand);
 		}	
+		timer.restart();
 	}
 	
 	public void sendScriptOpenGripper() {
 		testHandStatus();
+		timer.stop();
 		// Create a new ScriptCommand called "testSend"
 		if(!getStatus().contentEquals(SHS_OFFLINE)) {
 		ScriptCommand sendTestCommand = new ScriptCommand("testSend");
@@ -254,10 +261,12 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		// Use the ScriptSender to send the command for immediate execution
 		sender.sendScriptCommand(sendTestCommand);
 		}
+		timer.restart();
 	}
 	
 	public void sendScriptCloseGripper() {
 		testHandStatus();
+		timer.stop();
 		if(!getStatus().contentEquals(SHS_OFFLINE)) { // only if not offline
 		ScriptCommand sendTestCommand = new ScriptCommand("testSend");
 		sendTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8101/RPC2\")");
@@ -265,6 +274,7 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		sendTestCommand.appendLine("smarthand.close_gripper(1.0)");
 		sender.sendScriptCommand(sendTestCommand);
 		}
+		timer.restart();
 	}
 	public boolean isDefined() {
 		return !getIPAddress().isEmpty();
