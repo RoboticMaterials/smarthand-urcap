@@ -1,0 +1,9 @@
+Compile and install using
+
+mvn install -P ursim
+
+to install into the simulator and
+
+mvn install -Premote -Durcap.install.host=10.2.128.64
+
+with 10.2.128.64 the robot IP address.
