@@ -58,6 +58,7 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 	
 	private static final String SUCCESSVAR_KEY = "var_success";
 	private static final String TARGETVAR_KEY = "var_target";
+	private static final String APPROACHVAR_KEY = "var_approach";
 	private static final String WIDTHVAR_KEY = "var_width";
 	
 	private static String[] commands;
@@ -66,6 +67,9 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 	private static final int DEFAULT_APERTURE = 108;
 	private static final String DEFAULT_APERTUREVAR = "<none>";
 	private static final String DEFAULT_OBJECT = "generic";
+	
+	private static final String PLANEFILTERVAR_KEY = "var_planefilter";
+	private static final Boolean DEFAULT_PLANEFILTER = true;
 	
 	private String IPADDRESS;
 	private String STATUS = "offline";
@@ -120,6 +124,20 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 			} catch (InvalidExpressionException e1) {
 				e1.printStackTrace();
 			}	
+		
+		try {
+			ExpressionBuilder expressionBuilder = programAPI.getValueFactoryProvider().createExpressionBuilder();
+			Expression initialValue = expressionBuilder.append("get_actual_tcp_pose()").build();
+			VariableFactory variableFactory = programAPI.getVariableModel().getVariableFactory();
+			GlobalVariable targetVariable = variableFactory.createGlobalVariable("a_1",initialValue);
+			
+			model.set(APPROACHVAR_KEY, targetVariable);        
+    
+			} catch (VariableException e) {
+				e.printStackTrace();
+			} catch (InvalidExpressionException e1) {
+				e1.printStackTrace();
+			}
 		
 		try {
 			VariableFactory variableFactory = programAPI.getVariableModel().getVariableFactory();
@@ -282,6 +300,9 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 		});
 	}*/
 	
+	private Boolean getPlaneFilter() {
+		return model.get(PLANEFILTERVAR_KEY, DEFAULT_PLANEFILTER);
+	}
 	private String getPoseObject() {
 		return model.get(POSEOBJECT_KEY, DEFAULT_OBJECT);
 	}
@@ -344,6 +365,7 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 		
 		view.setObjectsInfoComboBoxItems(getInstallation().getKnownObjects());
 		view.setObjectsInfoComboBoxSelection(getInfoObject());
+		view.setPlaneFilterSelection(getPlaneFilter());
 		
 		getInstallation().setChildren(true);
 		
@@ -415,9 +437,9 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 				return getResolvedVarName(SUCCESSVAR_KEY)+"="+getCommand()+"("+getApertureVarStr() +", @"+getForceW()+"% force)"; 
 			}
 		// Get Pose
-		case 3 : return   getResolvedVarName(TARGETVAR_KEY) + "=" + getCommand()+"("+getPoseObject()+")";
-		// Get Object info
-		case 4 : return  "(" + getResolvedVarName(SUCCESSVAR_KEY) + "," + getResolvedVarName(TARGETVAR_KEY) +"," + getResolvedVarName(WIDTHVAR_KEY) + ")=" + getCommand()+"("+getInfoObject()+")";
+		//case 3 : return   getResolvedVarName(TARGETVAR_KEY) + "=" + getCommand()+"("+getPoseObject()+")";
+		// Get Object pose
+		case 3 : return  "(" + getResolvedVarName(SUCCESSVAR_KEY) + "," + getResolvedVarName(APPROACHVAR_KEY) + "," + getResolvedVarName(TARGETVAR_KEY) +"," + getResolvedVarName(WIDTHVAR_KEY) + ")=" + getCommand()+"("+getInfoObject()+","+getPlaneFilter()+")";
 		default: return "";
 		}
 	}
@@ -442,25 +464,35 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 		writer.sleep(getDuration());
 		writer.appendLine("set_standard_digital_out("+getOutput()+", False)");*/
 		switch(getCommandId(getCommand())) {
-		case 0 : writer.assign(getResolvedVarName(SUCCESSVAR_KEY),"smarthand.open_gripper("+
+		case 0 : writer.assign(getResolvedVarName(SUCCESSVAR_KEY),"smarthand.set_gripper_torque("+
 			 	 getForceO()/100.0+")"); 
+				 writer.assign(getResolvedVarName(SUCCESSVAR_KEY), "smarthand.open_gripper()");
 				 break;
-		case 1 : writer.assign(getResolvedVarName(SUCCESSVAR_KEY),"smarthand.close_gripper("+getForceC()/100.0+")");
+		case 1 : writer.assign(getResolvedVarName(SUCCESSVAR_KEY),"smarthand.set_gripper_torque("+getForceC()/100.0+")");
+				 writer.assign(getResolvedVarName(SUCCESSVAR_KEY),"smarthand.close_gripper()");
 				 break;
 		case 2 : if(getApertureVarStr().contentEquals("<none>")) {
-					 writer.assign(getResolvedVarName(SUCCESSVAR_KEY),"smarthand.set_gripper_width("+getAperture()/1000.0+","+getForceW()/100.0+")");
+					 writer.assign(getResolvedVarName(SUCCESSVAR_KEY),"smarthand.set_gripper_torque("+getForceW()/100.0+")");
+					 writer.assign(getResolvedVarName(SUCCESSVAR_KEY),"smarthand.set_gripper_width("+getAperture()/1000.0+")");
 				 } else {
-					 writer.assign(getResolvedVarName(SUCCESSVAR_KEY),"smarthand.set_gripper_width("+getApertureVarStr()+","+getForceW()/100.0+")");					 
+					 writer.assign(getResolvedVarName(SUCCESSVAR_KEY),"smarthand.set_gripper_torque("+getForceW()/100.0+")");
+					 writer.assign(getResolvedVarName(SUCCESSVAR_KEY),"smarthand.set_gripper_width("+getApertureVarStr()+")");					 
 				 }
 				 
 				 break;
-		case 3 : writer.assign(getResolvedVarName(TARGETVAR_KEY),"smarthand.get_object_pose(\""+getPoseObject()+"\")");
-				 break;
-		case 4 : writer.assign("_t","smarthand.get_object_info(\""+getInfoObject()+"\")");
+		//case 3 : writer.assign(getResolvedVarName(TARGETVAR_KEY),"smarthand.get_object_pose(\""+getPoseObject()+"\")");
+		//		 break;
+		case 3 : if(getPlaneFilter()) {
+				 	writer.assign("_t","smarthand.get_object_info(\""+getInfoObject()+"\",True)");
+					}
+				else {
+					writer.assign("_t","smarthand.get_object_info(\""+getInfoObject()+"\",False)");				
+				}
 			     writer.appendLine(getResolvedVarName(TARGETVAR_KEY)+"=p[_t[0],_t[1],_t[2],_t[3],_t[4],_t[5]]");
-			     writer.assign(getResolvedVarName(WIDTHVAR_KEY),"_t[6]");
+			     writer.appendLine(getResolvedVarName(APPROACHVAR_KEY)+"=p[_t[6],_t[7],_t[8],_t[9],_t[10],_t[11]]");
+			     writer.assign(getResolvedVarName(WIDTHVAR_KEY),"_t[12]");
 			     //writer.assign(writer.getResolvedVariableName(successVariable),"_t[7]");
-				 writer.appendLine("if _t[7] == 0 :");
+				 writer.appendLine("if _t[13] == 0 :");
 				 writer.assign(getResolvedVarName(SUCCESSVAR_KEY), "False");
 				 writer.appendLine("else:");
 				 writer.assign(getResolvedVarName(SUCCESSVAR_KEY), "True");
@@ -485,7 +517,8 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 		//sendTestCommand.appendLine("popup(\"This is a popup\")");
 		sendTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + getInstallation().getIPAddress() +":8101/RPC2\")");
 		sendTestCommand.appendLine("smarthand.init()");
-		sendTestCommand.appendLine("smarthand.open_gripper(1.0)");
+		sendTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + getInstallation().getIPAddress() +":8100/RPC2\")");
+		sendTestCommand.appendLine("smarthand.open_gripper()");
 		
 		// Use the ScriptSender to send the command for immediate execution
 		sender.sendScriptCommand(sendTestCommand);
@@ -495,7 +528,8 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 		ScriptCommand sendTestCommand = new ScriptCommand("testSend");
 		sendTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + getInstallation().getIPAddress() +":8101/RPC2\")");
 		sendTestCommand.appendLine("smarthand.init()");
-		sendTestCommand.appendLine("smarthand.close_gripper()\")");
+		sendTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + getInstallation().getIPAddress() +":8100/RPC2\")");
+		sendTestCommand.appendLine("smarthand.close_gripper()");
 		sender.sendScriptCommand(sendTestCommand);
 	}
 	
@@ -505,7 +539,7 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 		ScriptCommand exportTestCommand = new ScriptCommand("exportVariable");
 		
 		// Add the calculation script to the command
-		exportTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + getInstallation().getIPAddress() +":8101/RPC2\")");
+		exportTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + getInstallation().getIPAddress() +":8100/RPC2\")");
 		exportTestCommand.appendLine("smarthand.init()");
 		exportTestCommand.appendLine(getResolvedVarName(TARGETVAR_KEY)+"=smarthand.get_object_pose(\""+getPoseObject()+"\")");
 		exportTestCommand.appendLine("smarthand.irimage()");
@@ -550,5 +584,18 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 	
 	public String getStatus() {
 		return STATUS;
+	}
+
+	public void onPlaneFilterSelection(final Boolean item) {
+		undoRedoManager.recordChanges(new UndoableChanges() {
+
+			@Override
+			public void executeChanges() {
+				model.set(PLANEFILTERVAR_KEY, item);
+				System.out.println(item);
+				
+			}
+			
+		});
 	}
 }

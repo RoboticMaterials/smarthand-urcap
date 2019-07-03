@@ -14,6 +14,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
 
+import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
 import com.roboticmaterials.smarthand.communicator.ScriptCommand;
@@ -188,12 +189,12 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		// Create a new ScriptCommand called "exportVariable"
 		testHandStatus();
 		timer.stop();
-		if(!getStatus().contentEquals(SHS_OFFLINE)) {
+		if(getStatus().contentEquals(SHS_ONLINE)) {
 		ScriptCommand exportTestCommand = new ScriptCommand("exportVariable");
 		
 		// Add the calculation script to the command
-		exportTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8101/RPC2\")");
-		exportTestCommand.appendLine("smarthand.init()");
+		exportTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8100/RPC2\")");
+		//exportTestCommand.appendLine("smarthand.init()");
 		exportTestCommand.appendLine("objectIDs = smarthand.get_object_defs()");
 		
 		// Use the exporter to send the script
@@ -204,6 +205,8 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		// Put the result back in the View
 		view.setKnownObjects(returnValue);
 		setKnownObjects(returnValue);
+		} else {
+			// Place warning pop-up here
 		}
 		timer.restart();
 	}
@@ -256,7 +259,9 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		
 		sendTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8101/RPC2\")");
 		sendTestCommand.appendLine("smarthand.init()");
-		sendTestCommand.appendLine("smarthand.open_gripper(1.0)");
+		sendTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8100/RPC2\")");
+		sendTestCommand.appendLine("smarthand.set_gripper_torque(1.0)");
+		sendTestCommand.appendLine("smarthand.open_gripper()");
 		
 		// Use the ScriptSender to send the command for immediate execution
 		sender.sendScriptCommand(sendTestCommand);
@@ -271,7 +276,9 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		ScriptCommand sendTestCommand = new ScriptCommand("testSend");
 		sendTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8101/RPC2\")");
 		sendTestCommand.appendLine("smarthand.init()");
-		sendTestCommand.appendLine("smarthand.close_gripper(1.0)");
+		sendTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8100/RPC2\")");
+		sendTestCommand.appendLine("smarthand.set_gripper_torque(1.0)");
+		sendTestCommand.appendLine("smarthand.close_gripper()");
 		sender.sendScriptCommand(sendTestCommand);
 		}
 		timer.restart();
@@ -286,6 +293,8 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		// Only add the init call when a smarthand command is used in the code
 		if(areThereChildren) {
 			writer.appendLine("return_value = smarthand.init()");
+			writer.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8100/RPC2\")");
+
 		}
 	}
 

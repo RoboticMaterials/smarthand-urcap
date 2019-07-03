@@ -19,11 +19,13 @@ import java.util.Comparator;
 import java.util.List;
 
 import javax.imageio.ImageIO;
+import javax.swing.AbstractButton;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -49,6 +51,7 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 	private final JComboBox<String> commandComboBox = new JComboBox<String>();
 	private final JComboBox<String> objectsPoseComboBox = new JComboBox<String>();
 	private final JComboBox<String> objectsInfoComboBox = new JComboBox<String>();
+	private final JCheckBox plane_filter = new JCheckBox("Plane filter");
 	private final JComboBox apertureVarComboBox = new JComboBox();
 	
 	private final JSlider forceSliderO = new JSlider();
@@ -73,7 +76,7 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 	private ContributionProvider<SmartHandProgramNodeContribution> provider;
 
 	private JPanel cards;
-	private static final String[] commands = {"Open Gripper","Close Gripper","Set Gripper Width","Get Object Pose","Get Object Info"};
+	private static final String[] commands = {"Open Gripper","Close Gripper","Set Gripper Width","Get Object Pose"};
 	
 	@Override
 	public void buildUI(JPanel panel, final ContributionProvider<SmartHandProgramNodeContribution> provider) {
@@ -83,7 +86,7 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 		JPanel card2 = new JPanel();
 		JPanel card3 = new JPanel();
 		JPanel card4 = new JPanel();
-		JPanel card5 = new JPanel();
+		//JPanel card5 = new JPanel();
 	
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		
@@ -148,7 +151,8 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}*/
-			
+
+		/*
 		// Fourth card: get object pose
 		card4.add(createObjectsPoseComboBox(objectsPoseComboBox, provider));
 //		card4.add(createSpacer(10));
@@ -162,17 +166,20 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 				+ "<tr><td colspan=2><b>Output:</b></td></tr>"
 				+ "<tr><td><i>t</i>:</td><td><i>target</i>, a <i>pose</i> to grasp the object.</td></tr>"
 				+ "</table></html>"));
+		*/
 		
-		
-		// Fifth card: get object info
-		card5.add(createObjectsInfoComboBox(objectsInfoComboBox, provider));
-		card5.add(createDescription(objectsInfoLabel, "<html><table>"
+		// Fourth card: get object info
+		card4.add(createObjectsInfoComboBox(objectsInfoComboBox, plane_filter, provider));
+		card4.add(createDescription(objectsInfoLabel, "<html><table>"
 				+ "<tr><td colspan=2><b>Input:</b></td></tr>"
 				+ "<tr><td><i>type</i>:</td><td>String determining the specific parameters that the SmartHand will use</td></tr>"
 				+ "<tr><td></td><td>for object recognition. Use the 'installation' tab to retrieve a</td></tr>"
 				+ "<tr><td></td><td>list of supported objects.</td></tr>"
+				+ "<tr><td><i>filter_plane</i>:</td><td>Tick if objects are presented on a plane such as a table, leave</td></tr>"
+				+ "<tr><td></td><td>empty when objects are cluttered</td></tr>"
 				+ "<tr><td><b>Output:</b></td></tr>"
 				+ "<tr><td><i>s</i>:</td><td><i>success</i>, binary variable indicating whether an object was found.</td></tr>"
+				+ "<tr><td><i>a</i>:</td><td><i>approach<i>, a <i>pose</i> to approach just above the object.</td></tr>"
 				+ "<tr><td><i>t</i>:</td><td><i>target</i>, a <i>pose</i> to grasp the object. Yields current pose if</td></tr>"
 				+ "<tr><td><i>s</i> is <i>false</i>.</td></tr>"
 				+ "<tr><td><i>w</i>:</td><td><i>width</i>, optimal opening aperture to grasp the object.</td></tr>"
@@ -185,7 +192,7 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 		cards.add(card2, commands[1]);
 		cards.add(card3, commands[2]);
 		cards.add(card4, commands[3]);
-		cards.add(card5, commands[4]);
+		//cards.add(card5, commands[4]);
 		
 
 		panel.add(cards, BorderLayout.CENTER);
@@ -368,7 +375,7 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 		return box;
 	}
 	
-	private Box createObjectsInfoComboBox(final JComboBox<String> combo, 
+	private Box createObjectsInfoComboBox(final JComboBox<String> combo, final JCheckBox plane_filter,
 			final ContributionProvider<SmartHandProgramNodeContribution> provider) {
 		Box box = Box.createHorizontalBox();
 		box.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -385,7 +392,21 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 				}
 			}
 		});
+		
+		plane_filter.addItemListener(new ItemListener() {
+
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				//if(e.getStateChange() == ItemEvent.SELECTED) {
+					provider.get().onPlaneFilterSelection(((JCheckBox) e.getItem()).isSelected());
+				//}
+			}
+			
+		});
+		
 		box.add(combo);
+		box.createRigidArea(new Dimension(10,0));
+		box.add(plane_filter);
 		return box;
 	}
 	
@@ -680,6 +701,12 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 		if(status.contentEquals("idle")) testButton.setBackground(Color.orange);
 		else
 			if(status.contentEquals("online")) testButton.setBackground(Color.green);
+	}
+
+	public void setPlaneFilterSelection(Boolean value) {
+		// TODO Auto-generated method stub
+		plane_filter.setSelected(value);
+		
 	}
 
 }
