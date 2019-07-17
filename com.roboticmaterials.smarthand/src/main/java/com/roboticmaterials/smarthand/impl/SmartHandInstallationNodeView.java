@@ -51,8 +51,8 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 	private JButton openGripperButton = new JButton("Open");
 	private JButton closeGripperButton = new JButton("Close");;
 	private final JButton scanNetworkButton = new JButton("Scan");
-	private final JButton initGripperButton = new JButton("Init");
-	private final JButton stopGripperButton = new JButton("Stop");
+	private final JButton initGripperButton = new JButton("Connect");
+	//private final JButton stopGripperButton = new JButton("Stop");
 
 	
 	
@@ -180,16 +180,25 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 		openGripperButton.setEnabled(b);
 		closeGripperButton.setEnabled(b);
 		initGripperButton.setEnabled(b);
-		stopGripperButton.setEnabled(b);
+		//stopGripperButton.setEnabled(b);
 	}
 	
-	public void setTestButtonText(String status) {
+	public void setButtonText(String status) {
 		//scanNetworkButton.setText(status);
-		if(status.contentEquals("offline")) scanNetworkButton.setBackground(Color.red);
+		if(status.contentEquals("offline")) {
+			scanNetworkButton.setBackground(Color.red);
+			initGripperButton.setText("offline");
+		}
 		else
-		if(status.contentEquals("idle")) scanNetworkButton.setBackground(Color.orange);
+		if(status.contentEquals("idle")) {
+			scanNetworkButton.setBackground(Color.orange);
+			initGripperButton.setText("connect");
+		}
 		else
-			if(status.contentEquals("online")) scanNetworkButton.setBackground(Color.green);
+			if(status.contentEquals("online")) {
+				scanNetworkButton.setBackground(Color.green);
+				initGripperButton.setText("disconnect");
+			}
 	}
 	
 	public void setKnownObjects(String value) {
@@ -248,20 +257,23 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 		initGripperButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				contribution.sendScriptInitGripper();
+				if(contribution.getStatus().contentEquals("idle"))
+					contribution.sendScriptInitGripper();
+				else if(contribution.getStatus().contentEquals("online"))
+						contribution.sendScriptStopGripper();
 			}
 		});
 
-		stopGripperButton.addActionListener(new ActionListener() {
+		/*stopGripperButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				contribution.sendScriptStopGripper();
 			}
-		});
+		});*/
 		
 		box.add(initGripperButton);
 		box.add(createHorizontalSpacing());
-		box.add(stopGripperButton);
+		//box.add(stopGripperButton);
 		return box;
 	}
 	

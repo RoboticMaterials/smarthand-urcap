@@ -34,6 +34,7 @@
 
 		<!--Install path for the UR Sim-->
 		<ursim.home>/home/ur/ursim/ursim-3.9.0.64176</ursim.home>
+		<Nursim.home>/home/ur/ursim/ursim-5.3.0.64176</Nursim.home>
 
 		<!--Host and standard user/password for UR Sim running in a VM-->
 		<ursimvm.install.host></ursimvm.install.host>

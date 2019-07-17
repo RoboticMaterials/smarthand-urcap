@@ -63,7 +63,7 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 	              //view.updateCameraFeed();
 	              //System.out.println("Timer: Camera update");
 	        	  status=testHandStatus();
-	        	  view.setTestButtonText(status);
+	        	  view.setButtonText(status);
 	      		if(!getStatus().contentEquals("offline")) {
 	      			view.setButtonEnabled(true);
 	      		}
@@ -81,7 +81,7 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		view.setIPAddress(getIPAddress());
 		view.setKnownObjects(getKnownObjects());
 		view.setButtonEnabled(model.get(VALIDIP_KEY, false));
-		view.setTestButtonText(status);
+		view.setButtonText(status);
 	}
 
 	@Override
@@ -106,10 +106,10 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 	        Socket s2 = null;
 	        try
 	        {
-	        	System.out.printf("Pinging" + getIPAddress() +":8001...\n");
+	        	System.out.printf("Pinging" + getIPAddress() +":8100...\n");
 		        //s2 = new Socket(getIPAddress(),8001);
 		        s2 = new Socket();
-	        	s2.connect(new InetSocketAddress(getIPAddress(), 8001), 30);
+	        	s2.connect(new InetSocketAddress(getIPAddress(), 8100), 30);
 		        // At this point RMLib has also started or an exception has been
 	        	// thrown
 		        status=SHS_ONLINE;
@@ -122,7 +122,7 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 	            // at least the hand replied at the IP address given
 		        status=SHS_IDLE;
 		        model.set(VALIDIP_KEY,true);
-	        	System.out.printf("8001 (RMLIB) FAILED\n");
+	        	System.out.printf("8100 (RMLIB) FAILED\n");
 	        	return SHS_IDLE;
 	        }
 	        finally
