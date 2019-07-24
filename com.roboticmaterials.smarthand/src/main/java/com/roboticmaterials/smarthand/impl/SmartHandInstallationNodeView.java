@@ -47,7 +47,9 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 	private JTextField ipAddress = new JTextField();
 	
 	private final JComboBox<String> objectsComboBox = new JComboBox<String>();
+	private final JComboBox<String> waypointsComboBox = new JComboBox<String>();
 	private JButton requestObjectsButton = new JButton("Request objects");
+	private JButton requestWaypointsButton = new JButton("Request waypoints");
 	private JButton openGripperButton = new JButton("Open");
 	private JButton closeGripperButton = new JButton("Close");;
 	private final JButton scanNetworkButton = new JButton("Scan");
@@ -112,6 +114,9 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 		jPanel.add(createRequestObjectsButton(contribution));
 		jPanel.add(createVerticalSpacing());
 		jPanel.add(createObjectsComboBox(objectsComboBox, contribution));
+		jPanel.add(createRequestWaypointsButton(contribution));
+		jPanel.add(createVerticalSpacing());
+		jPanel.add(createWaypointsComboBox(waypointsComboBox,contribution));
 		
 		jPanel.add(createVerticalSpacing());
 		jPanel.add(createInfo("Open and close gripper:"));
@@ -207,6 +212,12 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 		objectsComboBox.removeAllItems();
 		objectsComboBox.setModel(new DefaultComboBoxModel<String>(objects));
 	}
+	
+	public void setKnownWaypoints(String value) {
+		String[] waypoints = value.split("%");
+		waypointsComboBox.removeAllItems();
+		waypointsComboBox.setModel(new DefaultComboBoxModel<String>(waypoints));
+	}
 
 	private Box createObjectsComboBox(final JComboBox<String> combo, 
 			final SmartHandInstallationNodeContribution contribution) {
@@ -216,7 +227,7 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 		combo.setPreferredSize(new Dimension(160,30));
 		combo.setMaximumSize(combo.getPreferredSize());
 		
-		combo.addItemListener(new  ItemListener() {
+		/*combo.addItemListener(new  ItemListener() {
 			
 			@Override
 			public void itemStateChanged(ItemEvent e) {
@@ -225,7 +236,18 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 					//setCard((String)e.getItem());
 				}
 			}
-		});
+		});*/
+		box.add(combo);
+		return box;
+	}
+	
+	private Box createWaypointsComboBox(final JComboBox<String> combo, 
+			final SmartHandInstallationNodeContribution contribution) {
+		Box box = Box.createHorizontalBox();
+		box.setAlignmentX(Component.LEFT_ALIGNMENT);
+		
+		combo.setPreferredSize(new Dimension(160,30));
+		combo.setMaximumSize(combo.getPreferredSize());
 		box.add(combo);
 		return box;
 	}
@@ -243,6 +265,25 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 		});
 		box.add(createVerticalSpacing());
 		box.add(requestObjectsButton);
+		//box.add(new JLabel("Returned value:"));
+		//box.add(this.RETURN_VALUE);
+		
+		return box;
+	}
+	
+	private Box createRequestWaypointsButton(final SmartHandInstallationNodeContribution contribution) {
+		Box box = Box.createVerticalBox();
+		
+		box.add(new JLabel("Obtain list of available cart waypoints"));
+		
+		requestObjectsButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				contribution.importKnownWaypoints();
+			}
+		});
+		box.add(createVerticalSpacing());
+		box.add(requestWaypointsButton);
 		//box.add(new JLabel("Returned value:"));
 		//box.add(this.RETURN_VALUE);
 		

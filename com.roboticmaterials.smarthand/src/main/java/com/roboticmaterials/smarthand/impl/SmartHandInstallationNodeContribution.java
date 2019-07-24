@@ -212,6 +212,33 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		}
 		timer.restart();
 	}
+	
+	
+	public void importKnownWaypoints() {
+		// Create a new ScriptCommand called "exportVariable"
+		testHandStatus();
+		timer.stop();
+		if(getStatus().contentEquals(SHS_ONLINE)) {
+		ScriptCommand exportTestCommand = new ScriptCommand("exportVariable");
+		
+		// Add the calculation script to the command
+		exportTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8100/RPC2\")");
+		//exportTestCommand.appendLine("smarthand.init()");
+		exportTestCommand.appendLine("waypoints = smarthand.get_waypoints()");
+		
+		// Use the exporter to send the script
+		// Note the String name of the variable (objectIDs) to be returned
+		String returnValue = exporter.exportStringFromURScript(exportTestCommand,
+				"waypoints");
+		
+		// Put the result back in the View
+		view.setKnownObjects(returnValue);
+		setKnownObjects(returnValue);
+		} else {
+			// Place warning pop-up here
+		}
+		timer.restart();
+	}
 
 	public void sendScriptInitGripper() {
 		testHandStatus();
