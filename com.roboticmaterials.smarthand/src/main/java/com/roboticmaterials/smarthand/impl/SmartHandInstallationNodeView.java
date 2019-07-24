@@ -185,6 +185,7 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 		openGripperButton.setEnabled(b);
 		closeGripperButton.setEnabled(b);
 		initGripperButton.setEnabled(b);
+		requestWaypointsButton.setEnabled(b);
 		//stopGripperButton.setEnabled(b);
 	}
 	

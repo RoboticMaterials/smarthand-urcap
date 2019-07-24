@@ -82,6 +82,7 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		timer.restart();
 		view.setIPAddress(getIPAddress());
 		view.setKnownObjects(getKnownObjects());
+		view.setKnownWaypoints(getKnownWaypoints());
 		view.setButtonEnabled(model.get(VALIDIP_KEY, false));
 		view.setButtonText(status);
 	}
