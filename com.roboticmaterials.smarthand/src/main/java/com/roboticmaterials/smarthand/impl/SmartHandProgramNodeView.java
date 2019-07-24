@@ -49,7 +49,7 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 	}
 		
 	private final JComboBox<String> commandComboBox = new JComboBox<String>();
-	private final JComboBox<String> objectsPoseComboBox = new JComboBox<String>();
+	private final JComboBox<String> cartWaypointsComboBox = new JComboBox<String>();
 	private final JComboBox<String> objectsInfoComboBox = new JComboBox<String>();
 	private final JCheckBox plane_filter = new JCheckBox("Plane filter");
 	private final JComboBox apertureVarComboBox = new JComboBox();
@@ -76,7 +76,7 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 	private ContributionProvider<SmartHandProgramNodeContribution> provider;
 
 	private JPanel cards;
-	private static final String[] commands = {"Open Gripper","Close Gripper","Set Gripper Width","Get Object Pose"};
+	private static final String[] commands = {"Open Gripper","Close Gripper","Set Gripper Width","Get Object Pose","Move Cart"};
 	
 	@Override
 	public void buildUI(JPanel panel, final ContributionProvider<SmartHandProgramNodeContribution> provider) {
@@ -86,7 +86,7 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 		JPanel card2 = new JPanel();
 		JPanel card3 = new JPanel();
 		JPanel card4 = new JPanel();
-		//JPanel card5 = new JPanel();
+		JPanel card5 = new JPanel();
 	
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		
@@ -138,35 +138,6 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 				+ "<tr><td><i>s</i>:</td><td><i>success</i>, binary variable representing successful execution.</td></tr>"
 				+ "</table></html>"));
 		
-
-		
-/*		try {
-			ClassLoader classLoader = getClass().getClassLoader();
-			image = ImageIO.read(classLoader.getResource("rmlogo.png"));
-//			image = ImageIO.read(new URL("http://192.168.2.119:8000/snapshot.png"));
-			imageLabel = new JLabel(new ImageIcon(image));
-			imageLabel.setPreferredSize(new Dimension(320,240));
-			imageLabel.setMaximumSize(imageLabel.getPreferredSize());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
-
-		/*
-		// Fourth card: get object pose
-		card4.add(createObjectsPoseComboBox(objectsPoseComboBox, provider));
-//		card4.add(createSpacer(10));
-//		card4.add(createRequestImageButton(provider));
-		card4.add(createDescription(objectsPoseLabel, "<html>"
-				+ "<table>"
-				+ "<tr><td colspan=2><b>Input:</b></td></tr>"
-				+ "<tr><td><i>type</i>:</td><td>String determining the specific parameters that the SmartHand will use</td></tr>"
-				+ "<tr><td></td><td>for object recognition. Use the 'installation' tab to retrieve a</td></tr>"
-				+ "<tr><td></td><td>list of supported objects.</td></tr>"
-				+ "<tr><td colspan=2><b>Output:</b></td></tr>"
-				+ "<tr><td><i>t</i>:</td><td><i>target</i>, a <i>pose</i> to grasp the object.</td></tr>"
-				+ "</table></html>"));
-		*/
 		
 		// Fourth card: get object info
 		card4.add(createObjectsInfoComboBox(objectsInfoComboBox, plane_filter, provider));
@@ -185,6 +156,16 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 				+ "<tr><td><i>w</i>:</td><td><i>width</i>, optimal opening aperture to grasp the object.</td></tr>"
 				+ "</table></html>"));
 		
+		// Fifth card: move cart
+		card5.add(createCartWaypointsComboBox(cartWaypointsComboBox, provider));
+		card5.add(createDescription(objectsInfoLabel, "<html><table>"
+				+ "<tr><td colspan=2><b>Input:</b></td></tr>"
+				+ "<tr><td><i>type</i>:</td><td>String determining the specific waypoint to move to.</td></tr>"
+				+ "<tr><td></td><td>Use the 'installation' tab to retrieve a list of supported waypoints.</td></tr>"
+				+ "<tr><td><b>Output:</b></td></tr>"
+				+ "<tr><td><i>s</i>:</td><td><i>success</i>, binary variable indicating whether waypoint could be reached.</td></tr>"
+				+ "</table></html>"));
+	
 		
 		//Create the panel that contains the "cards".
 		cards = new JPanel(new CardLayout());
@@ -192,7 +173,7 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 		cards.add(card2, commands[1]);
 		cards.add(card3, commands[2]);
 		cards.add(card4, commands[3]);
-		//cards.add(card5, commands[4]);
+		cards.add(card5, commands[4]);
 		
 
 		panel.add(cards, BorderLayout.CENTER);
@@ -226,49 +207,7 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 		}
 		
 	}*/
-	
-	private Box createRequestImageButton(final ContributionProvider<SmartHandProgramNodeContribution> provider) {
-		Box box = Box.createVerticalBox();
-		
-		box.add(new JLabel("Obtain list of available object definitions"));
-		
-		//JButton button = new JButton("Snapshot");
-		snapshotButton.setText("Snapshot");
-		snapshotButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				provider.get().requestPoseAndImage();
-			/*	try {
-					image = ImageIO.read(new URL("http://" +
-							provider.get().getIPAddress() + 
-							":8000/snapshot.png"));
-					
-					System.out.println("Read from: " + "http://" + 
-							provider.get().getIPAddress() + 
-						    ":8000/snapshot.png");
-					imageLabel.setIcon(new ImageIcon(image));
-					imageLabel.repaint();
-					
-					
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}*/
-			}
-		});
-		
-/*		imageLabel = new JLabel(new ImageIcon(image));
-		imageLabel.setPreferredSize(new Dimension(320,240));
-		imageLabel.setMaximumSize(imageLabel.getPreferredSize());
-		
-		box.add(imageLabel);*/
-		box.add(snapshotButton);
-		//box.add(new JLabel("Returned value:"));
-		//box.add(this.RETURN_VALUE);
-		
 
-		
-		return box;
-	}
 	
 	public void setCard(String card) {
 		CardLayout cl = (CardLayout)(cards.getLayout());
@@ -284,15 +223,15 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 		commandComboBox.setSelectedItem(item);
 	}
 	
-	public void setObjectsPoseComboBoxItems(String objects) {
-		objectsPoseComboBox.removeAllItems();
+	public void setCartWaypointsComboBoxItems(String objects) {
+		cartWaypointsComboBox.removeAllItems();
 		String[] objArray = objects.split("%");
-		objectsPoseComboBox.setModel(new DefaultComboBoxModel<String>(objArray));
+		cartWaypointsComboBox.setModel(new DefaultComboBoxModel<String>(objArray));
 	}
 	
 	
-	public void setObjectsPoseComboBoxSelection(String object) {
-		objectsPoseComboBox.setSelectedItem(object);
+	public void setCartWaypointsComboBoxSelection(String object) {
+		cartWaypointsComboBox.setSelectedItem(object);
 	}
 
 	public void setObjectsInfoComboBoxItems(String objects) {
@@ -354,7 +293,7 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 		return box;
 	}
 	
-	private Box createObjectsPoseComboBox(final JComboBox<String> combo, 
+	private Box createCartWaypointsComboBox(final JComboBox<String> combo, 
 			final ContributionProvider<SmartHandProgramNodeContribution> provider) {
 		Box box = Box.createHorizontalBox();
 		box.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -367,7 +306,7 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				if(e.getStateChange() == ItemEvent.SELECTED) {
-					provider.get().onPoseObjectSelection((String) e.getItem());
+					provider.get().onCartWaypointsSelection((String) e.getItem());
 				}
 			}
 		});

@@ -30,6 +30,8 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 	private static final String VALIDIP_KEY = "validip";
 	private static final String OBJECTS_KEY = "objects";
 	private static final String DEFAULT_OBJECT = "generic";
+	private static final String CARTWAYPOINTS_KEY = "waypoints";
+	private static final String DEFAULT_WAYPOINT = "home";
 	
 	// Variables to manage the status of the hand. 'status' is shown at 'statusLabel'.
 	final static String SHS_OFFLINE = "offline";
@@ -337,11 +339,23 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		return model.get(OBJECTS_KEY, DEFAULT_OBJECT);
 	}
 	
+	public String getKnownWaypoints() {
+		return model.get(CARTWAYPOINTS_KEY, DEFAULT_WAYPOINT);
+	}
+	
 	public void setKnownObjects(String message) {
 		if ("".equals(message)) {
 			resetToDefaultValue();
 		} else {
 			model.set(OBJECTS_KEY, message);
+		}
+	}
+	
+	public void setKnownWaypoints(String message) {
+		if ("".equals(message)) {
+			resetToDefaultValue();
+		} else {
+			model.set(CARTWAYPOINTS_KEY, message);
 		}
 	}
 

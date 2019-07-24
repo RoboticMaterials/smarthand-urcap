@@ -53,8 +53,9 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 	private static final String FORCEW_KEY = "forceW";
 	private static final String APERTURE_KEY = "aperture";
 	private static final String APERTUREVAR_KEY = "aperturevar";
-	private static final String POSEOBJECT_KEY = "object";
+	//private static final String POSEOBJECT_KEY = "object";
 	private static final String INFOOBJECT_KEY = "object";
+	private static final String CARTWAYPOINT_KEY = "waypoint";
 	
 	private static final String SUCCESSVAR_KEY = "var_success";
 	private static final String TARGETVAR_KEY = "var_target";
@@ -67,6 +68,7 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 	private static final int DEFAULT_APERTURE = 108;
 	private static final String DEFAULT_APERTUREVAR = "<none>";
 	private static final String DEFAULT_OBJECT = "generic";
+	private static final String DEFAULT_WAYPOINT = "home";
 	
 	private static final String PLANEFILTERVAR_KEY = "var_planefilter";
 	private static final Boolean DEFAULT_PLANEFILTER = true;
@@ -179,12 +181,12 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 	return IPADDRESS;
 	}
 	
-	public void onPoseObjectSelection(final String output) {
+	public void onCartWaypointsSelection(final String output) {
 		undoRedoManager.recordChanges(new UndoableChanges() {
 
 			@Override
 			public void executeChanges() {
-				model.set(POSEOBJECT_KEY, output);
+				model.set(CARTWAYPOINT_KEY, output);
 				
 			}
 			
@@ -303,8 +305,8 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 	private Boolean getPlaneFilter() {
 		return model.get(PLANEFILTERVAR_KEY, DEFAULT_PLANEFILTER);
 	}
-	private String getPoseObject() {
-		return model.get(POSEOBJECT_KEY, DEFAULT_OBJECT);
+	private String getCartWaypoint() {
+		return model.get(CARTWAYPOINT_KEY, DEFAULT_WAYPOINT);
 	}
 	
 	private String getInfoObject() {
@@ -360,8 +362,8 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 		//view.setApertureVarComboBoxSelection(getApertureVar());
 		view.updateApertureVarComboBox(this);
 		
-		view.setObjectsPoseComboBoxItems(getInstallation().getKnownObjects());
-		view.setObjectsPoseComboBoxSelection(getPoseObject());
+		view.setCartWaypointsComboBoxItems(getInstallation().getKnownWaypoints());
+		view.setCartWaypointsComboBoxSelection(getCartWaypoint());
 		
 		view.setObjectsInfoComboBoxItems(getInstallation().getKnownObjects());
 		view.setObjectsInfoComboBoxSelection(getInfoObject());
@@ -440,6 +442,7 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 		//case 3 : return   getResolvedVarName(TARGETVAR_KEY) + "=" + getCommand()+"("+getPoseObject()+")";
 		// Get Object pose
 		case 3 : return  "(" + getResolvedVarName(SUCCESSVAR_KEY) + "," + getResolvedVarName(APPROACHVAR_KEY) + "," + getResolvedVarName(TARGETVAR_KEY) +"," + getResolvedVarName(WIDTHVAR_KEY) + ")=" + getCommand()+"("+getInfoObject()+","+getPlaneFilter()+")";
+		case 4 : return getResolvedVarName(SUCCESSVAR_KEY)+"="+getCommand()+"("+getCartWaypoint()+")";
 		default: return "";
 		}
 	}
@@ -498,6 +501,8 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 				 writer.assign(getResolvedVarName(SUCCESSVAR_KEY), "True");
 			     writer.appendLine("end");
 				 break;
+		case 4 : writer.assign(getResolvedVarName(SUCCESSVAR_KEY),"smarthand.movecart(\""+getCartWaypoint()+"\")");
+				 break;
 		}
 		
 	}
@@ -533,7 +538,7 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 		sender.sendScriptCommand(sendTestCommand);
 	}
 	
-	public void requestPoseAndImage() {
+/*	public void requestPoseAndImage() {
 		if(!getInstallation().getStatus().contentEquals("offline")) {
 		
 		ScriptCommand exportTestCommand = new ScriptCommand("exportVariable");
@@ -557,9 +562,9 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 		sendTestCommand.appendLine(targetVariable.getDisplayName()+"=smarthand.get_object_pose(\""+getObject()+"\")");
 		sendTestCommand.appendLine("smarthand.irimage()");
 		sender.sendScriptCommand(sendTestCommand);*/
-		}
+	/*	}
 		
-	}
+	}*/
 	
 	private void insertGetInfoNode() {
 		try {
