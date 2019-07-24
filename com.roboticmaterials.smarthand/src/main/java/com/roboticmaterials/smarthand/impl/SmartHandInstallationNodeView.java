@@ -114,6 +114,7 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 		jPanel.add(createRequestObjectsButton(contribution));
 		jPanel.add(createVerticalSpacing());
 		jPanel.add(createObjectsComboBox(objectsComboBox, contribution));
+		jPanel.add(createVerticalSpacing());
 		jPanel.add(createRequestWaypointsButton(contribution));
 		jPanel.add(createVerticalSpacing());
 		jPanel.add(createWaypointsComboBox(waypointsComboBox,contribution));

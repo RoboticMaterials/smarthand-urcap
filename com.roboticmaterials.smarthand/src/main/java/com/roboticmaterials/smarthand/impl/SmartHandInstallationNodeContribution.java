@@ -233,8 +233,8 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 				"waypoints");
 		
 		// Put the result back in the View
-		view.setKnownObjects(returnValue);
-		setKnownObjects(returnValue);
+		view.setKnownWaypoints(returnValue);
+		setKnownWaypoints(returnValue);
 		} else {
 			// Place warning pop-up here
 		}
