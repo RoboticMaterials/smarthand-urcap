@@ -68,8 +68,8 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 	private final JLabel openGripperLabel = new JLabel();
 	private final JLabel closeGripperLabel = new JLabel();
 	private final JLabel widthGripperLabel = new JLabel();
-	private final JLabel objectsPoseLabel = new JLabel();
 	private final JLabel objectsInfoLabel = new JLabel();
+	private final JLabel cartLabel = new JLabel();
 	
 	//private JLabel imageLabel;
 	//private BufferedImage image;
@@ -158,7 +158,7 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 		
 		// Fifth card: move cart
 		card5.add(createCartWaypointsComboBox(cartWaypointsComboBox, provider));
-		card5.add(createDescription(objectsInfoLabel, "<html><table>"
+		card5.add(createDescription(cartLabel, "<html><table>"
 				+ "<tr><td colspan=2><b>Input:</b></td></tr>"
 				+ "<tr><td><i>type</i>:</td><td>String determining the specific waypoint to move to.</td></tr>"
 				+ "<tr><td></td><td>Use the 'installation' tab to retrieve a list of supported waypoints.</td></tr>"
