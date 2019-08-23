@@ -1,5 +1,5 @@
 package com.roboticmaterials.smarthand.impl;
-
+//Kalervo Test
 import com.ur.urcap.api.contribution.ProgramNodeContribution;
 import com.ur.urcap.api.contribution.program.ProgramAPIProvider;
 import com.ur.urcap.api.domain.ProgramAPI;
