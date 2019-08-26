@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1566501365190
-Build-Jdk: 1.8.0_222
+Bnd-LastModified: 1566837064317
+Build-Jdk: 1.8.0_212
 Built-By: ur
 Bundle-Activator: com.roboticmaterials.smarthand.impl.Activator
 Bundle-Category: URCap
