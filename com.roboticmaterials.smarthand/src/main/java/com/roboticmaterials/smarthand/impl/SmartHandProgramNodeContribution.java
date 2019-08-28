@@ -38,7 +38,7 @@ import com.roboticmaterials.smarthand.communicator.ScriptExporter;
 import com.roboticmaterials.smarthand.communicator.ScriptSender;
 import com.roboticmaterials.smarthand.impl.SmartHandInstallationNodeContribution;
 
-public class SmartHandProgramNodeContribution implements ProgramNodeContribution {
+public abstract class SmartHandProgramNodeContribution implements ProgramNodeContribution {
 
     public SmartHandProgramNodeContribution(ProgramAPIProvider apiProvider, 
             final SmartHandProgramNodeView view, DataModel model) {
