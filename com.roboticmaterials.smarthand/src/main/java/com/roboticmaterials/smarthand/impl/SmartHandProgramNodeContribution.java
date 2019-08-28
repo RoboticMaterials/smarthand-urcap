@@ -2,7 +2,10 @@ package com.roboticmaterials.smarthand.impl;
 
 import com.ur.urcap.api.contribution.ProgramNodeContribution;
 
-import com.roboticmaterials.smarthand.impl.SmartHandInstallationNodeContribution;
+import com.ur.urcap.api.contribution.program.ProgramAPIProvider;
+import com.ur.urcap.api.domain.data.DataModel;
+import com.ur.urcap.api.domain.script.ScriptWriter;
+
 
 public class SmartHandProgramNodeContribution implements ProgramNodeContribution {
 
