@@ -64,6 +64,7 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 	private final JButton openButton = new JButton();
 	private final JButton closeButton = new JButton();
 	private final JButton snapshotButton = new JButton();
+	private final JButton test = new JButton();
 	
 	private final JLabel openGripperLabel = new JLabel();
 	private final JLabel closeGripperLabel = new JLabel();

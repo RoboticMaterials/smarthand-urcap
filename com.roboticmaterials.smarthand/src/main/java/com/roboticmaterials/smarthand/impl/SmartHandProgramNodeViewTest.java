@@ -1,0 +1,72 @@
+package com.roboticmaterials.smarthand.impl;
+
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+import javax.imageio.ImageIO;
+import javax.swing.AbstractButton;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSeparator;
+import javax.swing.JSlider;
+import javax.swing.SwingConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
+import com.ur.urcap.api.contribution.ContributionProvider;
+import com.ur.urcap.api.contribution.ViewAPIProvider;
+import com.ur.urcap.api.contribution.program.swing.SwingProgramNodeView;
+import com.ur.urcap.api.domain.variable.Variable;
+
+public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandProgramNodeContibution>{
+
+    private final ViewAPIProvider apiProvider;
+	
+	public SmartHandProgramNodeView(ViewAPIProvider apiProvider) {
+		this.apiProvider = apiProvider;
+    }
+    
+    private final JButton ocbutton = new JButton();
+
+
+    @Override
+    public void buildUI(JPanel panel, final ContributionProvider<SmartHandProgramNodeContribution> provider) {
+
+
+        Box box = Box.createVerticalBox();
+		
+		Box toolbox = Box.createHorizontalBox();
+		toolbox.setAlignmentX(Component.CENTER_ALIGNMENT);
+		toolbox.add(createCommandComboBox(commandComboBox, provider));
+		toolbox.add(createHorizontalSpacing(10));
+		toolbox.add(createSenderOpenGripperButton(provider));
+		toolbox.add(createHorizontalSpacing(10));
+		toolbox.add(createSenderCloseGripperButton(provider));
+		toolbox.add(createHorizontalSpacing(10));
+        toolbox.add(createTestButton(provider));
+        
+        //this needs to be refined
+    }
+}
