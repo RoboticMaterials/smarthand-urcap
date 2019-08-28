@@ -11,12 +11,12 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 
     public SmartHandProgramNodeContribution(ProgramAPIProvider apiProvider, 
             final SmartHandProgramNodeView view, DataModel model) {
-        commands = view.getCommands();
-        this.apiProvider = apiProvider;
-        this.programAPI = apiProvider.getProgramAPI();
-        this.view = view;
-        this.model = model;
-        this.undoRedoManager = this.apiProvider.getProgramAPI().getUndoRedoManager();
+        // commands = view.getCommands();
+        // this.apiProvider = apiProvider;
+        // this.programAPI = apiProvider.getProgramAPI();
+        // this.view = view;
+        // this.model = model;
+        // this.undoRedoManager = this.apiProvider.getProgramAPI().getUndoRedoManager();
 
     }
 
