@@ -51,16 +51,16 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
     
 
     //Basic Function Buttons
-    private final JButton openCloseButton = new JButton();
-    private final JButton widthGripperButton = new JButton();
-    private final JButton objectPoseButton = new JButton();
-    private final JButton moveCartbutton = new JButton();
+    private final JButton openCloseButton = new JButton("Open/Close Gripper");
+    private final JButton widthGripperButton = new JButton("Gripper Width");
+    private final JButton objectPoseButton = new JButton("Object Pose");
+    private final JButton moveCartbutton = new JButton("Move Cart");
 
     //Advance Function Buttons
-    private final JButton pickPlaceButton = new JButton();
-    private final JButton assemblyButton = new JButton();
-    private final JButton binPickingButton = new JButton();
-    private final JButton restockingButton = new JButton();
+    private final JButton pickPlaceButton = new JButton("Pick and Place");
+    private final JButton assemblyButton = new JButton("Assembly");
+    private final JButton binPickingButton = new JButton("Bin Picking");
+    private final JButton restockingButton = new JButton("Restocking");
 
     private final JSlider openCloseForceSlider = new JSlider();
 
@@ -70,19 +70,47 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
     @Override
     public void buildUI(JPanel panel, final ContributionProvider<SmartHandProgramNodeContribution> provider) {
 
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS);
 
-        Box box = Box.createVerticalBox();
+        //Panel for basic tasks
+        panel.add(createDescription("Basic"));
+        panel.add(openCloseButton);
+        panel.add(widthGripperButton);
+        panel.add(objectPoseButton);
+        panel.add(moveCartbutton);
+
+        //Panel for advance tasks
+        panel.add(createDescription("Advance"));
+        panel.add(pickPlaceButton);
+        panel.add(assemblyButton);
+        panel.add(binPickingButton);
+        panel.add(restockingButton);
+
+    }
+        private Box createDescription(String desc) {
+            Box box = Box.createHorizontalBox();
+            box.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+            JLabel label = new JLabel(desc);
+
+            box.add(label);
+
+            return box;
+        }
+
+
+        // Box box = Box.createVerticalBox();
 		
-		Box toolbox = Box.createHorizontalBox();
-		toolbox.setAlignmentX(Component.CENTER_ALIGNMENT);
-		toolbox.add(createCommandComboBox(commandComboBox, provider));
-		toolbox.add(createHorizontalSpacing(10));
-		toolbox.add(createSenderOpenGripperButton(provider));
-		toolbox.add(createHorizontalSpacing(10));
-		toolbox.add(createSenderCloseGripperButton(provider));
-		toolbox.add(createHorizontalSpacing(10));
-        toolbox.add(createTestButton(provider));
+		// Box toolbox = Box.createHorizontalBox();
+		// toolbox.setAlignmentX(Component.CENTER_ALIGNMENT);
+		// toolbox.add(createCommandComboBox(commandComboBox, provider));
+		// toolbox.add(createHorizontalSpacing(10));
+		// toolbox.add(createSenderOpenGripperButton(provider));
+		// toolbox.add(createHorizontalSpacing(10));
+		// toolbox.add(createSenderCloseGripperButton(provider));
+		// toolbox.add(createHorizontalSpacing(10));
+        // toolbox.add(createTestButton(provider));
         
         //this needs to be refined
-    }
+    
 }
