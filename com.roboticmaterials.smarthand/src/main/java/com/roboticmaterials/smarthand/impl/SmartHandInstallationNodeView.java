@@ -40,7 +40,7 @@ import com.ur.urcap.api.domain.userinteraction.keyboard.KeyboardTextInput;
 import com.roboticmaterials.smarthand.impl.SmartHandInstallationNodeContribution;
 import com.roboticmaterials.smarthand.impl.Style;
 
-public class SmartHandInstallationNodeView implements SwingInstallationNodeView{
+public class SmartHandInstallationNodeView implements SwingInstallationNodeView<SmartHandInstallationNodeContribution>{
 
 	
 	private final Style style;
