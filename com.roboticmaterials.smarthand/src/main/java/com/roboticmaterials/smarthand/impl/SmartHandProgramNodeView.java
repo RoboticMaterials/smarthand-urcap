@@ -514,7 +514,7 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				int newValue = slider.getValue();
-				value.setText(Integer.toString(newValue)+" mm");
+				value.setText(Integer.toString(newValue)+" mm ");
 				provider.get().onApertureSelection(newValue);
 				
 			}

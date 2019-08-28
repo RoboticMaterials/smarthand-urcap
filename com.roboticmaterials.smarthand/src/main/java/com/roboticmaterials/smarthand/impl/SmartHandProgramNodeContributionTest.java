@@ -39,11 +39,16 @@ import com.roboticmaterials.smarthand.communicator.ScriptSender;
 import com.roboticmaterials.smarthand.impl.SmartHandInstallationNodeContribution;
 
 public class SmartHandProgramNodeContribution implements ProgramNodeContribution {
-        public SmartHandProgramNodeContribution(ProgramAPIProvider apiProvider, 
-        final SmartHandProgramNodeView view, DataModel model) {
-    commands = view.getCommands();
-    this.apiProvider = apiProvider;
-    this.programAPI = apiProvider.getProgramAPI();
-    this.view = view;
-    this.model = model;
-    this.undoRedoManager = this.apiProvider.getProgramAPI().getUndoRedoManager();
+
+    private static final String FORCEOC_KEY = "forceOC";
+    
+
+
+    public SmartHandProgramNodeContribution(ProgramAPIProvider apiProvider, 
+            final SmartHandProgramNodeView view, DataModel model) {
+        commands = view.getCommands();
+        this.apiProvider = apiProvider;
+        this.programAPI = apiProvider.getProgramAPI();
+        this.view = view;
+        this.model = model;
+        this.undoRedoManager = this.apiProvider.getProgramAPI().getUndoRedoManager();

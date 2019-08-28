@@ -27,6 +27,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
@@ -48,7 +49,22 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 		this.apiProvider = apiProvider;
     }
     
-    private final JButton ocbutton = new JButton();
+
+    //Basic Function Buttons
+    private final JButton openCloseButton = new JButton();
+    private final JButton widthGripperButton = new JButton();
+    private final JButton objectPoseButton = new JButton();
+    private final JButton moveCartbutton = new JButton();
+
+    //Advance Function Buttons
+    private final JButton pickPlaceButton = new JButton();
+    private final JButton assemblyButton = new JButton();
+    private final JButton binPickingButton = new JButton();
+    private final JButton restockingButton = new JButton();
+
+    private final JSlider openCloseForceSlider = new JSlider();
+
+    private final JCheckBox planeFileter = new JCheckBox("Plane Filter");
 
 
     @Override
