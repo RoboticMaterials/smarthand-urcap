@@ -38,7 +38,7 @@ import com.roboticmaterials.smarthand.communicator.ScriptExporter;
 import com.roboticmaterials.smarthand.communicator.ScriptSender;
 import com.roboticmaterials.smarthand.impl.SmartHandInstallationNodeContribution;
 
-public abstract class SmartHandProgramNodeContribution implements ProgramNodeContribution {
+public class SmartHandProgramNodeContribution implements ProgramNodeContribution {
 
     public SmartHandProgramNodeContribution(ProgramAPIProvider apiProvider, 
             final SmartHandProgramNodeView view, DataModel model) {
@@ -71,7 +71,8 @@ public abstract class SmartHandProgramNodeContribution implements ProgramNodeCon
         return false;
     }
 
-    public void genereateScript(ScriptWriter writer) {
+    @Override
+    public void generateScript(ScriptWriter writer) {
         
     }
 
