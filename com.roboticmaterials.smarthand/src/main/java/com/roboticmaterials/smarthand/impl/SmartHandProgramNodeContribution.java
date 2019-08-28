@@ -114,8 +114,8 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
     }
 
     @Override
-    public void genereateScript(ScriptWriter writer) (
+    public void genereateScript(ScriptWriter writer) {
         
-    )
+    }
 
 }
