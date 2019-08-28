@@ -41,7 +41,7 @@ import com.ur.urcap.api.contribution.ViewAPIProvider;
 import com.ur.urcap.api.contribution.program.swing.SwingProgramNodeView;
 import com.ur.urcap.api.domain.variable.Variable;
 
-public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandProgramNodeContibution>{
+public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandProgramNodeContribution>{
 
     private final ViewAPIProvider apiProvider;
 	
