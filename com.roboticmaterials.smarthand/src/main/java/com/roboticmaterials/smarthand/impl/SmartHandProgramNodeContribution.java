@@ -5,7 +5,7 @@ import com.ur.urcap.api.contribution.ProgramNodeContribution;
 import com.ur.urcap.api.contribution.program.ProgramAPIProvider;
 import com.ur.urcap.api.domain.data.DataModel;
 import com.ur.urcap.api.domain.script.ScriptWriter;
-
+import com.roboticmaterials.smarthand.impl.SmartHandInstallationNodeContribution;
 
 public class SmartHandProgramNodeContribution implements ProgramNodeContribution {
 
@@ -40,7 +40,6 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
         return false;
     }
 
-    @Override
     public void genereateScript(ScriptWriter writer) {
         
     }
