@@ -71,7 +71,7 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
     @Override
     public void buildUI(JPanel panel, final ContributionProvider<SmartHandProgramNodeContribution> provider) {
 
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setLayout(new GridLayout(5,2));
 
         //Panel for basic tasks
         panel.add(createDescription("Basic"));
