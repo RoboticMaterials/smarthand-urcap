@@ -76,7 +76,7 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 	private ContributionProvider<SmartHandProgramNodeContribution> provider;
 
 	private JPanel cards;
-	private static final String[] commands = {"Open Gripper","Close Gripper","Set Gripper Width","Get Object Pose","Move Cart"};
+	private static final String[] commands = {"Open Gripper","Close Gripper","Set Gripper Width","Move Cart","Get Object Pose","Object Recognition"};
 	
 	@Override
 	public void buildUI(JPanel panel, final ContributionProvider<SmartHandProgramNodeContribution> provider) {
@@ -87,6 +87,7 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 		JPanel card3 = new JPanel();
 		JPanel card4 = new JPanel();
 		JPanel card5 = new JPanel();
+		JPanel card6 = new JPanel();
 	
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		
@@ -138,10 +139,19 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 				+ "<tr><td><i>s</i>:</td><td><i>success</i>, binary variable representing successful execution.</td></tr>"
 				+ "</table></html>"));
 		
-		
-		// Fourth card: get object info
-		card4.add(createObjectsInfoComboBox(objectsInfoComboBox, plane_filter, provider));
-		card4.add(createDescription(objectsInfoLabel, "<html><table>"
+		// Fourth card: move cart
+		card4.add(createCartWaypointsComboBox(cartWaypointsComboBox, provider));
+		card4.add(createDescription(cartLabel, "<html><table>"
+				+ "<tr><td colspan=2><b>Input:</b></td></tr>"
+				+ "<tr><td><i>type</i>:</td><td>String determining the specific waypoint to move to.</td></tr>"
+				+ "<tr><td></td><td>Use the 'installation' tab to retrieve a list of supported waypoints.</td></tr>"
+				+ "<tr><td><b>Output:</b></td></tr>"
+				+ "<tr><td><i>s</i>:</td><td><i>success</i>, binary variable indicating whether waypoint could be reached.</td></tr>"
+				+ "</table></html>"));
+
+		// Fifth card: get object info
+		card5.add(createObjectsInfoComboBox(objectsInfoComboBox, plane_filter, provider));
+		card5.add(createDescription(objectsInfoLabel, "<html><table>"
 				+ "<tr><td colspan=2><b>Input:</b></td></tr>"
 				+ "<tr><td><i>type</i>:</td><td>String determining the specific parameters that the SmartHand will use</td></tr>"
 				+ "<tr><td></td><td>for object recognition. Use the 'installation' tab to retrieve a</td></tr>"
@@ -155,16 +165,10 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 				+ "<tr><td><i>s</i> is <i>false</i>.</td></tr>"
 				+ "<tr><td><i>w</i>:</td><td><i>width</i>, optimal opening aperture to grasp the object.</td></tr>"
 				+ "</table></html>"));
+
+		// Sixth card: Object Recognition
+		card6.setLayout(new BoxLayout(card6, BoxLayout.Y_AXIS));
 		
-		// Fifth card: move cart
-		card5.add(createCartWaypointsComboBox(cartWaypointsComboBox, provider));
-		card5.add(createDescription(cartLabel, "<html><table>"
-				+ "<tr><td colspan=2><b>Input:</b></td></tr>"
-				+ "<tr><td><i>type</i>:</td><td>String determining the specific waypoint to move to.</td></tr>"
-				+ "<tr><td></td><td>Use the 'installation' tab to retrieve a list of supported waypoints.</td></tr>"
-				+ "<tr><td><b>Output:</b></td></tr>"
-				+ "<tr><td><i>s</i>:</td><td><i>success</i>, binary variable indicating whether waypoint could be reached.</td></tr>"
-				+ "</table></html>"));
 	
 		
 		//Create the panel that contains the "cards".
@@ -174,6 +178,7 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 		cards.add(card3, commands[2]);
 		cards.add(card4, commands[3]);
 		cards.add(card5, commands[4]);
+		cards.add(card6, commands[5]);
 		
 
 		panel.add(cards, BorderLayout.CENTER);
