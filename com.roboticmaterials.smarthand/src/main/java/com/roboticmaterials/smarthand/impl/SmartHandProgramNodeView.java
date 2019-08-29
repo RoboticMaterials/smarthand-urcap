@@ -1,5 +1,8 @@
 package com.roboticmaterials.smarthand.impl;
 
+import java.awt.*;
+import java.applet.Applet;
+
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
