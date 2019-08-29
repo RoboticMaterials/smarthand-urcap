@@ -49,8 +49,6 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 		this.apiProvider = apiProvider;
     }
     
-    Icon newpic = new ImageIcon("com.roboticmaterials.smarthand\src\main\resources\rmlogo.png");
-
     //Basic Function Buttons
     private final JButton openCloseButton = new JButton("Open/Close Gripper");
     private final JButton widthGripperButton = new JButton("Gripper Width");
@@ -58,7 +56,7 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
     private final JButton moveCartbutton = new JButton("Move Cart");
 
     //Advance Function Buttons
-    private final JButton pickPlaceButton = new JButton(newpic);
+    private final JButton pickPlaceButton = new JButton("Pick and Place");
     private final JButton assemblyButton = new JButton("Assembly");
     private final JButton binPickingButton = new JButton("Bin Picking");
     private final JButton restockingButton = new JButton("Restocking");
