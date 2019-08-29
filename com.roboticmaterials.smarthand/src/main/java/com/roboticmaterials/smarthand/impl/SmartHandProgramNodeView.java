@@ -70,6 +70,7 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 	private final JLabel widthGripperLabel = new JLabel();
 	private final JLabel objectsInfoLabel = new JLabel();
 	private final JLabel cartLabel = new JLabel();
+	private final JLabel objectRecognition = new JLabel();
 	
 	//private JLabel imageLabel;
 	//private BufferedImage image;
@@ -168,6 +169,7 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 
 		// Sixth card: Object Recognition
 		card6.setLayout(new BoxLayout(card6, BoxLayout.Y_AXIS));
+		card6.add(createDescription(objectRecognition, "<html> This is where the info for Object recognition will be going </html>"));
 		
 	
 		

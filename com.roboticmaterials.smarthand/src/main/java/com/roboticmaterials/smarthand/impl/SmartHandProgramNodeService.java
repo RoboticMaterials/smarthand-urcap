@@ -25,7 +25,7 @@ public class SmartHandProgramNodeService implements SwingProgramNodeService<Smar
 
 	@Override
 	public String getTitle(Locale locale) {
-		return "SmartHand";
+		return "SmartHand Basic Commands";
 	}
 
 	@Override
