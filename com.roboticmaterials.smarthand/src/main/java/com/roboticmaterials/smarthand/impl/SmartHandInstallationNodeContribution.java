@@ -193,15 +193,12 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		testHandStatus();
 		timer.stop();
 		if(getStatus().contentEquals(SHS_ONLINE)) {
-		System.out.println("Connected to the gripper Known Ogbjects");
 		ScriptCommand exportTestCommand = new ScriptCommand("exportVariable");
 		
 		// Add the calculation script to the command
 		exportTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8100/RPC2\")");
-		System.out.println("Request met");		
 		//exportTestCommand.appendLine("smarthand.init()");
 		exportTestCommand.appendLine("objectIDs = smarthand.get_object_defs()");
-		System.out.println("Has Objects");		
 		
 		// Use the exporter to send the script
 		// Note the String name of the variable (objectIDs) to be returned
@@ -223,16 +220,13 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		testHandStatus();
 		timer.stop();
 		if(getStatus().contentEquals(SHS_ONLINE)) {
-		System.out.println("Connected to the gripper Known Waypoints");		
 		ScriptCommand exportTestCommand = new ScriptCommand("exportVariable");
 		
 		// Add the calculation script to the command
 		exportTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8100/RPC2\")");
-		System.out.println("Request met");		
 		
 		//exportTestCommand.appendLine("smarthand.init()");
 		exportTestCommand.appendLine("waypoints = smarthand.get_waypoints()");
-		System.out.println("Has waypoints");		
 		
 		// Use the exporter to send the script
 		// Note the String name of the variable (objectIDs) to be returned
