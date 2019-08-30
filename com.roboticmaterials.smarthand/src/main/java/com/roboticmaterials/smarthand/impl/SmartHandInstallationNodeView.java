@@ -262,6 +262,7 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 		requestObjectsButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				System.out.println("Request Objects Button Pressed");
 				contribution.importKnownObjects();
 			}
 		});
@@ -281,6 +282,7 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 		requestObjectsButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				System.out.println("Request Waypoint button pressed");
 				contribution.importKnownWaypoints();
 			}
 		});
