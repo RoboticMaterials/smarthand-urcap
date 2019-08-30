@@ -279,7 +279,7 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 		
 		box.add(new JLabel("Obtain list of available cart waypoints"));
 		
-		requestObjectsButton.addActionListener(new ActionListener() {
+		requestWaypointsButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("Request Waypoint button pressed");
