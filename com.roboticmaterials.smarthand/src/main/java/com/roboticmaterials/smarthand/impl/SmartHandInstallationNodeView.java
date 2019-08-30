@@ -48,12 +48,12 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 	
 	private final JComboBox<String> objectsComboBox = new JComboBox<String>();
 	private final JComboBox<String> waypointsComboBox = new JComboBox<String>();
-	private final JButton requestObjectsButton = new JButton("Request objects");
-	private final JButton requestWaypointsButton = new JButton("Request waypoints");
-	private final JButton openGripperButton = new JButton("Open");
-	private final JButton closeGripperButton = new JButton("Close");;
-	private final JButton scanNetworkButton = new JButton("Scan");
-	private final JButton initGripperButton = new JButton("Connect");
+	private JButton requestObjectsButton = new JButton("Request objects");
+	private JButton requestWaypointsButton = new JButton("Request waypoints");
+	private JButton openGripperButton = new JButton("Open");
+	private JButton closeGripperButton = new JButton("Close");;
+	private JButton scanNetworkButton = new JButton("Scan");
+	private JButton initGripperButton = new JButton("Connect");
 	//private final JButton stopGripperButton = new JButton("Stop");
 
 	

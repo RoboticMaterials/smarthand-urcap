@@ -188,6 +188,7 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		return status;
 	}
 	
+	//Need to add catch if the code fails
 	public void importKnownObjects() {
 		// Create a new ScriptCommand called "exportVariable"
 		testHandStatus();
@@ -202,6 +203,7 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		
 		// Use the exporter to send the script
 		// Note the String name of the variable (objectIDs) to be returned
+		
 		String returnValue = exporter.exportStringFromURScript(exportTestCommand,
 				"objectIDs");
 		
