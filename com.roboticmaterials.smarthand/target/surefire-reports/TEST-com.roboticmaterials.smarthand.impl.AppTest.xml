@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.roboticmaterials.smarthand.impl.AppTest" time="0.111" tests="1" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.roboticmaterials.smarthand.impl.AppTest" time="0.095" tests="1" errors="0" skipped="0" failures="0">
   <properties>
     <property name="sun.desktop" value="gnome"/>
     <property name="awt.toolkit" value="sun.awt.X11.XToolkit"/>
@@ -7,7 +7,7 @@
     <property name="java.specification.version" value="1.8"/>
     <property name="sun.cpu.isalist" value=""/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
-    <property name="java.class.path" value="/home/ur/.m2/repository/org/apache/maven/surefire/surefire-booter/2.22.1/surefire-booter-2.22.1.jar:/home/ur/.m2/repository/org/apache/maven/surefire/surefire-api/2.22.1/surefire-api-2.22.1.jar:/home/ur/.m2/repository/org/apache/maven/surefire/surefire-logger-api/2.22.1/surefire-logger-api-2.22.1.jar:/home/ur/Desktop/smarthand-urcap/com.roboticmaterials.smarthand/target/test-classes:/home/ur/Desktop/smarthand-urcap/com.roboticmaterials.smarthand/target/classes:/home/ur/.m2/repository/org/osgi/org.osgi.core/4.3.0/org.osgi.core-4.3.0.jar:/home/ur/.m2/repository/com/ur/urcap/api/1.6.0/api-1.6.0.jar:/home/ur/.m2/repository/junit/junit/4.12/junit-4.12.jar:/home/ur/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/home/ur/.m2/repository/org/apache/maven/surefire/surefire-junit4/2.22.1/surefire-junit4-2.22.1.jar"/>
+    <property name="java.class.path" value="/home/ur/.m2/repository/org/apache/maven/surefire/surefire-booter/2.22.1/surefire-booter-2.22.1.jar:/home/ur/.m2/repository/org/apache/maven/surefire/surefire-api/2.22.1/surefire-api-2.22.1.jar:/home/ur/.m2/repository/org/apache/maven/surefire/surefire-logger-api/2.22.1/surefire-logger-api-2.22.1.jar:/home/ur/sdk/sdk-1.7.0/smarthand-urcap/com.roboticmaterials.smarthand/target/test-classes:/home/ur/sdk/sdk-1.7.0/smarthand-urcap/com.roboticmaterials.smarthand/target/classes:/home/ur/.m2/repository/org/osgi/org.osgi.core/4.3.0/org.osgi.core-4.3.0.jar:/home/ur/.m2/repository/com/ur/urcap/api/1.6.0/api-1.6.0.jar:/home/ur/.m2/repository/junit/junit/4.12/junit-4.12.jar:/home/ur/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/home/ur/.m2/repository/org/apache/maven/surefire/surefire-junit4/2.22.1/surefire-junit4-2.22.1.jar"/>
     <property name="java.vm.vendor" value="Private Build"/>
     <property name="sun.arch.data.model" value="64"/>
     <property name="java.vendor.url" value="http://java.oracle.com/"/>
@@ -17,14 +17,14 @@
     <property name="user.country" value="US"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="sun.boot.library.path" value="/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/amd64"/>
-    <property name="sun.java.command" value="org.apache.maven.surefire.booter.ForkedBooter /home/ur/Desktop/smarthand-urcap/com.roboticmaterials.smarthand/target/surefire 2019-08-29T13-03-12_379-jvmRun1 surefire7030273678673686891tmp surefire_07021957087771780417tmp"/>
-    <property name="surefire.test.class.path" value="/home/ur/Desktop/smarthand-urcap/com.roboticmaterials.smarthand/target/test-classes:/home/ur/Desktop/smarthand-urcap/com.roboticmaterials.smarthand/target/classes:/home/ur/.m2/repository/org/osgi/org.osgi.core/4.3.0/org.osgi.core-4.3.0.jar:/home/ur/.m2/repository/com/ur/urcap/api/1.6.0/api-1.6.0.jar:/home/ur/.m2/repository/junit/junit/4.12/junit-4.12.jar:/home/ur/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:"/>
+    <property name="sun.java.command" value="org.apache.maven.surefire.booter.ForkedBooter /home/ur/sdk/sdk-1.7.0/smarthand-urcap/com.roboticmaterials.smarthand/target/surefire 2019-08-22T12-16-03_440-jvmRun1 surefire2242187068278767262tmp surefire_07565675927777150337tmp"/>
+    <property name="surefire.test.class.path" value="/home/ur/sdk/sdk-1.7.0/smarthand-urcap/com.roboticmaterials.smarthand/target/test-classes:/home/ur/sdk/sdk-1.7.0/smarthand-urcap/com.roboticmaterials.smarthand/target/classes:/home/ur/.m2/repository/org/osgi/org.osgi.core/4.3.0/org.osgi.core-4.3.0.jar:/home/ur/.m2/repository/com/ur/urcap/api/1.6.0/api-1.6.0.jar:/home/ur/.m2/repository/junit/junit/4.12/junit-4.12.jar:/home/ur/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:"/>
     <property name="sun.cpu.endian" value="little"/>
     <property name="user.home" value="/home/ur"/>
     <property name="user.language" value="en"/>
     <property name="java.specification.vendor" value="Oracle Corporation"/>
     <property name="java.home" value="/usr/lib/jvm/java-8-openjdk-amd64/jre"/>
-    <property name="basedir" value="/home/ur/Desktop/smarthand-urcap/com.roboticmaterials.smarthand"/>
+    <property name="basedir" value="/home/ur/sdk/sdk-1.7.0/smarthand-urcap/com.roboticmaterials.smarthand"/>
     <property name="file.separator" value="/"/>
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
@@ -35,7 +35,7 @@
     <property name="java.runtime.version" value="1.8.0_222-8u222-b10-1ubuntu1~16.04.1-b10"/>
     <property name="user.name" value="ur"/>
     <property name="path.separator" value=":"/>
-    <property name="os.version" value="4.15.0-51-generic"/>
+    <property name="os.version" value="4.15.0-58-generic"/>
     <property name="java.endorsed.dirs" value="/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/endorsed"/>
     <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
     <property name="file.encoding" value="UTF-8"/>
@@ -44,7 +44,7 @@
     <property name="java.vendor.url.bug" value="http://bugreport.sun.com/bugreport/"/>
     <property name="java.io.tmpdir" value="/tmp"/>
     <property name="java.version" value="1.8.0_222"/>
-    <property name="user.dir" value="/home/ur/Desktop/smarthand-urcap/com.roboticmaterials.smarthand"/>
+    <property name="user.dir" value="/home/ur/sdk/sdk-1.7.0/smarthand-urcap/com.roboticmaterials.smarthand"/>
     <property name="os.arch" value="amd64"/>
     <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
     <property name="java.awt.printerjob" value="sun.print.PSPrinterJob"/>
@@ -57,5 +57,5 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="52.0"/>
   </properties>
-  <testcase name="testApp" classname="com.roboticmaterials.smarthand.impl.AppTest" time="0.005"/>
+  <testcase name="testApp" classname="com.roboticmaterials.smarthand.impl.AppTest" time="0.002"/>
 </testsuite>

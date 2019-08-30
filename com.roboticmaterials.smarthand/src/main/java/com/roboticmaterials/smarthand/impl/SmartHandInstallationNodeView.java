@@ -52,8 +52,8 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 	private JButton requestWaypointsButton = new JButton("Request waypoints");
 	private JButton openGripperButton = new JButton("Open");
 	private JButton closeGripperButton = new JButton("Close");;
-	private JButton scanNetworkButton = new JButton("Scan");
-	private JButton initGripperButton = new JButton("Connect");
+	private final JButton scanNetworkButton = new JButton("Scan");
+	private final JButton initGripperButton = new JButton("Connect");
 	//private final JButton stopGripperButton = new JButton("Stop");
 
 	
@@ -278,7 +278,7 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 		
 		box.add(new JLabel("Obtain list of available cart waypoints"));
 		
-		requestObjectsButton.addActionListener(new ActionListener() {
+		requestWaypointsButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				contribution.importKnownWaypoints();

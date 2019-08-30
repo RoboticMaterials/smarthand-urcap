@@ -188,7 +188,6 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		return status;
 	}
 	
-	//Need to add catch if the code fails
 	public void importKnownObjects() {
 		// Create a new ScriptCommand called "exportVariable"
 		testHandStatus();
@@ -203,7 +202,6 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		
 		// Use the exporter to send the script
 		// Note the String name of the variable (objectIDs) to be returned
-		
 		String returnValue = exporter.exportStringFromURScript(exportTestCommand,
 				"objectIDs");
 		
@@ -226,6 +224,7 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		
 		// Add the calculation script to the command
 		exportTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8100/RPC2\")");
+		
 		//exportTestCommand.appendLine("smarthand.init()");
 		exportTestCommand.appendLine("waypoints = smarthand.get_waypoints()");
 		
