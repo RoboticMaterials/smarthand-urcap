@@ -250,6 +250,7 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		ScriptCommand sendTestCommand = new ScriptCommand("testSend");
 		
 		sendTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8101/RPC2\")");
+		System.out.println("Init script sent to gripper");
 		try {
 			sendTestCommand.appendLine("smarthand.set_robot_ip(\""+view.getHost4Address() +"\")");
 			System.out.print("Sending "+view.getHost4Address()+" as robot address to hand");
@@ -258,6 +259,7 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 			e.printStackTrace();
 		}
 		sendTestCommand.appendLine("smarthand.init()");
+		System.out.println("Gripper initiated");
 		
 		// Use the ScriptSender to send the command for immediate execution
 		sender.sendScriptCommand(sendTestCommand);
@@ -273,7 +275,10 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		ScriptCommand sendTestCommand = new ScriptCommand("testSend");
 		
 		sendTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8101/RPC2\")");
+		System.out.println("Stop XML script sent");
+		
 		sendTestCommand.appendLine("smarthand.stop()");
+		System.out.println("Smart Hand Stopped");
 		
 		// Use the ScriptSender to send the command for immediate execution
 		sender.sendScriptCommand(sendTestCommand);
