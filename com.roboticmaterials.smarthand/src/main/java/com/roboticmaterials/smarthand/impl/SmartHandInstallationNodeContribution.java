@@ -169,7 +169,9 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 	        }
 	        catch (Exception e)
 	        {
-	            if(i==255) return "0.0.0.0";
+				if(i==255) 
+				return "0.0.0.0";
+				break;
 	        }
 	        finally
 	        {
