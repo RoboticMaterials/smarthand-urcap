@@ -246,7 +246,7 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 
 	public void sendScriptInitGripper() {
 		testHandStatus();
-		timer.start();
+		timer.stop();
 		// Create a new ScriptCommand called "testSend"
 		if(!getStatus().contentEquals(SHS_OFFLINE)) {
 		ScriptCommand sendTestCommand = new ScriptCommand("testSend");
@@ -266,12 +266,12 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		// Use the ScriptSender to send the command for immediate execution
 		sender.sendScriptCommand(sendTestCommand);
 		}
-		timer.stop();
+		timer.restart();
 	}
 	
 	public void sendScriptStopGripper() {
 		testHandStatus();
-		timer.start();
+		timer.stop();
 		// Create a new ScriptCommand called "testSend"
 		if(!getStatus().contentEquals(SHS_OFFLINE)) {
 		ScriptCommand sendTestCommand = new ScriptCommand("testSend");
@@ -285,8 +285,11 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		// Use the ScriptSender to send the command for immediate execution
 		sender.sendScriptCommand(sendTestCommand);
 		System.out.println("Test Command Sent");//delete
-		}	
-		timer.stop();
+		}
+		if(getStatus().contentEquals(SHS_OFFLINE)) {
+			System.out.println("SHS is OFFLINE");
+		}
+		timer.restart();
 		System.out.println("Timer Restarted"); //delete
 	}
 	
