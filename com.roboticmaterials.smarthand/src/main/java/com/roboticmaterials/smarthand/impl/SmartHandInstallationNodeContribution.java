@@ -79,7 +79,8 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 
 	@Override
 	public void openView() {
-		timer.restart();
+		//timer.restart(); Do not want the timmer to start when the view is opened
+		if 
 		view.setIPAddress(getIPAddress());
 		view.setKnownObjects(getKnownObjects());
 		view.setKnownWaypoints(getKnownWaypoints());
@@ -244,7 +245,7 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 
 	public void sendScriptInitGripper() {
 		testHandStatus();
-		timer.stop();
+		timer.start();
 		// Create a new ScriptCommand called "testSend"
 		if(!getStatus().contentEquals(SHS_OFFLINE)) {
 		ScriptCommand sendTestCommand = new ScriptCommand("testSend");
@@ -263,15 +264,15 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		
 		// Use the ScriptSender to send the command for immediate execution
 		sender.sendScriptCommand(sendTestCommand);
-		timer.restart();
-		}	
+		}
+		timer.stop();
 	}
 	
 	public void sendScriptStopGripper() {
 		testHandStatus();
-		timer.stop();
+		timer.start();
 		// Create a new ScriptCommand called "testSend"
-		if(!getStatus().contentEquals(SHS_OFFLINE)) {
+		if(!getStatus().contentEquals(SHS_ONLINE)) {
 		ScriptCommand sendTestCommand = new ScriptCommand("testSend");
 		
 		sendTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8101/RPC2\")");
@@ -284,7 +285,7 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		sender.sendScriptCommand(sendTestCommand);
 		System.out.println("Test Command Sent");//delete
 		}	
-		timer.restart();
+		timer.stop();
 		System.out.println("Timer Restarted"); //delete
 	}
 	
