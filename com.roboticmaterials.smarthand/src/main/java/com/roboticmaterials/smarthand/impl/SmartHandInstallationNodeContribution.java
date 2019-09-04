@@ -271,7 +271,7 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		testHandStatus();
 		timer.start();
 		// Create a new ScriptCommand called "testSend"
-		if(!getStatus().contentEquals(SHS_ONLINE)) {
+		if(!getStatus().contentEquals(SHS_OFFLINE)) {
 		ScriptCommand sendTestCommand = new ScriptCommand("testSend");
 		
 		sendTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8101/RPC2\")");
