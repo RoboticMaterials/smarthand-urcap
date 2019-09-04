@@ -79,8 +79,7 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 
 	@Override
 	public void openView() {
-		//timer.restart(); Do not want the timmer to start when the view is opened
-		if 
+		timer.restart(); //Do not want the timmer to start when the view is opened
 		view.setIPAddress(getIPAddress());
 		view.setKnownObjects(getKnownObjects());
 		view.setKnownWaypoints(getKnownWaypoints());
