@@ -59,6 +59,22 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
         
         this.sender = new ScriptSender();
         this.exporter = new ScriptExporter();
+
+        ActionListener taskPerformer = new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                //view.updateCameraFeed();
+                //System.out.println("Timer: Camera update");
+                status=testHandStatus();
+                view.setButtonText(status);
+                if(!getStatus().contentEquals("offline")) {
+                    view.setButtonEnabled(true);
+                }
+                else {
+                    view.setButtonEnabled(false);
+                }
+            }
+        };
+        timer = new Timer(10000,taskPerformer);
     
     }
 
