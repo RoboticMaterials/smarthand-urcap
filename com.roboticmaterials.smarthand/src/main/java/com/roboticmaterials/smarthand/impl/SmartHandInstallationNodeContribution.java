@@ -101,7 +101,7 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 	        //s = new Socket(getIPAddress(),8101);
 	        s1 = new Socket();
 	        s1.connect(new InetSocketAddress(getIPAddress(), 8101), 30);
-	      
+			
 	        // At this point, the IP address is correct and the hand
 	        // responds via the XML-RPC server. We now test for RMLib
 	        // being started:
