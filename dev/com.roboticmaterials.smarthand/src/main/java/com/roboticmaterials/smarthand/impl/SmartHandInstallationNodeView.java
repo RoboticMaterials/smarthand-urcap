@@ -208,7 +208,7 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
     }
 
     private Box createSenderInitGripperButton(final SmartHandInstallationNodeContribution contribution) {
-        Bob box = Box.createHorizontalBox();
+        Box box = Box.createHorizontalBox();
         box.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         initGripperButton.addActionListener(new ActionListener() {

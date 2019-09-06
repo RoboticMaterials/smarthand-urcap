@@ -58,21 +58,21 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
         this.sender = new ScriptSender();
         this.exporter = new ScriptExporter();
 
-        ActionListener taskPerformer = new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                //view.updateCameraFeed();
-                //System.out.println("Timer: Camera update");
-                status=testHandStatus();
-                view.setButtonText(status);
-                if(!getStatus().contentEquals("offline")) {
-                    view.setButtonEnabled(true);
-                }
-                else {
-                    view.setButtonEnabled(false);
-                }
-            }
-        };
-        timer = new Timer(10000,taskPerformer);
+        // ActionListener taskPerformer = new ActionListener() {
+        //     public void actionPerformed(ActionEvent evt) {
+        //         //view.updateCameraFeed();
+        //         //System.out.println("Timer: Camera update");
+        //         status=testHandStatus();
+        //         view.setButtonText(status);
+        //         if(!getStatus().contentEquals("offline")) {
+        //             view.setButtonEnabled(true);
+        //         }
+        //         else {
+        //             view.setButtonEnabled(false);
+        //         }
+        //     }
+        // };
+        // timer = new Timer(10000,taskPerformer);
     
     }
 
@@ -82,6 +82,11 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		view.setButtonEnabled(model.get(VALIDIP_KEY, false));
 		view.setButtonText(status);
     }
+
+    @Override
+	public void closeView() {
+		System.out.println("She Closed Homie");
+	}
 
     public String scanIPAddress(String range) {
         String cand = "0.0.0.0";
@@ -167,14 +172,14 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
     }
 
     public String testStatus() {
-        testHandStatus();
-        return status;
+        status = getStatus();
+        
 
         int i = 0;
         while(((status == SHS_OFFLINE) || (status == SHS_IDLE)) && (i<=5)) {
             testHandStatus();
-            return status;
             i++;
+            status = getStatus();
         }
 
         if(status == SHS_ONLINE) {
@@ -188,6 +193,7 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
         else {
             System.out.printf("Failure, " + status + ". IP is not responding");
         }
+        return status;
     }
 
 
@@ -294,6 +300,19 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
         else {
             System.out.println("Something went wrong");
         }
+    }
+    
+
+	@Override
+	public void generateScript(ScriptWriter writer) {
+		writer.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8101/RPC2\")");
+		// Only add the init call when a smarthand command is used in the code
+		if(areThereChildren) {
+			System.out.println("OVERHERE!!!"); //Delete
+			writer.appendLine("return_value = smarthand.init()");
+			writer.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8100/RPC2\")");
+			System.out.println("RIGHT NOW ~~~"); //Delete
+		}
 	}
 
 
