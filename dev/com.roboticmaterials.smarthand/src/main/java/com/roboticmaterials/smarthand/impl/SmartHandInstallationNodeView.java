@@ -87,6 +87,7 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
             }
         }));
 
+		jPanel.add(createSenderInitGripperButton(contribution));
         jPanel.add(createVerticalSpacing());
 		jPanel.add(createInfo("Open and close gripper:"));
 		jPanel.add(createVerticalSpacing());
@@ -209,7 +210,7 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 
     private Box createSenderInitGripperButton(final SmartHandInstallationNodeContribution contribution) {
         Box box = Box.createHorizontalBox();
-        box.setAlignmentX(Component.LEFT_ALIGNMENT);
+        //box.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         initGripperButton.addActionListener(new ActionListener() {
             @Override
