@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1566501365190
+Bnd-LastModified: 1568146186111
 Build-Jdk: 1.8.0_222
-Built-By: ur
+Built-By: kalervo
 Bundle-Activator: com.roboticmaterials.smarthand.impl.Activator
 Bundle-Category: URCap
 Bundle-ContactAddress: 1860 38th Street, Boulder, CO, USA
