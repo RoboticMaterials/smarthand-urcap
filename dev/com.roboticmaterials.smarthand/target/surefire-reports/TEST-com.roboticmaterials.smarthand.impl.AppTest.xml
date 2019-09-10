@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.roboticmaterials.smarthand.impl.AppTest" time="0.013" tests="1" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.roboticmaterials.smarthand.impl.AppTest" time="0.015" tests="1" errors="0" skipped="0" failures="0">
   <properties>
     <property name="sun.desktop" value="gnome"/>
     <property name="awt.toolkit" value="sun.awt.X11.XToolkit"/>
@@ -17,7 +17,7 @@
     <property name="user.country" value="US"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="sun.boot.library.path" value="/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/amd64"/>
-    <property name="sun.java.command" value="org.apache.maven.surefire.booter.ForkedBooter /home/kalervo/Documents/smarthand-urcap/dev/com.roboticmaterials.smarthand/target/surefire 2019-09-06T16-43-33_485-jvmRun1 surefire5802017695824785716tmp surefire_08880484776577001022tmp"/>
+    <property name="sun.java.command" value="org.apache.maven.surefire.booter.ForkedBooter /home/kalervo/Documents/smarthand-urcap/dev/com.roboticmaterials.smarthand/target/surefire 2019-09-10T15-59-59_265-jvmRun1 surefire2326001805939552418tmp surefire_09210356005597741405tmp"/>
     <property name="surefire.test.class.path" value="/home/kalervo/Documents/smarthand-urcap/dev/com.roboticmaterials.smarthand/target/test-classes:/home/kalervo/Documents/smarthand-urcap/dev/com.roboticmaterials.smarthand/target/classes:/home/kalervo/.m2/repository/org/osgi/org.osgi.core/4.3.0/org.osgi.core-4.3.0.jar:/home/kalervo/.m2/repository/com/ur/urcap/api/1.6.0/api-1.6.0.jar:/home/kalervo/.m2/repository/junit/junit/4.12/junit-4.12.jar:/home/kalervo/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:"/>
     <property name="sun.cpu.endian" value="little"/>
     <property name="user.home" value="/home/kalervo"/>

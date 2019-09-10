@@ -46,6 +46,10 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 	private final Style style;
 	private JTextField ipAddress = new JTextField();
 	
+	private final JComboBox<String> objectsComboBox = new JComboBox<String>();
+	private final JComboBox<String> waypointsComboBox = new JComboBox<String>();
+	private JButton requestObjectsButton = new JButton("Request objects");
+	private JButton requestWaypointsButton = new JButton("Request waypoints");
 	private JButton openGripperButton = new JButton("Open");
 	private JButton closeGripperButton = new JButton("Close");;
 	private final JButton scanNetworkButton = new JButton("Scan");
@@ -57,7 +61,7 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
     public void buildUI(JPanel jPanel, final SmartHandInstallationNodeContribution contribution) {
         jPanel.setLayout(new BoxLayout(jPanel, BoxLayout.Y_AXIS));
 
-        ipAddress.setHorizontalAlignment(JTextField.RIGHT);
+        ipAddress.setHorizontalAlignment(JTextField.LEFT);
         scanNetworkButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -87,13 +91,49 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
             }
         }));
 
+		jPanel.add(createVerticalSpacing());
 		jPanel.add(createSenderInitGripperButton(contribution));
         jPanel.add(createVerticalSpacing());
 		jPanel.add(createInfo("Open and close gripper:"));
 		jPanel.add(createVerticalSpacing());
-		jPanel.add(createSenderOpenGripperButton(contribution));
+		//jPanel.add(createSenderOpenGripperButton(contribution), createSenderCloseGripperButton(contribution));
+		//jPanel.add(createSenderCloseGripperButton(contribution));
+
+		JPanel radioButtonPanel = new JPanel();
+		BoxLayout radioButtonLayout1 = new BoxLayout(radioButtonPanel, BoxLayout.X_AXIS);
+		radioButtonPanel.setLayout(radioButtonLayout1);
+		radioButtonPanel.add(createSenderOpenGripperButton(contribution));
+		radioButtonPanel.add(createHorizontalSpacing());
+		radioButtonPanel.add(createSenderCloseGripperButton(contribution));
+		radioButtonPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+		jPanel.add(radioButtonPanel);
+
+		objectsComboBox.setAlignmentX(Component.CENTER_ALIGNMENT);
+		requestObjectsButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+		
 		jPanel.add(createVerticalSpacing());
-		jPanel.add(createSenderCloseGripperButton(contribution));
+		jPanel.add(createInfo("Import Known Objects"));
+		//jPanel.add(createVerticalSpacing());
+		JPanel requestObjectsPanel = new JPanel();
+		BoxLayout requestObjectsLayout = new BoxLayout(requestObjectsPanel, BoxLayout.X_AXIS);
+		requestObjectsPanel.setLayout(requestObjectsLayout);
+		requestObjectsPanel.add(createRequestObjectsButton(contribution));
+		requestObjectsPanel.add(createHorizontalSpacing());
+		requestObjectsPanel.add(createObjectsComboBox(objectsComboBox, contribution));
+		requestObjectsPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+		jPanel.add(requestObjectsPanel);
+
+		jPanel.add(createVerticalSpacing());
+		jPanel.add(createInfo("Import Known Waypoints"));
+		//jPanel.add(createVerticalSpacing());
+		JPanel requestWaypointsPanel = new JPanel();
+		BoxLayout requestWaypointsLayout = new BoxLayout(requestWaypointsPanel, BoxLayout.X_AXIS);
+		requestWaypointsPanel.setLayout(requestWaypointsLayout);
+		requestWaypointsPanel.add(createRequestWaypointsButton(contribution));
+		requestWaypointsPanel.add(createHorizontalSpacing());
+		requestWaypointsPanel.add(createWaypointsComboBox(waypointsComboBox, contribution));
+		requestWaypointsPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+		jPanel.add(requestWaypointsPanel);
     }
 
 
@@ -187,10 +227,11 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
     }
     
     public void setButtonEnabled(boolean b) {
-        //requestObjectsButton.setEnabled(b);
-        openGripperButton.setEnabled(b);
-        closeGripperButton.setEnabled(b);
-        initGripperButton.setEnabled(b);
+		requestObjectsButton.setEnabled(b);
+		openGripperButton.setEnabled(b);
+		closeGripperButton.setEnabled(b);
+		initGripperButton.setEnabled(b);
+		requestWaypointsButton.setEnabled(b);
     }
 
     public void setButtonText(String status) {
@@ -210,7 +251,7 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 
     private Box createSenderInitGripperButton(final SmartHandInstallationNodeContribution contribution) {
         Box box = Box.createHorizontalBox();
-        //box.setAlignmentX(Component.LEFT_ALIGNMENT);
+        box.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         initGripperButton.addActionListener(new ActionListener() {
             @Override
@@ -254,5 +295,90 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 
         box.add(closeGripperButton);
         return box;
-    }
+	}
+	
+
+	public void setKnownObjects(String value) {
+		String[] objects = value.split("%");
+		//RETURN_VALUE.setText(Arrays.toString(objects));
+		objectsComboBox.removeAllItems();
+		objectsComboBox.setModel(new DefaultComboBoxModel<String>(objects));
+	}
+	
+	public void setKnownWaypoints(String value) {
+		String[] waypoints = value.split("%");
+		waypointsComboBox.removeAllItems();
+		waypointsComboBox.setModel(new DefaultComboBoxModel<String>(waypoints));
+	}
+
+	private Box createObjectsComboBox(final JComboBox<String> combo, 
+			final SmartHandInstallationNodeContribution contribution) {
+		Box box = Box.createHorizontalBox();
+		box.setAlignmentX(Component.LEFT_ALIGNMENT);
+		
+		combo.setPreferredSize(new Dimension(160,30));
+		combo.setMaximumSize(combo.getPreferredSize());
+		
+		/*combo.addItemListener(new  ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if(e.getStateChange() == ItemEvent.SELECTED) {
+					//provider.get().onCommandSelection((String) e.getItem());
+					//setCard((String)e.getItem());
+				}
+			}
+		});*/
+		box.add(combo);
+		return box;
+	}
+
+	private Box createRequestObjectsButton(final SmartHandInstallationNodeContribution contribution) {
+		Box box = Box.createVerticalBox();
+		
+		//box.add(new JLabel("Obtain list of available object definitions"));
+		
+		requestObjectsButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				contribution.importKnownObjects();
+			}
+		});
+		box.add(createVerticalSpacing());
+		box.add(requestObjectsButton);
+		//box.add(new JLabel("Returned value:"));
+		//box.add(this.RETURN_VALUE);
+		
+		return box;
+	}
+
+	private Box createRequestWaypointsButton(final SmartHandInstallationNodeContribution contribution) {
+		Box box = Box.createVerticalBox();
+		
+		//box.add(new JLabel("Obtain list of available cart waypoints"));
+		
+		requestWaypointsButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				contribution.importKnownWaypoints();
+			}
+		});
+		box.add(createVerticalSpacing());
+		box.add(requestWaypointsButton);
+		//box.add(new JLabel("Returned value:"));
+		//box.add(this.RETURN_VALUE);
+		
+		return box;
+	}
+
+	private Box createWaypointsComboBox(final JComboBox<String> combo, 
+			final SmartHandInstallationNodeContribution contribution) {
+		Box box = Box.createHorizontalBox();
+		box.setAlignmentX(Component.LEFT_ALIGNMENT);
+		
+		combo.setPreferredSize(new Dimension(160,30));
+		combo.setMaximumSize(combo.getPreferredSize());
+		box.add(combo);
+		return box;
+	}
 }

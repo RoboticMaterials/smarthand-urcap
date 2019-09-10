@@ -13,6 +13,7 @@ import com.roboticmaterials.smarthand.impl.SmartHandInstallationNodeView;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.TimerTask;
 
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
@@ -23,6 +24,8 @@ import com.roboticmaterials.smarthand.communicator.ScriptSender;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import org.apache.xmlrpc.*;
 
 public class SmartHandInstallationNodeContribution implements InstallationNodeContribution {
     private static final String IPADDRESS_KEY = "ipaddress";
@@ -56,37 +59,52 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
         this.view = view;
         
         this.sender = new ScriptSender();
-        this.exporter = new ScriptExporter();
+		this.exporter = new ScriptExporter();
+		
 
-        // ActionListener taskPerformer = new ActionListener() {
-        //     public void actionPerformed(ActionEvent evt) {
-        //         //view.updateCameraFeed();
-        //         //System.out.println("Timer: Camera update");
-        //         status=testHandStatus();
-        //         view.setButtonText(status);
-        //         if(!getStatus().contentEquals("offline")) {
-        //             view.setButtonEnabled(true);
-        //         }
-        //         else {
-        //             view.setButtonEnabled(false);
-        //         }
-        //     }
-        // };
-        // timer = new Timer(10000,taskPerformer);
-    
-    }
+
+		ActionListener taskPerformer = new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				status=testHandStatus();
+				view.setButtonText(status);
+			if(!getStatus().contentEquals("offline")) {
+					view.setButtonEnabled(true);
+			}
+			else {
+				view.setButtonEnabled(false);
+				}
+			 }
+		};
+
+		// public String pingTimer() {
+		// 	timer.restart();
+		// 	if(getStatus.contentEquals(SHS_OFFLINE) || getStatus.contentEquals(SHS_IDLE)) {
+		// 		timer = new Timer(1000,taskPerformer);
+		// 	}
+	
+		// 	else if(getStatus.contentEquals(SHS_ONLINE)) {
+		// 		timer = new Timer(10000,taskPerformer);
+		// 	}
+		// }
+		
+	}
+	
+
 
     @Override
     public void openView() {
+		//pingTimer();
         view.setIPAddress(getIPAddress());
 		view.setButtonEnabled(model.get(VALIDIP_KEY, false));
 		view.setButtonText(status);
+		view.setKnownObjects(getKnownObjects());
+		view.setKnownWaypoints(getKnownWaypoints());
     }
 
     @Override
 	public void closeView() {
-		System.out.println("She Closed Homie");
-	}
+		timer.stop();
+		}
 
     public String scanIPAddress(String range) {
         String cand = "0.0.0.0";
@@ -175,12 +193,18 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
         status = getStatus();
         
 
-        int i = 0;
+		try{
+		int i = 0;
         while(((status == SHS_OFFLINE) || (status == SHS_IDLE)) && (i<=5)) {
+			Thread.sleep(100);
+			System.out.print("Currently on " + i + " loop");
             testHandStatus();
             i++;
-            status = getStatus();
-        }
+			status = getStatus();
+		}
+		} catch(InterruptedException ex) {
+			Thread.currentThread().interrupt();
+		}
 
         if(status == SHS_ONLINE) {
             System.out.printf("Success, " + status);
@@ -197,7 +221,8 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
     }
 
 
-    public String getIPAddress() {
+	//IP address Section
+	public String getIPAddress() {
 		return model.get(IPADDRESS_KEY, DEFAULT_IP);
 	}
 
@@ -208,6 +233,91 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 			model.set(IPADDRESS_KEY, message);
 		}
 	}
+
+	//Object Section
+	public void setKnownObjects(String message) {
+		if ("".equals(message)) {
+			resetToDefaultValue();
+		} else {
+			model.set(OBJECTS_KEY, message);
+		}
+	}
+
+	public String getKnownObjects() {
+		return model.get(OBJECTS_KEY, DEFAULT_OBJECT);
+	}
+
+	public void importKnownObjects() {
+		// Create a new ScriptCommand called "exportVariable"
+		testHandStatus();
+		timer.stop();
+		if(getStatus().contentEquals(SHS_ONLINE)) {
+		ScriptCommand exportTestCommand = new ScriptCommand("exportVariable");
+		
+		// Add the calculation script to the command
+		exportTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8100/RPC2\")");
+		//exportTestCommand.appendLine("smarthand.init()");
+		exportTestCommand.appendLine("objectIDs = smarthand.get_object_defs()");
+		
+		// Use the exporter to send the script
+		// Note the String name of the variable (objectIDs) to be returned
+		String returnValue = exporter.exportStringFromURScript(exportTestCommand,
+				"objectIDs");
+		
+		// Put the result back in the View
+		view.setKnownObjects(returnValue);
+		setKnownObjects(returnValue);
+		} else {
+			// Place warning pop-up here
+		}
+		timer.restart();
+	}
+
+
+	//Waypoint Section
+	public void setKnownWaypoints(String message) {
+		if ("".equals(message)) {
+			resetToDefaultValue();
+		} else {
+			model.set(CARTWAYPOINTS_KEY, message);
+		}
+	}
+
+	public String getKnownWaypoints() {
+		return model.get(CARTWAYPOINTS_KEY, DEFAULT_WAYPOINT);
+	}
+
+	public void importKnownWaypoints() {
+		// Create a new ScriptCommand called "exportVariable"
+		testHandStatus();
+		timer.stop();
+		if(getStatus().contentEquals(SHS_ONLINE)) {
+		ScriptCommand exportTestCommand = new ScriptCommand("exportVariable");
+		
+		// Add the calculation script to the command
+		exportTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8100/RPC2\")");
+		
+		//exportTestCommand.appendLine("smarthand.init()");
+		exportTestCommand.appendLine("waypoints = smarthand.get_waypoints()");
+		
+		// Use the exporter to send the script
+		// Note the String name of the variable (objectIDs) to be returned
+		String returnValue = exporter.exportStringFromURScript(exportTestCommand,
+				"waypoints");
+		
+		// Put the result back in the View
+		view.setKnownWaypoints(returnValue);
+		setKnownWaypoints(returnValue);
+		} else {
+			// Place warning pop-up here
+		}
+		timer.restart();
+	}
+
+
+
+
+
 	
 	private void resetToDefaultValue() {
 		view.setIPAddress(DEFAULT_IP);
@@ -339,7 +449,4 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 			}
 		};
 	}
-
-
-
 }
