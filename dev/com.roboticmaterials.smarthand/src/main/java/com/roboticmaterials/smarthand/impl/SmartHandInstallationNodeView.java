@@ -61,8 +61,8 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
     public void buildUI(JPanel jPanel, final SmartHandInstallationNodeContribution contribution) {
         jPanel.setLayout(new BoxLayout(jPanel, BoxLayout.Y_AXIS));
 
-        ipAddress.setHorizontalAlignment(JTextField.LEFT);
-        scanNetworkButton.addActionListener(new ActionListener(){
+        ipAddress.setHorizontalAlignment(JTextField.RIGHT);
+        scanNetworkButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 				try {
@@ -70,7 +70,7 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 					if(robotAddress != null) {
 						String handAddress = contribution.scanIPAddress(robotAddress);//InetAddress.getLocalHost().getHostAddress());
 						setIPAddress(handAddress);
-						contribution.setIPAddress(handAddress);	
+						contribution.setIPAddress(handAddress);
 					} else {
 						JOptionPane.showMessageDialog(null, "Cannot determine the robot's IP address. Is the network cable connected?", "No IP address", JOptionPane.INFORMATION_MESSAGE);
 					}
@@ -112,7 +112,7 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 		requestObjectsButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 		
 		jPanel.add(createVerticalSpacing());
-		jPanel.add(createInfo("Import Known Objects"));
+		jPanel.add(createInfo("Import Known Objects:"));
 		//jPanel.add(createVerticalSpacing());
 		JPanel requestObjectsPanel = new JPanel();
 		BoxLayout requestObjectsLayout = new BoxLayout(requestObjectsPanel, BoxLayout.X_AXIS);
@@ -124,7 +124,7 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 		jPanel.add(requestObjectsPanel);
 
 		jPanel.add(createVerticalSpacing());
-		jPanel.add(createInfo("Import Known Waypoints"));
+		jPanel.add(createInfo("Import Known Waypoints:"));
 		//jPanel.add(createVerticalSpacing());
 		JPanel requestWaypointsPanel = new JPanel();
 		BoxLayout requestWaypointsLayout = new BoxLayout(requestWaypointsPanel, BoxLayout.X_AXIS);
@@ -138,7 +138,7 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 
 
 	private Box createInfo(String text) {
-		Box infoBox = Box.createVerticalBox();
+		Box infoBox = Box.createHorizontalBox();
 		infoBox.setAlignmentX(Component.LEFT_ALIGNMENT);
 		JTextPane pane = new JTextPane();
 		pane.setBorder(BorderFactory.createEmptyBorder());

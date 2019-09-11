@@ -29,12 +29,14 @@ import org.apache.xmlrpc.*;
 
 public class SmartHandInstallationNodeContribution implements InstallationNodeContribution {
     private static final String IPADDRESS_KEY = "ipaddress";
-    private static final String DEFAULT_IP = "10.1.12.1";
+    private static final String DEFAULT_IP = "192.168.1.2";
     private static final String VALIDIP_KEY = "validip";
 	private static final String OBJECTS_KEY = "objects";
 	private static final String DEFAULT_OBJECT = "generic";
 	private static final String CARTWAYPOINTS_KEY = "waypoints";
-    private static final String DEFAULT_WAYPOINT = "home";
+	private static final String DEFAULT_WAYPOINT = "home";
+	
+	private int delay = 1000;
     
     // Variables to manage the status of the hand. 'status' is shown at 'statusLabel'.
 	final static String SHS_OFFLINE = "offline";
@@ -67,33 +69,48 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 			public void actionPerformed(ActionEvent evt) {
 				status=testHandStatus();
 				view.setButtonText(status);
-			if(!getStatus().contentEquals("offline")) {
-					view.setButtonEnabled(true);
+				int i = 1000;
+
+			if(getStatus().contentEquals(SHS_ONLINE) || getStatus().contentEquals(SHS_IDLE)) {
+				delay = 10000 + i;
+				view.setButtonEnabled(true);
+				System.out.println("SHS is either online or IDLE for timer");
+				i++;
+				timer.setDelay(delay);
 			}
+
 			else {
+				delay = 1000;
 				view.setButtonEnabled(false);
-				}
-			 }
+				System.out.println("SHS is offle for timer");
+				timer.setDelay(delay);
+			}
+		}
+			// if(!getStatus().contentEquals("offline")) {
+			// 		view.setButtonEnabled(true);
+			// }
+			// else {
+			// 	view.setButtonEnabled(false);
+			// 	}
+			//  }
 		};
+		timer = new Timer(delay, taskPerformer);
 
 		// public String pingTimer() {
 		// 	timer.restart();
-		// 	if(getStatus.contentEquals(SHS_OFFLINE) || getStatus.contentEquals(SHS_IDLE)) {
+		// 	if(getStatus().contentEquals(SHS_OFFLINE) || getStatus().contentEquals(SHS_IDLE)) {
 		// 		timer = new Timer(1000,taskPerformer);
 		// 	}
 	
-		// 	else if(getStatus.contentEquals(SHS_ONLINE)) {
+		// 	else if(getStatus().contentEquals(SHS_ONLINE)) {
 		// 		timer = new Timer(10000,taskPerformer);
 		// 	}
-		// }
-		
-	}
-	
-
+		// };
+	}	
 
     @Override
     public void openView() {
-		//pingTimer();
+		timer.restart();
         view.setIPAddress(getIPAddress());
 		view.setButtonEnabled(model.get(VALIDIP_KEY, false));
 		view.setButtonText(status);
@@ -124,7 +141,7 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
             catch (Exception e) {
                 if(i==255)
                     return "0.0.0.0";
-                    break;
+                    //break;
             }
             finally {
                 if(s != null)
@@ -189,36 +206,36 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
         return status;
     }
 
-    public String testStatus() {
-        status = getStatus();
+    // public String testHandStatus() {
+    //     status = getStatus();
         
 
-		try{
-		int i = 0;
-        while(((status == SHS_OFFLINE) || (status == SHS_IDLE)) && (i<=5)) {
-			Thread.sleep(100);
-			System.out.print("Currently on " + i + " loop");
-            testHandStatus();
-            i++;
-			status = getStatus();
-		}
-		} catch(InterruptedException ex) {
-			Thread.currentThread().interrupt();
-		}
+	// 	try{
+	// 	int i = 0;
+    //     while(((status == SHS_OFFLINE) || (status == SHS_IDLE)) && (i<=5)) {
+	// 		Thread.sleep(100);
+	// 		System.out.print("Currently on " + i + " loop");
+    //         testHandStatus();
+    //         i++;
+	// 		status = getStatus();
+	// 	}
+	// 	} catch(InterruptedException ex) {
+	// 		Thread.currentThread().interrupt();
+	// 	}
 
-        if(status == SHS_ONLINE) {
-            System.out.printf("Success, " + status);
-        }
+    //     if(status == SHS_ONLINE) {
+    //         System.out.printf("Success, " + status);
+    //     }
 
-        else if(status == SHS_IDLE) {
-            System.out.printf("Failure, " + status + ". May be a RMLib issue");
-        }
+    //     else if(status == SHS_IDLE) {
+    //         System.out.printf("Failure, " + status + ". May be a RMLib issue");
+    //     }
 
-        else {
-            System.out.printf("Failure, " + status + ". IP is not responding");
-        }
-        return status;
-    }
+    //     else {
+    //         System.out.printf("Failure, " + status + ". IP is not responding");
+    //     }
+    //     return status;
+    // }
 
 
 	//IP address Section
@@ -310,8 +327,7 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		setKnownWaypoints(returnValue);
 		} else {
 			// Place warning pop-up here
-		}
-		timer.restart();
+		}timer.restart();
 	}
 
 
@@ -325,9 +341,10 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 	}
 
 	public void sendScriptInitGripper() {
-		testStatus();
+		testHandStatus();
+		timer.stop();
 		// Create a new ScriptCommand called "testSend"
-		if(testStatus().contentEquals(SHS_ONLINE)) {
+		if(testHandStatus().contentEquals(SHS_ONLINE)) {
 		ScriptCommand sendTestCommand = new ScriptCommand("testSend");
 		
 		sendTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8101/RPC2\")");
@@ -345,12 +362,14 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		// Use the ScriptSender to send the command for immediate execution
 		sender.sendScriptCommand(sendTestCommand);
 		}
+		timer.restart();
 	}
 	
 	public void sendScriptStopGripper() {
-		testStatus();
+		testHandStatus();
+		timer.stop();
 		// Create a new ScriptCommand called "testSend"
-		if(testStatus().contentEquals(SHS_ONLINE)) {
+		if(testHandStatus().contentEquals(SHS_ONLINE)) {
 		ScriptCommand sendTestCommand = new ScriptCommand("testSend");
 		
 		sendTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8101/RPC2\")");
@@ -368,12 +387,14 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		}
 		timer.restart();
 		System.out.println("Timer Restarted"); //delete
+		timer.restart();
 	}
 
     public void sendScriptOpenGripper() {
-		testStatus();
+		testHandStatus();
+		timer.stop();
 		// Create a new ScriptCommand called "testSend"
-		if(testStatus().contentEquals(SHS_ONLINE)) {
+		if(testHandStatus().contentEquals(SHS_ONLINE)) {
 		ScriptCommand sendTestCommand = new ScriptCommand("testSend");
 		
 		sendTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8101/RPC2\")");
@@ -388,13 +409,15 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
         
         else {
             System.out.println("Something went wrong");
-        }
+		}
+		timer.restart();
 	}
     
     public void sendScriptCloseGripper() {
-		testStatus();
+		testHandStatus();
+		timer.stop();
 		// Create a new ScriptCommand called "testSend"
-		if(testStatus().contentEquals(SHS_ONLINE)) {
+		if(testHandStatus().contentEquals(SHS_ONLINE)) {
 		ScriptCommand sendTestCommand = new ScriptCommand("testSend");
 		
 		sendTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8101/RPC2\")");
@@ -409,7 +432,8 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
         
         else {
             System.out.println("Something went wrong");
-        }
+		}
+		timer.restart();
     }
     
 
