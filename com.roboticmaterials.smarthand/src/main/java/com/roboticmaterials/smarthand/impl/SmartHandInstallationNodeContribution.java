@@ -187,6 +187,7 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		testHandStatus();
 		return status;
 	}
+
 	
 	public void importKnownObjects() {
 		// Create a new ScriptCommand called "exportVariable"
@@ -214,6 +215,19 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		timer.restart();
 	}
 	
+	public void requestKnownWaypoints() {
+		testHandStatus();
+		timer.stop();
+		if(getStatus().contentEquals(SHS_ONLINE)) {
+			ScriptCommand sendTestCommand = new ScriptCommand("testSend");
+			// Add the calculation script to the command
+			sendTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8100/RPC2\")");
+			//exportTestCommand.appendLine("smarthand.init()");
+			sendTestCommand.appendLine("smarthand.request_waypoints()");
+			sender.sendScriptCommand(sendTestCommand);
+		}
+		timer.restart();
+	}
 	
 	public void importKnownWaypoints() {
 		// Create a new ScriptCommand called "exportVariable"
