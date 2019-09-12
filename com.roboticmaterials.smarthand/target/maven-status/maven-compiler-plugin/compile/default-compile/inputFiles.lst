@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /home/kalervo/Documents/OG/smarthand-urcap/com.roboticmaterials.smarthand/src/main/java/com/roboticmaterials/smarthand/impl/SmartHandInstallationNodeView.java
 /home/kalervo/Documents/OG/smarthand-urcap/com.roboticmaterials.smarthand/src/main/java/com/roboticmaterials/smarthand/impl/V3Style.java
 /home/kalervo/Documents/OG/smarthand-urcap/com.roboticmaterials.smarthand/src/main/java/com/roboticmaterials/smarthand/impl/Style.java
@@ -13,3 +14,20 @@
 /home/kalervo/Documents/OG/smarthand-urcap/com.roboticmaterials.smarthand/src/main/java/com/roboticmaterials/smarthand/impl/ToolbarService.java
 /home/kalervo/Documents/OG/smarthand-urcap/com.roboticmaterials.smarthand/src/main/java/com/roboticmaterials/smarthand/impl/SmartHandInstallationNodeService.java
 /home/kalervo/Documents/OG/smarthand-urcap/com.roboticmaterials.smarthand/src/main/java/com/roboticmaterials/smarthand/communicator/ScriptCommand.java
+=======
+/home/kalervo/Documents/Bugz/smarthand-urcap/com.roboticmaterials.smarthand/src/main/java/com/roboticmaterials/smarthand/communicator/ScriptSender.java
+/home/kalervo/Documents/Bugz/smarthand-urcap/com.roboticmaterials.smarthand/src/main/java/com/roboticmaterials/smarthand/communicator/ScriptCommand.java
+/home/kalervo/Documents/Bugz/smarthand-urcap/com.roboticmaterials.smarthand/src/main/java/com/roboticmaterials/smarthand/impl/SmartHandProgramNodeService.java
+/home/kalervo/Documents/Bugz/smarthand-urcap/com.roboticmaterials.smarthand/src/main/java/com/roboticmaterials/smarthand/impl/SmartHandInstallationNodeService.java
+/home/kalervo/Documents/Bugz/smarthand-urcap/com.roboticmaterials.smarthand/src/main/java/com/roboticmaterials/smarthand/impl/V5Style.java
+/home/kalervo/Documents/Bugz/smarthand-urcap/com.roboticmaterials.smarthand/src/main/java/com/roboticmaterials/smarthand/impl/ToolbarContribution.java
+/home/kalervo/Documents/Bugz/smarthand-urcap/com.roboticmaterials.smarthand/src/main/java/com/roboticmaterials/smarthand/communicator/ScriptExporter.java
+/home/kalervo/Documents/Bugz/smarthand-urcap/com.roboticmaterials.smarthand/src/main/java/com/roboticmaterials/smarthand/impl/SmartHandProgramNodeView.java
+/home/kalervo/Documents/Bugz/smarthand-urcap/com.roboticmaterials.smarthand/src/main/java/com/roboticmaterials/smarthand/impl/SmartHandInstallationNodeView.java
+/home/kalervo/Documents/Bugz/smarthand-urcap/com.roboticmaterials.smarthand/src/main/java/com/roboticmaterials/smarthand/impl/Activator.java
+/home/kalervo/Documents/Bugz/smarthand-urcap/com.roboticmaterials.smarthand/src/main/java/com/roboticmaterials/smarthand/impl/ToolbarService.java
+/home/kalervo/Documents/Bugz/smarthand-urcap/com.roboticmaterials.smarthand/src/main/java/com/roboticmaterials/smarthand/impl/SmartHandProgramNodeContribution.java
+/home/kalervo/Documents/Bugz/smarthand-urcap/com.roboticmaterials.smarthand/src/main/java/com/roboticmaterials/smarthand/impl/Style.java
+/home/kalervo/Documents/Bugz/smarthand-urcap/com.roboticmaterials.smarthand/src/main/java/com/roboticmaterials/smarthand/impl/V3Style.java
+/home/kalervo/Documents/Bugz/smarthand-urcap/com.roboticmaterials.smarthand/src/main/java/com/roboticmaterials/smarthand/impl/SmartHandInstallationNodeContribution.java
+>>>>>>> bugz

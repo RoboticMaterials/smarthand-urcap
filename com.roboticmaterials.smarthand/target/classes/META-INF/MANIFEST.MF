@@ -1,5 +1,9 @@
 Manifest-Version: 1.0
+<<<<<<< HEAD
 Bnd-LastModified: 1568146186111
+=======
+Bnd-LastModified: 1568319273482
+>>>>>>> bugz
 Build-Jdk: 1.8.0_222
 Built-By: kalervo
 Bundle-Activator: com.roboticmaterials.smarthand.impl.Activator

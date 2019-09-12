@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -281,7 +282,16 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 		requestWaypointsButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				System.out.println("Waypoints button clicked"); //delete
+				contribution.requestKnownWaypoints();
+				System.out.println("Request sent to contribution"); //delete
+				// try {
+				// 	Thread.sleep(500);
+				// } catch(InterruptedException ex) {
+				// 	Thread.currentThread().interrupt();
+				// }
 				contribution.importKnownWaypoints();
+				System.out.println("Import sent to contribution"); //delete
 			}
 		});
 		box.add(createVerticalSpacing());

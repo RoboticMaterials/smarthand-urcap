@@ -187,6 +187,7 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		testHandStatus();
 		return status;
 	}
+
 	
 	public void importKnownObjects() {
 		// Create a new ScriptCommand called "exportVariable"
@@ -214,10 +215,26 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		timer.restart();
 	}
 	
+	public void requestKnownWaypoints() {
+		testHandStatus();
+		System.out.println("Tested hand status at request Known waypoints"); //delete
+		timer.stop();
+		if(getStatus().contentEquals(SHS_ONLINE)) {
+			ScriptCommand sendTestCommand = new ScriptCommand("testSend");
+			// Add the calculation script to the command
+			sendTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8100/RPC2\")");
+			//exportTestCommand.appendLine("smarthand.init()");
+			sendTestCommand.appendLine("smarthand.request_waypoints()");
+			sender.sendScriptCommand(sendTestCommand);
+			System.out.println("Succesfully sent request"); //delete
+		}
+		timer.restart();
+	}
 	
 	public void importKnownWaypoints() {
 		// Create a new ScriptCommand called "exportVariable"
 		testHandStatus();
+		System.out.println("Tested hand status at known waypoints"); //delete
 		timer.stop();
 		if(getStatus().contentEquals(SHS_ONLINE)) {
 		ScriptCommand exportTestCommand = new ScriptCommand("exportVariable");
@@ -225,20 +242,25 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		// Add the calculation script to the command
 		exportTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8100/RPC2\")");
 		
+		
 		//exportTestCommand.appendLine("smarthand.init()");
 		exportTestCommand.appendLine("waypoints = smarthand.get_waypoints()");
-		
+		System.out.println("Appended Lines"); //delete
 		// Use the exporter to send the script
 		// Note the String name of the variable (objectIDs) to be returned
 		String returnValue = exporter.exportStringFromURScript(exportTestCommand,
 				"waypoints");
+				System.out.printf("values"); //delete
 		
 		// Put the result back in the View
 		view.setKnownWaypoints(returnValue);
+		System.out.println("view set"); //delete
 		setKnownWaypoints(returnValue);
+		System.out.println("Values Returned"); //delete
 		} else {
 			// Place warning pop-up here
 		}
+		System.out.println("known waypoints succesfully imported"); //delete
 		timer.restart();
 	}
 

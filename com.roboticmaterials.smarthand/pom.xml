@@ -33,6 +33,10 @@
 		<urcap.install.password>easybot</urcap.install.password>
 
 		<!--Install path for the UR Sim-->
+<<<<<<< HEAD
+=======
+		<!--ursim.home>/home/ur/ursim/ursim-3.10.0.76181</ursim.home-->
+>>>>>>> bugz
 		<ursim.home>/home/kalervo/ursim/ursim-3.10.1.76190</ursim.home>
 		<Nursim.home>/home/ur/ursim/ursim-5.3.0.64176</Nursim.home>
 
