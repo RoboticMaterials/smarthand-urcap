@@ -217,6 +217,7 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 	
 	public void requestKnownWaypoints() {
 		testHandStatus();
+		System.out.println("Tested hadn status at request Known waypoints"); //delete
 		timer.stop();
 		if(getStatus().contentEquals(SHS_ONLINE)) {
 			ScriptCommand sendTestCommand = new ScriptCommand("testSend");
@@ -225,6 +226,7 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 			//exportTestCommand.appendLine("smarthand.init()");
 			sendTestCommand.appendLine("smarthand.request_waypoints()");
 			sender.sendScriptCommand(sendTestCommand);
+			System.out.println("Succesfully sent request"); //delete
 		}
 		timer.restart();
 	}
@@ -232,6 +234,7 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 	public void importKnownWaypoints() {
 		// Create a new ScriptCommand called "exportVariable"
 		testHandStatus();
+		System.out.println("Tested hadn status at known waypoints"); //delete
 		timer.stop();
 		if(getStatus().contentEquals(SHS_ONLINE)) {
 		ScriptCommand exportTestCommand = new ScriptCommand("exportVariable");
@@ -253,6 +256,7 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		} else {
 			// Place warning pop-up here
 		}
+		System.out.println("known waypoints succesfully imported"); //delete
 		timer.restart();
 	}
 
