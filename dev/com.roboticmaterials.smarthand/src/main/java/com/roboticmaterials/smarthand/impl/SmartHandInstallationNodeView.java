@@ -360,6 +360,12 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 		requestWaypointsButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				contribution.requestKnownWaypoints();
+				// try {
+				// 	Thread.sleep(500);
+				// } catch(InterruptedException ex) {
+				// 	Thread.currentThread().interrupt();
+				// }
 				contribution.importKnownWaypoints();
 			}
 		});

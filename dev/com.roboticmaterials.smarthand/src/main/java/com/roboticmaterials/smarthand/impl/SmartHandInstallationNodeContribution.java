@@ -35,7 +35,7 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 	private static final String DEFAULT_OBJECT = "generic";
 	private static final String CARTWAYPOINTS_KEY = "waypoints";
 	private static final String DEFAULT_WAYPOINT = "home";
-	
+
 	private int delay = 1000;
     
     // Variables to manage the status of the hand. 'status' is shown at 'statusLabel'.
@@ -304,6 +304,20 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		return model.get(CARTWAYPOINTS_KEY, DEFAULT_WAYPOINT);
 	}
 
+	public void requestKnownWaypoints() {
+		testHandStatus();
+		timer.stop();
+		if(getStatus().contentEquals(SHS_ONLINE)) {
+			ScriptCommand sendTestCommand = new ScriptCommand("testSend");
+			// Add the calculation script to the command
+			sendTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8100/RPC2\")");
+			//exportTestCommand.appendLine("smarthand.init()");
+			sendTestCommand.appendLine("smarthand.request_waypoints()");
+			sender.sendScriptCommand(sendTestCommand);
+		}
+		timer.restart();
+	}
+
 	public void importKnownWaypoints() {
 		// Create a new ScriptCommand called "exportVariable"
 		testHandStatus();
@@ -472,5 +486,13 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 				view.setButtonEnabled(false);
 			}
 		};
+	}
+
+	public void setChildren(boolean b) {
+		areThereChildren=b;
+	}
+	
+	public void setButtonEnabled(boolean b) {
+		view.setButtonEnabled(b);
 	}
 }

@@ -17,7 +17,7 @@
     <property name="user.country" value="US"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="sun.boot.library.path" value="/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/amd64"/>
-    <property name="sun.java.command" value="org.apache.maven.surefire.booter.ForkedBooter /home/kalervo/Documents/smarthand-urcap/dev/com.roboticmaterials.smarthand/target/surefire 2019-09-11T13-42-30_464-jvmRun1 surefire1499606126671536079tmp surefire_03773821239305922178tmp"/>
+    <property name="sun.java.command" value="org.apache.maven.surefire.booter.ForkedBooter /home/kalervo/Documents/smarthand-urcap/dev/com.roboticmaterials.smarthand/target/surefire 2019-09-12T11-08-45_681-jvmRun1 surefire8872693842369699842tmp surefire_07739694503518673253tmp"/>
     <property name="surefire.test.class.path" value="/home/kalervo/Documents/smarthand-urcap/dev/com.roboticmaterials.smarthand/target/test-classes:/home/kalervo/Documents/smarthand-urcap/dev/com.roboticmaterials.smarthand/target/classes:/home/kalervo/.m2/repository/org/osgi/org.osgi.core/4.3.0/org.osgi.core-4.3.0.jar:/home/kalervo/.m2/repository/com/ur/urcap/api/1.6.0/api-1.6.0.jar:/home/kalervo/.m2/repository/org/apache/xmlrpc/xmlrpc-common/3.1.3/xmlrpc-common-3.1.3.jar:/home/kalervo/.m2/repository/org/apache/ws/commons/util/ws-commons-util/1.0.2/ws-commons-util-1.0.2.jar:/home/kalervo/.m2/repository/xml-apis/xml-apis/1.0.b2/xml-apis-1.0.b2.jar:/home/kalervo/.m2/repository/junit/junit/4.12/junit-4.12.jar:/home/kalervo/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:"/>
     <property name="sun.cpu.endian" value="little"/>
     <property name="user.home" value="/home/kalervo"/>

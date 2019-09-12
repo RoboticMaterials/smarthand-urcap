@@ -362,14 +362,14 @@ public class SmartHandProgramNodeContribution implements ProgramNodeContribution
 		//view.setApertureVarComboBoxSelection(getApertureVar());
 		view.updateApertureVarComboBox(this);
 		
-		//view.setCartWaypointsComboBoxItems(getInstallation().getKnownWaypoints());
+		view.setCartWaypointsComboBoxItems(getInstallation().getKnownWaypoints());
 		view.setCartWaypointsComboBoxSelection(getCartWaypoint());
 		
-		//view.setObjectsInfoComboBoxItems(getInstallation().getKnownObjects());
+		view.setObjectsInfoComboBoxItems(getInstallation().getKnownObjects());
 		view.setObjectsInfoComboBoxSelection(getInfoObject());
 		view.setPlaneFilterSelection(getPlaneFilter());
 		
-		//getInstallation().setChildren(true);
+		getInstallation().setChildren(true);
 		
 
 		//System.out.println("Open view: " + getCommandId(getCommand()));
