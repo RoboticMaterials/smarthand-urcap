@@ -217,7 +217,7 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 	
 	public void requestKnownWaypoints() {
 		testHandStatus();
-		System.out.println("Tested hadn status at request Known waypoints"); //delete
+		System.out.println("Tested hand status at request Known waypoints"); //delete
 		timer.stop();
 		if(getStatus().contentEquals(SHS_ONLINE)) {
 			ScriptCommand sendTestCommand = new ScriptCommand("testSend");
@@ -234,7 +234,7 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 	public void importKnownWaypoints() {
 		// Create a new ScriptCommand called "exportVariable"
 		testHandStatus();
-		System.out.println("Tested hadn status at known waypoints"); //delete
+		System.out.println("Tested hand status at known waypoints"); //delete
 		timer.stop();
 		if(getStatus().contentEquals(SHS_ONLINE)) {
 		ScriptCommand exportTestCommand = new ScriptCommand("exportVariable");
@@ -242,9 +242,10 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		// Add the calculation script to the command
 		exportTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8100/RPC2\")");
 		
+		
 		//exportTestCommand.appendLine("smarthand.init()");
 		exportTestCommand.appendLine("waypoints = smarthand.get_waypoints()");
-		
+		System.out.println("Appended Lines"); //delete
 		// Use the exporter to send the script
 		// Note the String name of the variable (objectIDs) to be returned
 		String returnValue = exporter.exportStringFromURScript(exportTestCommand,
@@ -253,6 +254,7 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		// Put the result back in the View
 		view.setKnownWaypoints(returnValue);
 		setKnownWaypoints(returnValue);
+		System.out.printf("Values Returned" + setKnownWaypoints(returnValue)); //delete
 		} else {
 			// Place warning pop-up here
 		}
