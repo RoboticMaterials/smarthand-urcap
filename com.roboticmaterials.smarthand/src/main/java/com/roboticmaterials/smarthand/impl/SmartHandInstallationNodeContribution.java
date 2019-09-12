@@ -254,7 +254,7 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		// Put the result back in the View
 		view.setKnownWaypoints(returnValue);
 		setKnownWaypoints(returnValue);
-		System.out.printf("Values Returned" + setKnownWaypoints(returnValue)); //delete
+		System.out.printf("Values Returned"); //delete
 		} else {
 			// Place warning pop-up here
 		}
