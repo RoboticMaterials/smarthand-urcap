@@ -244,12 +244,12 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		
 		
 		//exportTestCommand.appendLine("smarthand.init()");
-		exportTestCommand.appendLine("waypoints = smarthand.get_waypoints()");
+		exportTestCommand.appendLine("waypointIDs = smarthand.get_waypoints()");
 		System.out.println("Appended Lines"); //delete
 		// Use the exporter to send the script
 		// Note the String name of the variable (objectIDs) to be returned
 		String returnValue = exporter.exportStringFromURScript(exportTestCommand,
-				"waypoints");
+				"waypointIDs");
 				System.out.println("Exporter"); //delete
 		
 		// Put the result back in the View
