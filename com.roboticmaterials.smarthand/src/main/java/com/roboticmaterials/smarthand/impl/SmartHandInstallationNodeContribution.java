@@ -250,11 +250,13 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		// Note the String name of the variable (objectIDs) to be returned
 		String returnValue = exporter.exportStringFromURScript(exportTestCommand,
 				"waypoints");
+				System.out.println("Exporter"); //delete
 		
 		// Put the result back in the View
 		view.setKnownWaypoints(returnValue);
+		System.out.println("view set"); //delete
 		setKnownWaypoints(returnValue);
-		System.out.printf("Values Returned"); //delete
+		System.out.println("Values Returned"); //delete
 		} else {
 			// Place warning pop-up here
 		}
