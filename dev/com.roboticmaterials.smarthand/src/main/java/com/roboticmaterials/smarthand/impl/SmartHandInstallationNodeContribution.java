@@ -82,7 +82,6 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 			else {
 				delay = 1000;
 				view.setButtonEnabled(false);
-				System.out.println("SHS is offle for timer");
 				timer.setDelay(delay);
 			}
 		}
@@ -96,16 +95,6 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		};
 		timer = new Timer(delay, taskPerformer);
 
-		// public String pingTimer() {
-		// 	timer.restart();
-		// 	if(getStatus().contentEquals(SHS_OFFLINE) || getStatus().contentEquals(SHS_IDLE)) {
-		// 		timer = new Timer(1000,taskPerformer);
-		// 	}
-	
-		// 	else if(getStatus().contentEquals(SHS_ONLINE)) {
-		// 		timer = new Timer(10000,taskPerformer);
-		// 	}
-		// };
 	}	
 
     @Override
@@ -170,7 +159,6 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 	        	s2.connect(new InetSocketAddress(getIPAddress(), 8100), 30);
 		        // At this point RMLib has also started or an exception has been
                 // thrown
-                System.out.println("RMlib has started");
 		        status=SHS_ONLINE;
 		        model.set(VALIDIP_KEY,true);
 		        return SHS_ONLINE;
@@ -307,7 +295,7 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 	public void requestKnownWaypoints() {
 		testHandStatus();
 		timer.stop();
-		if(getStatus().contentEquals(SHS_ONLINE)) {
+		if(!getStatus().contentEquals(SHS_OFFLINE)) {
 			ScriptCommand sendTestCommand = new ScriptCommand("testSend");
 			// Add the calculation script to the command
 			sendTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8100/RPC2\")");
@@ -358,11 +346,10 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		testHandStatus();
 		timer.stop();
 		// Create a new ScriptCommand called "testSend"
-		if(testHandStatus().contentEquals(SHS_ONLINE)) {
+		if(!getStatus().contentEquals(SHS_OFFLINE)) {
 		ScriptCommand sendTestCommand = new ScriptCommand("testSend");
 		
 		sendTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8101/RPC2\")");
-		System.out.println("Init script sent to gripper");
 		try {
 			sendTestCommand.appendLine("smarthand.set_robot_ip(\""+view.getHost4Address() +"\")");
 			System.out.print("Sending "+view.getHost4Address()+" as robot address to hand");
@@ -371,36 +358,26 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 			e.printStackTrace();
 		}
 		sendTestCommand.appendLine("smarthand.init()");
-		System.out.println("Gripper initiated");
 		
 		// Use the ScriptSender to send the command for immediate execution
 		sender.sendScriptCommand(sendTestCommand);
-		}
 		timer.restart();
+		}	
 	}
 	
 	public void sendScriptStopGripper() {
 		testHandStatus();
 		timer.stop();
 		// Create a new ScriptCommand called "testSend"
-		if(testHandStatus().contentEquals(SHS_ONLINE)) {
+		if(!getStatus().contentEquals(SHS_OFFLINE)) {
 		ScriptCommand sendTestCommand = new ScriptCommand("testSend");
 		
 		sendTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8101/RPC2\")");
-		System.out.println("Stop XML script sent");//delete
-		
 		sendTestCommand.appendLine("smarthand.stop()");
-		System.out.println("Smart Hand Stopped");//delete
 		
 		// Use the ScriptSender to send the command for immediate execution
 		sender.sendScriptCommand(sendTestCommand);
-		System.out.println("Test Command Sent");//delete
-		}
-		if(getStatus().contentEquals(SHS_OFFLINE)) {
-			System.out.println("SHS is OFFLINE");
-		}
-		timer.restart();
-		System.out.println("Timer Restarted"); //delete
+		}	
 		timer.restart();
 	}
 
@@ -408,7 +385,7 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		testHandStatus();
 		timer.stop();
 		// Create a new ScriptCommand called "testSend"
-		if(testHandStatus().contentEquals(SHS_ONLINE)) {
+		if(!getStatus().contentEquals(SHS_OFFLINE)) {
 		ScriptCommand sendTestCommand = new ScriptCommand("testSend");
 		
 		sendTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8101/RPC2\")");
@@ -431,7 +408,7 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		testHandStatus();
 		timer.stop();
 		// Create a new ScriptCommand called "testSend"
-		if(testHandStatus().contentEquals(SHS_ONLINE)) {
+		if(!getStatus().contentEquals(SHS_OFFLINE)) {
 		ScriptCommand sendTestCommand = new ScriptCommand("testSend");
 		
 		sendTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8101/RPC2\")");
@@ -456,10 +433,8 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		writer.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8101/RPC2\")");
 		// Only add the init call when a smarthand command is used in the code
 		if(areThereChildren) {
-			System.out.println("OVERHERE!!!"); //Delete
 			writer.appendLine("return_value = smarthand.init()");
 			writer.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8100/RPC2\")");
-			System.out.println("RIGHT NOW ~~~"); //Delete
 		}
 	}
 

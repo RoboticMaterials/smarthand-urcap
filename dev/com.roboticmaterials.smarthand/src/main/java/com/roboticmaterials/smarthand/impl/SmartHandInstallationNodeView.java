@@ -19,6 +19,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -26,11 +28,14 @@ import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.ImageIcon;
+import javax.imageio.ImageIO;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 
@@ -81,7 +86,15 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 				
 			}
         });
-        
+						
+		// BufferedImage myPicture = ImageIO.read(new File("/src/main/resorces/rmlogo.png"));
+		// JLabel picLabel = new JLabel(new ImageIcon(myPicture));
+		// add(picLabel);
+    
+		jPanel.add(new JLabel(new ImageIcon(getClass().getClassLoader().getResource("rmlogo.png"))));
+
+		jPanel.add(createVerticalSpacing());
+
         jPanel.add(createLabelInputField("IP Address: ", ipAddress, scanNetworkButton, new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -121,6 +134,7 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 		requestObjectsPanel.add(createHorizontalSpacing());
 		requestObjectsPanel.add(createObjectsComboBox(objectsComboBox, contribution));
 		requestObjectsPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+		//requestObjectsPanel.setHorizontalAlignment(Component.CENTER_);
 		jPanel.add(requestObjectsPanel);
 
 		jPanel.add(createVerticalSpacing());
@@ -133,8 +147,21 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 		requestWaypointsPanel.add(createHorizontalSpacing());
 		requestWaypointsPanel.add(createWaypointsComboBox(waypointsComboBox, contribution));
 		requestWaypointsPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+		//requestWaypointsPanel.setHorizontalAlignment(JPanel.CENTER_ALIGNMENT);
 		jPanel.add(requestWaypointsPanel);
-    }
+	}
+
+
+
+
+	//private BufferedImage myPicture;
+	// private ImagePanel() {
+	// 	BufferedImage myPicture; 
+	// 	try {
+	// 		myPicture = ImageIO.read(new File("/src/main/resources/rmlogo.png"));
+	// 	} catch (IOException ex) {}
+	// 	return myPicture;
+	// }
 
 
 	private Box createInfo(String text) {
@@ -244,7 +271,8 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
             initGripperButton.setText("Connect");
         }
         else if (status.contentEquals("online")) {
-            scanNetworkButton.setBackground(Color.green);
+			scanNetworkButton.setBackground(Color.green);
+			scanNetworkButton.setText("Connected");
             initGripperButton.setText("Disconnect");
         }
     }
