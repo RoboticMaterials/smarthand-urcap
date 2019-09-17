@@ -194,38 +194,6 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
         return status;
     }
 
-    // public String testHandStatus() {
-    //     status = getStatus();
-        
-
-	// 	try{
-	// 	int i = 0;
-    //     while(((status == SHS_OFFLINE) || (status == SHS_IDLE)) && (i<=5)) {
-	// 		Thread.sleep(100);
-	// 		System.out.print("Currently on " + i + " loop");
-    //         testHandStatus();
-    //         i++;
-	// 		status = getStatus();
-	// 	}
-	// 	} catch(InterruptedException ex) {
-	// 		Thread.currentThread().interrupt();
-	// 	}
-
-    //     if(status == SHS_ONLINE) {
-    //         System.out.printf("Success, " + status);
-    //     }
-
-    //     else if(status == SHS_IDLE) {
-    //         System.out.printf("Failure, " + status + ". May be a RMLib issue");
-    //     }
-
-    //     else {
-    //         System.out.printf("Failure, " + status + ". IP is not responding");
-    //     }
-    //     return status;
-    // }
-
-
 	//IP address Section
 	public String getIPAddress() {
 		return model.get(IPADDRESS_KEY, DEFAULT_IP);
