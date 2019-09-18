@@ -1,7 +1,0 @@
-Disconect Error
-If you hit the disconect button an error appears
-XMLRPC: Failed with error code 1: <class 'SystemExit'>:Stop request from user
-Terminal: 
-15:45:35.333 WARN  - XMLRPC: Failed with error code 1: &lt;class 'SystemExit'&gt;:Stop request from user {thread: AWT-EventQueue-0 , loggerClass: gui.tools.URDialogCreator}
-- initGripperButton line 300 in InstallationNodeView
-- sendScriptInitGripper line 245 in Contribution
