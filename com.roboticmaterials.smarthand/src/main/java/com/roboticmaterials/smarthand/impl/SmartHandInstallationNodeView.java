@@ -139,9 +139,9 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 
 		jPanel.add(createVerticalSpacing());
 		jPanel.add(createInfo("Import Known Waypoints:"));
-		//jPanel.add(createVerticalSpacing());
 		JPanel requestWaypointsPanel = new JPanel();
 		BoxLayout requestWaypointsLayout = new BoxLayout(requestWaypointsPanel, BoxLayout.X_AXIS);
+		requestWaypointsPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 		requestWaypointsPanel.setLayout(requestWaypointsLayout);
 		requestWaypointsPanel.add(createRequestWaypointsButton(contribution));
 		requestWaypointsPanel.add(createHorizontalSpacing());
@@ -149,6 +149,15 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 		requestWaypointsPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		//requestWaypointsPanel.setHorizontalAlignment(JPanel.CENTER_ALIGNMENT);
 		jPanel.add(requestWaypointsPanel);
+
+		// Box toolbox = Box.createHorizontalBox();
+		// toolbox.setAlignmentX(Component.CENTER_ALIGNMENT);
+		// toolbox.add(createRequestObjectsButton(contribution));
+		// toolbox.add(createHorizontalSpacing());
+		// toolbox.add(createObjectsComboBox(objectsComboBox, contribution));
+		// jPanel.add(toolbox);
+
+
 	}
 
 
@@ -365,16 +374,14 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 
 	private Box createRequestObjectsButton(final SmartHandInstallationNodeContribution contribution) {
 		Box box = Box.createVerticalBox();
-		
-		//box.add(new JLabel("Obtain list of available object definitions"));
-		
+				
 		requestObjectsButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				contribution.importKnownObjects();
 			}
 		});
-		box.add(createVerticalSpacing());
+
 		box.add(requestObjectsButton);
 		//box.add(new JLabel("Returned value:"));
 		//box.add(this.RETURN_VALUE);
@@ -399,7 +406,6 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 				contribution.importKnownWaypoints();
 			}
 		});
-		box.add(createVerticalSpacing());
 		box.add(requestWaypointsButton);
 		//box.add(new JLabel("Returned value:"));
 		//box.add(this.RETURN_VALUE);

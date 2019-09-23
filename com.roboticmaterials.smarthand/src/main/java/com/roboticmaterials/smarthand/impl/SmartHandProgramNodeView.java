@@ -118,12 +118,16 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 		//card1.setAlignmentY(Component.LEFT_ALIGNMENT);
 		card1.add(createForceOSlider("Force:",forceSliderO, 0, 100, provider));
 		card1.add(createDescription(openGripperLabel, "<html><b>Input:</b><br><br><i>force</i>: Maximum force during opening<br><br><b>Output:</b><br><br><i>s</i>: <i>success</i>, binary variable representing successful execution</html>"));
-	
+		card1.add(createVerticalSpacing(20));
+		card1.add(new JLabel(new ImageIcon(getClass().getClassLoader().getResource("Assembly_Outline_ClosetoOpen1.png"))));
+		
 		// Second card: close gripper	
 		card2.setLayout(new BoxLayout(card2, BoxLayout.Y_AXIS));
 		card2.add(createForceCSlider("Force:", forceSliderC, 0, 100, provider));		
 		card2.add(createDescription(closeGripperLabel, "<html><b>Input:</b><br><br><i>force</i>: Maximum force during closing<br><br><b>Output:</b><br><br><i>s</i>: <i>success</i>, binary variable representing successful execution</html>"));
-		
+		card2.add(createVerticalSpacing(20));
+		card2.add(new JLabel(new ImageIcon(getClass().getClassLoader().getResource("Assembly_Outline_OpentoClose1.png"))));
+
 		// Third card: set gripper width
 		card3.setLayout(new BoxLayout(card3, BoxLayout.Y_AXIS));
 		card3.add(createForceWSlider("Force:",forceSliderW, 0, 100, provider));		
@@ -184,6 +188,10 @@ public class SmartHandProgramNodeView implements SwingProgramNodeView<SmartHandP
 		//return Box.createHorizontalGlue();
 		return Box.createRigidArea(new Dimension(width,0));
 	}
+
+	private Component createVerticalSpacing(int height) {
+		return Box.createRigidArea(new Dimension(0, height));
+    }
 	
 	public void setButtonsEnabled(boolean b) {
 		openButton.setEnabled(b);
