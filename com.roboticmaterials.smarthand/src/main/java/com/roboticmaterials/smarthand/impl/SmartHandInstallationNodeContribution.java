@@ -260,6 +260,7 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		return model.get(CARTWAYPOINTS_KEY, DEFAULT_WAYPOINT);
 	}
 
+	//requestKnownWaypoints was added to help fix the issure with to may waypoints shutting down the robot
 	public void requestKnownWaypoints() {
 		testHandStatus();
 		timer.stop();
