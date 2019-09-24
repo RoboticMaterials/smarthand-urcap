@@ -221,30 +221,47 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 	}
 
 	public void importKnownObjects() {
-		// Create a new ScriptCommand called "exportVariable"
 		testHandStatus();
 		timer.stop();
-		if(getStatus().contentEquals(SHS_ONLINE)) {
-		ScriptCommand exportTestCommand = new ScriptCommand("exportVariable");
-		
-		// Add the calculation script to the command
-		exportTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8100/RPC2\")");
-		//exportTestCommand.appendLine("smarthand.init()");
-		exportTestCommand.appendLine("objectIDs = smarthand.get_object_defs()");
-		
-		// Use the exporter to send the script
-		// Note the String name of the variable (objectIDs) to be returned
-		String returnValue = exporter.exportStringFromURScript(exportTestCommand,
-				"objectIDs");
-		
-		// Put the result back in the View
-		view.setKnownObjects(returnValue);
-		setKnownObjects(returnValue);
-		} else {
-			// Place warning pop-up here
+		if(!getStatus().contentEquals(SHS_OFFLINE)) {
+			try {
+				XmlRpcClient client = new XmlRpcClient("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8100/RPC2\")");
+
+				String objectIDs = server.execute("smarthand.get_object_defs()");
+
+				view.setKnownObjects(returnValue);
+				setKnownObjects(returnValue);
+			} catch (Exception exception) {
+				System.err.println("JavaClient: " + exception);
+			}
 		}
-		timer.restart();
 	}
+
+	// public void importKnownObjects() {
+	// 	// Create a new ScriptCommand called "exportVariable"
+	// 	testHandStatus();
+	// 	timer.stop();
+	// 	if(getStatus().contentEquals(SHS_ONLINE)) {
+	// 	ScriptCommand exportTestCommand = new ScriptCommand("exportVariable");
+		
+	// 	// Add the calculation script to the command
+	// 	exportTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8100/RPC2\")");
+	// 	//exportTestCommand.appendLine("smarthand.init()");
+	// 	exportTestCommand.appendLine("objectIDs = smarthand.get_object_defs()");
+		
+	// 	// Use the exporter to send the script
+	// 	// Note the String name of the variable (objectIDs) to be returned
+	// 	String returnValue = exporter.exportStringFromURScript(exportTestCommand,
+	// 			"objectIDs");
+		
+	// 	// Put the result back in the View
+	// 	view.setKnownObjects(returnValue);
+	// 	setKnownObjects(returnValue);
+	// 	} else {
+	// 		// Place warning pop-up here
+	// 	}
+	// 	timer.restart();
+	// }
 
 
 	//Waypoint Section
