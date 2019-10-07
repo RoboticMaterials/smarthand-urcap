@@ -4,6 +4,7 @@ import com.ur.urcap.api.contribution.InstallationNodeContribution;
 import com.ur.urcap.api.contribution.installation.InstallationAPIProvider;
 import com.ur.urcap.api.contribution.toolbar.swing.SwingToolbarService;
 import com.ur.urcap.api.domain.data.DataModel;
+import com.ur.urcap.api.domain.program.nodes.builtin.ElseIfNode;
 import com.ur.urcap.api.domain.script.ScriptWriter;
 import com.ur.urcap.api.domain.userinteraction.keyboard.KeyboardInputCallback;
 import com.ur.urcap.api.domain.userinteraction.keyboard.KeyboardInputFactory;
@@ -79,8 +80,16 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 				view.setButtonText(status);
 				int i = 1000;
 
-			if(getStatus().contentEquals(SHS_ONLINE) || getStatus().contentEquals(SHS_IDLE)) {
+			if(getStatus().contentEquals(SHS_ONLINE)) {
 				delay = 10000 + i;
+				view.setButtonEnabled(true);
+				System.out.println("SHS is either online or IDLE for timer");
+				i++;
+				timer.setDelay(delay);
+			}
+
+			else if(getStatus().contentEquals(SHS_IDLE)) {
+				delay = 5000 + i;
 				view.setButtonEnabled(true);
 				System.out.println("SHS is either online or IDLE for timer");
 				i++;
@@ -364,7 +373,7 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		timer.stop();
 		int qq = 0;
 		// Create a new ScriptCommand called "testSend"
-		while(getStatus().contentEquals(SHS_IDLE)) {
+		if(!getStatus().contentEquals(SHS_OFFLINE)) {
 
 			view.setButtonEnabled(false);	
 			ScriptCommand sendTestCommand = new ScriptCommand("testSend");
@@ -383,9 +392,6 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 			sender.sendScriptCommand(sendTestCommand);
 			view.setButtonEnabled(true);
 			testHandStatus();
-
-			qq = qq + 1;
-			System.out.println("On loop" + qq);
 
 		}	
 		timer.restart();
