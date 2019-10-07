@@ -28,12 +28,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 
-import org.apache.xmlrpc.*;
+// import org.apache.xmlrpc.*;
 // import org.apache.xmlrpc.client.XmlRpcClient;
 // import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
-import org.apache.xmlrpc.client.*;
-import org.apache.xmlrpc.common.*;
-import org.apache.xmlrpc.server.*;
+// import org.apache.xmlrpc.client.*;
+// import org.apache.xmlrpc.common.*;
+// import org.apache.xmlrpc.server.*;
 
 public class SmartHandInstallationNodeContribution implements InstallationNodeContribution {
     private static final String IPADDRESS_KEY = "ipaddress";
@@ -228,65 +228,71 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		return model.get(OBJECTS_KEY, DEFAULT_OBJECT);
 	}
 
-	public void importKnownObjects() {
-		testHandStatus();
-		timer.stop();
-		if(!getStatus().contentEquals(SHS_OFFLINE)) {
-		System.out.println("In the If statement"); //delete
-
-			try {
-				System.out.println("In the try statment"); //delete
-				XmlRpcClient client = new XmlRpcClient();
-
-				XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
-
-				URL url = new URL("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8100/RPC2\")");
-
-				config.setServerURL(url);
-				config.setEnabledForExtensions(true);
-
-				client.setConfig(config);
-				System.out.println("XmlRpcClient is good *shrug*"); //delete
-
-				String objectIDs = client.execute("smarthand.get_object_defs()", objectIDs);
-
-				view.setKnownObjects(objectIDs);
-				setKnownObjects(objectIDs);
-			} catch (Exception exception) {
-				System.err.println("JavaClient: " + exception);
-			}
-		}
-		else {
-			//Place an else statement
-		}
-		timer.restart();
-	}
-
 	// public void importKnownObjects() {
-	// 	// Create a new ScriptCommand called "exportVariable"
 	// 	testHandStatus();
 	// 	timer.stop();
-	// 	if(getStatus().contentEquals(SHS_ONLINE)) {
-	// 	ScriptCommand exportTestCommand = new ScriptCommand("exportVariable");
-		
-	// 	// Add the calculation script to the command
-	// 	exportTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8100/RPC2\")");
-	// 	//exportTestCommand.appendLine("smarthand.init()");
-	// 	exportTestCommand.appendLine("objectIDs = smarthand.get_object_defs()");
-		
-	// 	// Use the exporter to send the script
-	// 	// Note the String name of the variable (objectIDs) to be returned
-	// 	String returnValue = exporter.exportStringFromURScript(exportTestCommand,
-	// 			"objectIDs");
-		
-	// 	// Put the result back in the View
-	// 	view.setKnownObjects(returnValue);
-	// 	setKnownObjects(returnValue);
-	// 	} else {
-	// 		// Place warning pop-up here
+	// 	if(!getStatus().contentEquals(SHS_OFFLINE)) {
+	// 	System.out.println("In the If statement"); //delete
+
+	// 		try {
+	// 			System.out.println("In the try statment"); //delete
+	// 			XmlRpcClient client = new XmlRpcClient();
+
+	// 			XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
+
+	// 			URL url = new URL("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8100/RPC2\")");
+
+	// 			config.setServerURL(url);
+	// 			config.setEnabledForExtensions(true);
+
+	// 			client.setConfig(config);
+	// 			System.out.println("XmlRpcClient is good *shrug*"); //delete
+
+	// 			Map<String, Object> params = new HashMap<>();
+	// 			params.put(get_object_defs, obj);
+
+	// 			List<Object> objects = new ArrayList<>();
+	// 			objects.add(obj);
+
+	// 			String objectIDs = client.execute(smarthand, objects);
+
+	// 			view.setKnownObjects(objectIDs);
+	// 			setKnownObjects(objectIDs);
+	// 		} catch (Exception exception) {
+	// 			System.err.println("JavaClient: " + exception);
+	// 		}
+	// 	}
+	// 	else {
+	// 		//Place an else statement
 	// 	}
 	// 	timer.restart();
 	// }
+
+	public void importKnownObjects() {
+		// Create a new ScriptCommand called "exportVariable"
+		testHandStatus();
+		timer.stop();
+		if(getStatus().contentEquals(SHS_ONLINE)) {
+		ScriptCommand exportTestCommand = new ScriptCommand("exportVariable");
+		
+		// Add the calculation script to the command
+		exportTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8100/RPC2\")");
+		//exportTestCommand.appendLine("smarthand.init()");
+		exportTestCommand.appendLine("objectIDs = smarthand.get_object_defs()");
+		
+		// Use the exporter to send the script
+		// Note the String name of the variable (objectIDs) to be returned
+		String returnValue = exporter.exportStringFromURScript(exportTestCommand,
+				"objectIDs");
+		
+		// Put the result back in the View
+		view.setKnownObjects(returnValue);
+		setKnownObjects(returnValue);
+		} else {
+			// Place warning pop-up here
+		}
+		timer.restart();
+	}
 
 
 	//Waypoint Section
@@ -374,9 +380,10 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 			
 			// Use the ScriptSender to send the command for immediate execution
 			sender.sendScriptCommand(sendTestCommand);
-			timer.restart();
 			view.setButtonEnabled(true);
+			testHandStatus();
 		}	
+		timer.restart();
 	}
 	
 	public void sendScriptStopGripper() {
