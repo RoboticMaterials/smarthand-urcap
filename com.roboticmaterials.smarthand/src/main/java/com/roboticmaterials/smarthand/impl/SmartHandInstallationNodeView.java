@@ -295,8 +295,10 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
         initGripperButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(contribution.getStatus().contentEquals("idle"))
-                    contribution.sendScriptInitGripper();
+                if(contribution.getStatus().contentEquals("idle")) {
+					contribution.sendScriptInitGripper();
+					initGripperButton.setText("Connecting...");
+				}
                 else if(contribution.getStatus().contentEquals("online"))
                     contribution.sendScriptStopGripper();
             }
