@@ -13,7 +13,9 @@ import com.roboticmaterials.smarthand.impl.SmartHandInstallationNodeView;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.TimerTask;
+import java.net.URI;
+import java.net.URL;
+import java.util.*;
 
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
@@ -25,7 +27,13 @@ import com.roboticmaterials.smarthand.communicator.ScriptSender;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+
 import org.apache.xmlrpc.*;
+// import org.apache.xmlrpc.client.XmlRpcClient;
+// import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
+import org.apache.xmlrpc.client.*;
+import org.apache.xmlrpc.common.*;
+import org.apache.xmlrpc.server.*;
 
 public class SmartHandInstallationNodeContribution implements InstallationNodeContribution {
     private static final String IPADDRESS_KEY = "ipaddress";
@@ -224,17 +232,34 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		testHandStatus();
 		timer.stop();
 		if(!getStatus().contentEquals(SHS_OFFLINE)) {
+		System.out.println("In the If statement"); //delete
+
 			try {
-				XmlRpcClient client = new XmlRpcClient("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8100/RPC2\")");
+				System.out.println("In the try statment"); //delete
+				XmlRpcClient client = new XmlRpcClient();
 
-				String objectIDs = server.execute("smarthand.get_object_defs()");
+				XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
 
-				view.setKnownObjects(returnValue);
-				setKnownObjects(returnValue);
+				URL url = new URL("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8100/RPC2\")");
+
+				config.setServerURL(url);
+				config.setEnabledForExtensions(true);
+
+				client.setConfig(config);
+				System.out.println("XmlRpcClient is good *shrug*"); //delete
+
+				String objectIDs = client.execute("smarthand.get_object_defs()", objectIDs);
+
+				view.setKnownObjects(objectIDs);
+				setKnownObjects(objectIDs);
 			} catch (Exception exception) {
 				System.err.println("JavaClient: " + exception);
 			}
 		}
+		else {
+			//Place an else statement
+		}
+		timer.restart();
 	}
 
 	// public void importKnownObjects() {
@@ -333,21 +358,24 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		timer.stop();
 		// Create a new ScriptCommand called "testSend"
 		if(!getStatus().contentEquals(SHS_OFFLINE)) {
-		ScriptCommand sendTestCommand = new ScriptCommand("testSend");
-		
-		sendTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8101/RPC2\")");
-		try {
-			sendTestCommand.appendLine("smarthand.set_robot_ip(\""+view.getHost4Address() +"\")");
-			System.out.print("Sending "+view.getHost4Address()+" as robot address to hand");
-		} catch (SocketException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		sendTestCommand.appendLine("smarthand.init()");
-		
-		// Use the ScriptSender to send the command for immediate execution
-		sender.sendScriptCommand(sendTestCommand);
-		timer.restart();
+
+			view.setButtonEnabled(false);	
+			ScriptCommand sendTestCommand = new ScriptCommand("testSend");
+			
+			sendTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8101/RPC2\")");
+			try {
+				sendTestCommand.appendLine("smarthand.set_robot_ip(\""+view.getHost4Address() +"\")");
+				System.out.print("Sending "+view.getHost4Address()+" as robot address to hand");
+			} catch (SocketException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			sendTestCommand.appendLine("smarthand.init()");
+			
+			// Use the ScriptSender to send the command for immediate execution
+			sender.sendScriptCommand(sendTestCommand);
+			timer.restart();
+			view.setButtonEnabled(true);
 		}	
 	}
 	

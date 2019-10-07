@@ -1,2 +1,5 @@
-com/roboticmaterials/smarthand/impl/SmartHandInstallationNodeView$6.class
-com/roboticmaterials/smarthand/impl/SmartHandInstallationNodeView$7.class
+com/roboticmaterials/smarthand/communicator/ScriptExporter.class
+com/roboticmaterials/smarthand/impl/ToolbarContribution.class
+com/roboticmaterials/smarthand/communicator/ScriptCommand.class
+com/roboticmaterials/smarthand/impl/ToolbarService.class
+com/roboticmaterials/smarthand/communicator/ScriptSender.class
