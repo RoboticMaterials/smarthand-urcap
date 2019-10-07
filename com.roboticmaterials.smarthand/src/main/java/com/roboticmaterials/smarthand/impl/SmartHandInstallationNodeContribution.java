@@ -362,8 +362,9 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 	public void sendScriptInitGripper() {
 		testHandStatus();
 		timer.stop();
+		int qq = 0;
 		// Create a new ScriptCommand called "testSend"
-		if(!getStatus().contentEquals(SHS_OFFLINE)) {
+		while(getStatus().contentEquals(SHS_IDLE)) {
 
 			view.setButtonEnabled(false);	
 			ScriptCommand sendTestCommand = new ScriptCommand("testSend");
@@ -382,6 +383,10 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 			sender.sendScriptCommand(sendTestCommand);
 			view.setButtonEnabled(true);
 			testHandStatus();
+
+			qq = qq + 1;
+			System.out.println("On loop" + qq);
+
 		}	
 		timer.restart();
 	}
