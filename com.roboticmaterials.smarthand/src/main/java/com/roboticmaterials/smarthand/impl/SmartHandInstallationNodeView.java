@@ -58,7 +58,7 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
 	private JButton openGripperButton = new JButton("Open");
 	private JButton closeGripperButton = new JButton("Close");;
 	private final JButton scanNetworkButton = new JButton("Scan");
-	private final JButton initGripperButton = new JButton("Connect");
+	public final JButton initGripperButton = new JButton("Connect");
 	//private final JButton stopGripperButton = new JButton("Stop");
 
 
@@ -288,7 +288,7 @@ public class SmartHandInstallationNodeView implements SwingInstallationNodeView<
         }
     }
 
-    private Box createSenderInitGripperButton(final SmartHandInstallationNodeContribution contribution) {
+    public Box createSenderInitGripperButton(final SmartHandInstallationNodeContribution contribution) {
         Box box = Box.createHorizontalBox();
         box.setAlignmentX(Component.LEFT_ALIGNMENT);
 

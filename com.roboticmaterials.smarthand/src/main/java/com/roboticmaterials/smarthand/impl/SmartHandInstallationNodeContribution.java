@@ -365,7 +365,8 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 		// Create a new ScriptCommand called "testSend"
 		if(!getStatus().contentEquals(SHS_OFFLINE)) {
 
-			view.setButtonEnabled(false);	
+			view.setButtonEnabled(false);
+			view.initGripperButton.setText("Connecting...");
 			ScriptCommand sendTestCommand = new ScriptCommand("testSend");
 			
 			sendTestCommand.appendLine("smarthand = rpc_factory(\"xmlrpc\",\"http://" + model.get(IPADDRESS_KEY, DEFAULT_IP) +":8101/RPC2\")");
@@ -380,6 +381,11 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 			
 			// Use the ScriptSender to send the command for immediate execution
 			sender.sendScriptCommand(sendTestCommand);
+			try {
+				Thread.sleep(1000);
+			} catch(InterruptedException ex) {
+				Thread.currentThread().interrupt();
+			}
 			view.setButtonEnabled(true);
 		}	
 		timer.restart();
@@ -490,4 +496,5 @@ public class SmartHandInstallationNodeContribution implements InstallationNodeCo
 	public void setButtonEnabled(boolean b) {
 		view.setButtonEnabled(b);
 	}
+
 }
